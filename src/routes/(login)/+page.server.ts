@@ -20,7 +20,7 @@ export const actions = {
             event.cookies.set('token', token, {
                 path: '/',
             });
-            throw redirect(301, '/dashboard');
+            throw redirect(301, '/admin');
         } else {
             return { error: 'Invalid credentials' };
         }
