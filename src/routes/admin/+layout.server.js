@@ -10,6 +10,8 @@
  * @prop {Data[]?} children
  */
 
+import { redirect } from '@sveltejs/kit';
+
 export async function load ({ fetch, cookies }) {
     const response = await fetch(import.meta.env.VITE_API_URL + '/menu', {
       method: 'GET',
@@ -18,14 +20,17 @@ export async function load ({ fetch, cookies }) {
         'Authorization': 'Bearer ' + cookies.get('token')
       }
     });
+    
+     /**@type {Menu} */
+    let menu = null;
   
     if (response.ok) {
-        /**@type {Menu} */
-      const data = await response.json();
-      return {
-         menu: data.menu 
-        };
+     menu = await response.json();
     } else {
-      throw new Error(await response.text());
+      throw redirect(302, '/');
     }
+
+    return {
+      menu: menu.menu 
+    }; 
 }
