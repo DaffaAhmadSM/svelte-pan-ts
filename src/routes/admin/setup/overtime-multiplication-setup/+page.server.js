@@ -1,5 +1,5 @@
 export  async function load({ fetch, cookies, url }) {
-    const list = await fetch(import.meta.env.VITE_API_URL + '/company/list', {
+    const list = await fetch(import.meta.env.VITE_API_URL + '/overtime-multiplication-setup/all', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
