@@ -15,7 +15,7 @@
 
 <li style="padding-left: {indent}px;" class="flex  hover:bg-gray-100 dark:hover:bg-gray-700 group text-start max-w-full p-3">
     {#if menu.url !== null && $page.url.pathname !== menu.url}
-    <a class="pt-1 pr-1 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:underline" href={menu.url}>{menu.name}</a>
+    <a class="pt-1 pr-1 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:underline" href='{menu.url}?menuid={menu.id}'>{menu.name}</a>
     {:else}
     <button class="pt-1 pr-1 flex items-center p-2 text-gray-900 rounded-lg dark:text-white w-max" on:click={toggle}>{menu.name}</button>
     {/if}

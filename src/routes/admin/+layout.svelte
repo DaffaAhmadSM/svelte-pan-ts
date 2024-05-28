@@ -1,6 +1,8 @@
 <script>
 	import Nested from './nested.svelte';
     import { navigating } from '$app/stores';
+    import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+    initializeStores();
     /**
      * @type {import('./$types').LayoutData} 
      * */
@@ -8,6 +10,7 @@
     let menu = data.menu;
 </script>
 
+<Modal/>
 <div class="flex flex-row" data-theme="wintry">
     <aside class="min-w-60 max-w-60 h-screen overflow-scroll">
         <div class="flex flex-col h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
@@ -18,7 +21,6 @@
             {/each}
         </div>
     </aside>
-    
     {#if $navigating}
         <div class="flex flex-col items-center justify-center w-full h-screen">
             <div class="loader">Loading</div>

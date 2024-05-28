@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-export  async function load({ fetch, cookies }) {
+export  async function load({ fetch, cookies, url }) {
     const user = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
         method: 'GET',
         headers: {
@@ -8,5 +8,15 @@ export  async function load({ fetch, cookies }) {
             'Authorization': 'Bearer ' + cookies.get('token')
         }
     })
-    return { users: await user.json() }
+
+    const paramsurl = url.searchParams.get('menuid')
+    const permission = await fetch(import.meta.env.VITE_API_URL + '/menu-user-permission/menu/' + paramsurl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + cookies.get('token')
+        }
+    })
+
+    return { users: await user.json(), permissions: await permission.json() }
 }
