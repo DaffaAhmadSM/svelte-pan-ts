@@ -1,12 +1,14 @@
 <script>
-    import { page } from "$app/stores";
-    import TableData from "$lib/components/table.svelte";
+    import Table from '$lib/components/table.svelte';
+    export let data;
+
+    let tableData = data.users.data.data;
+    let header = data.users.header;
+    let permission = data.permissions.permission;
 </script>
 <div class="table-container">
-    <div class="flex w-full flex-col justify-center items-center">
-        <button>Dashboard</button>
-        <p>This is a dashboard route</p>
-        <p>Only authenticated users can access this page</p>
+    <div class="flex w-full flex-col mb-6">
+        <h1 class="text-5xl">Company Setup</h1>
     </div>
-    <TableData/>
+    <Table tableData={tableData} header={header} permissions={permission}/>
 </div>

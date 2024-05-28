@@ -22,9 +22,12 @@
     };
 </script>
 
-<div class="m-2 flex justify-end text-white">
-    <button class="p-3 bg-primary-500 rounded-lg">Add</button>
-</div>
+{#if permissions.create}
+    <div class="m-2 flex justify-end text-white">
+        <button class="p-3 bg-primary-500 rounded-lg">Add</button>
+    </div>
+{/if}
+
 <table class="table table-hover">
     <thead>
         <tr>
