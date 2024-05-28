@@ -1,4 +1,5 @@
 import adapter from '@sveltejs/adapter-static';
+import { preprocessMeltUI, sequence } from '@melt-ui/pp'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,7 +10,10 @@ const config = {
 		adapter: adapter({
 			fallback: 'index.html'
 		})
-	}
+	},
+	preprocess: sequence([
+		preprocessMeltUI()
+	])
 };
 
 export default config;
