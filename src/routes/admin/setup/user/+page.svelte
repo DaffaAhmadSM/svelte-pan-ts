@@ -1,8 +1,7 @@
 <script>
-    import { getModalStore} from '@skeletonlabs/skeleton';
-    import { createDialog, melt } from '@melt-ui/svelte';		
-    const modalStore = getModalStore();
+    import { createDialog, melt } from '@melt-ui/svelte';
     import Table from '$lib/components/table.svelte';
+	import FormModal from '$lib/components/form-modal.svelte';
     export let data;
 
     let tableData = data.list.data.data;
@@ -14,5 +13,6 @@
         <h1 class="text-5xl">User Setup</h1>
     </div>
     <Table tableData={tableData} header={header} permissions={permission}/>
+    <FormModal />
 </div>
 

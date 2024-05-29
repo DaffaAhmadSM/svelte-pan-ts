@@ -14,7 +14,6 @@ export const actions = {
         });
 
         if (response.ok) {
-            console.log('Login successful');
             const { token } = await response.json();
             // Save the token in cookies
             event.cookies.set('token', token, {

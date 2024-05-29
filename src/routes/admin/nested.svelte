@@ -18,7 +18,7 @@
     {#if menu.url !== null && $page.url.pathname !== menu.url}
         <a class="pt-1 pr-1 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:underline" href='{menu.url}?menuid={menu.id}'>{menu.name}</a>
     {:else}
-        <button class="pt-1 pr-1 flex items-center p-2 rounded-lg dark:text-white w-max text-start text-gray-900" on:click={toggle} disabled>{menu.name}</button>
+        <button class="pt-1 pr-1 flex items-center p-2 rounded-lg dark:text-white w-max text-start {$page.url.pathname == menu.url ? 'text-surface-50 dark:text-surface-700' : ''}" on:click={toggle} disabled>{menu.name}</button>
     {/if}
     {#if menu.children}
         {#if open}
