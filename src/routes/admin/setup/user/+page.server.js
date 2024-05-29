@@ -1,6 +1,6 @@
 
 export  async function load({ fetch, cookies, url }) {
-    const user = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
+    const list = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,5 +17,5 @@ export  async function load({ fetch, cookies, url }) {
         }
     })
 
-    return { users: await user.json(), permissions: await permission.json() }
+    return { list: await list.json(), permissions: await permission.json() }
 }

@@ -14,7 +14,7 @@
 
 </script>
 
-<li style="padding-left: {indent}px;" class="flex dark:hover:bg-gray-700 group text-start max-w-full p-3 rounded-lg {$page.url.pathname == menu.url ? 'bg-secondary-400' : 'hover:bg-surface-200'}">
+<li style="padding-left: {indent}px;" class="flex dark:hover:bg-gray-700 group text-start max-w-full px-3 py-2 rounded-xl {$page.url.pathname == menu.url ? 'bg-secondary-400' : 'hover:bg-surface-200'}">
     {#if menu.url !== null && $page.url.pathname !== menu.url}
         <a class="pt-1 pr-1 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:underline" href='{menu.url}?menuid={menu.id}'>{menu.name}</a>
     {:else}
