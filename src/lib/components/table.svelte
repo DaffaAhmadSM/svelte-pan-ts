@@ -1,4 +1,5 @@
 <script>
+	import { openModal } from "$lib/stores/formModal";
 	export let tableData = [
 			{
 				id : "dolorem",
@@ -24,7 +25,7 @@
 
 {#if permissions.create}
     <div class="m-2 flex justify-end text-white">
-        <button class="p-3 bg-primary-500 rounded-lg">Add</button>
+        <button class="p-3 bg-primary-500 rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
     </div>
 {/if}
 

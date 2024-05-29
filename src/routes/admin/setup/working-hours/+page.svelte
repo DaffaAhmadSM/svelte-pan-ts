@@ -1,7 +1,4 @@
 <script>
-    import { getModalStore} from '@skeletonlabs/skeleton';
-			
-    const modalStore = getModalStore();
     import Table from '$lib/components/table.svelte';
     // export let data;
 

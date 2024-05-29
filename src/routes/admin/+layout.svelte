@@ -7,7 +7,7 @@
     export let data;
     let menu = data.menu;
 </script>
-<div class="flex flex-row" data-theme="wintry">
+<div class="flex flex-row selection:bg-primary-300" data-theme="wintry">
     <aside class="min-w-60 max-w-60 h-screen overflow-scroll">
         <div class="flex flex-col h-full px-3 py-4 overflow-y-auto bg-surface-50 dark:bg-gray-800">
             {#each menu as item}
