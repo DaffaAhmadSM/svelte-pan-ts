@@ -18,6 +18,7 @@ export const actions = {
             // Save the token in cookies
             event.cookies.set('token', token, {
                 path: '/',
+                httpOnly: false,
             });
             throw redirect(301, '/admin');
         } else {
