@@ -22,6 +22,6 @@
     </script>
     {#if $editForm}
     <div class="" use:melt={$portalled}>
-      <slot class="" data-theme="wintry"/>
+      <slot class=""/>
     </div>
     {/if}

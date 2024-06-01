@@ -22,6 +22,6 @@ import {openModal} from '$lib/stores/formModal.js';
 </script>
 {#if $openModal}
 <div class="" use:melt={$portalled}>
-  <slot class="" data-theme="wintry"/>
+  <slot class=""/>
 </div>
 {/if}

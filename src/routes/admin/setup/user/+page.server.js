@@ -1,3 +1,4 @@
+import { redirect } from '@sveltejs/kit'
 
 export  async function load({ fetch, cookies, url }) {
     const list = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
@@ -16,6 +17,10 @@ export  async function load({ fetch, cookies, url }) {
             'Authorization': 'Bearer ' + cookies.get('token')
         }
     })
+
+    if (permission.status !== 200) {
+        throw redirect(301, '/admin')
+    }
 
     return { list: await list.json(), permissions: await permission.json() }
 }

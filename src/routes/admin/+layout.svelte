@@ -28,5 +28,5 @@
     <slot/>
     {/if}
     </div>
-    <Toast/>
+    <div data-theme="wintry"><Toast position='br'/></div>
 </div>
