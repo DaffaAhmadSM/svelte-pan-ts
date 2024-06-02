@@ -22,6 +22,6 @@ import {openModal} from '$lib/stores/formModal.js';
 </script>
 {#if $openModal}
 <div class="" use:melt={$portalled}>
-  <slot class=""/>
+  <slot class="overflow-scroll"/>
 </div>
 {/if}

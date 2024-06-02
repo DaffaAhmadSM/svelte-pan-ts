@@ -22,7 +22,7 @@
     <div class="ml-60 w-full">
     {#if $navigating}
         <div class="flex flex-col items-center justify-center w-full h-screen">
-            <div class="loader">Loading</div>
+            <span class="loading loading-spinner loading-sm"></span>
         </div>
     {:else}
     <slot/>

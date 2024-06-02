@@ -1,5 +1,8 @@
 <script>
 	import { openModal, editForm } from "$lib/stores/formModal";
+    import { getContext } from "svelte";
+
+    const {confirmDelete} = getContext("deleteList");
 	export let tableData = [
 			{
 				id : "dolorem",
@@ -22,12 +25,8 @@
         "delete" : 1
     };
 
-    export let editData = {
-        id : null,
-        email : null,
-        name : null,
-        password : null
-    };
+    export let editData = null;
+    
 </script>
 
 {#if permissions.create}
@@ -58,15 +57,12 @@
                     {#if permissions.update}
                             <button class="btn btn-warning hover:btn-error" on:click={() => { 
                                 editForm.set(true)
-                                editData.id = row.id;
-                                editData.email = row.email;
-                                editData.name = row.name;
-                                editData.password = row.password;
+                                editData = row
                             } 
                         }>Edit</button>
                     {/if}
                     {#if permissions.delete}
-                            <button class="btn btn-primary hover:btn-error">Delete</button>
+                            <button class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}}>Delete</button>
                     {/if}
     
                         </td>

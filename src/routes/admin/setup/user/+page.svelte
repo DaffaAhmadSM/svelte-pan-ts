@@ -7,6 +7,7 @@
   import { editForm, openModal } from "$lib/stores/formModal";
   import {getCookie} from '$lib/helpers/getLocalCookies';
   import { getToastStore } from '@skeletonlabs/skeleton';
+	import { setContext } from 'svelte';
   export let data;
 
     $: tableData = data.list.data.data;
@@ -97,25 +98,6 @@
     }
   }
 
-  async function deleteList(id){
-    const del = await fetch(import.meta.env.VITE_API_URL + '/user/delete/' + id, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' +  getCookie('token')
-      },
-    })
-
-    const datajson = await del.json();
-    if(del.ok){
-      data.list.data = datajson.data;
-      toast('User deleted successfully', 'bg-green-500');
-    }
-    if (del.status === 404) {
-      toast(datajson.message, 'bg-red-500');
-    }
-  }
-
   async function edit(){
     const post = await fetch(import.meta.env.VITE_API_URL + '/user/update/' + editData.id, {
       method: 'POST',
@@ -141,6 +123,39 @@
       window.location.href = '/login';
     }
   }
+
+  function confirmDelete(id){
+    if(confirm('Are you sure you want to delete this user?')){
+      deleteList(id);
+    }
+  }
+  /**
+   * 
+   * @param {number} id
+   * @returns {Promise<void>}
+   */
+  async function deleteList(id){
+    const del = await fetch(import.meta.env.VITE_API_URL + '/user/delete/' + id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' +  getCookie('token')
+      },
+    })
+
+    const datajson = await del.json();
+
+    if(del.ok){
+      data.list.data = datajson.data;
+      toast('User deleted successfully', 'bg-green-500');
+    }
+
+    if(del.status !== 200){
+      toast(datajson.message, 'bg-red-500');
+    }
+  }
+
+  setContext('deleteList', {confirmDelete});
 
 </script>
 <div class="table-container">
