@@ -33,6 +33,7 @@
 
       toastStore.trigger(toastSetting);
     }
+    
 
     const {
     elements: {
@@ -155,6 +156,16 @@
     }
   }
 
+  function openPermisModal(){
+    /**
+         * @type {HTMLDialogElement}
+    */
+
+    // @ts-ignore
+    let permisEdit = document.getElementById('permis-edit');
+    permisEdit.showModal()
+  }
+
   setContext('crud', {confirmDelete});
 
 </script>
@@ -162,7 +173,21 @@
     <div class="flex w-full flex-col mb-6">
         <h1 class="text-5xl">User Setup</h1>
     </div>
-    <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}/>
+    <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}>
+      
+      <button slot="user-menu-edit" class="btn" on:click={openPermisModal}>Edit Permission</button>
+    </Table>
+
+    <dialog id="my_modal_2" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Hello!</h3>
+        <p class="py-4">Press ESC key or click outside to close</p>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
     <FormModal>
         
       <div
