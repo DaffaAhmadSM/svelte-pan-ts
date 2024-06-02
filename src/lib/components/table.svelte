@@ -2,7 +2,7 @@
 	import { openModal, editForm } from "$lib/stores/formModal";
     import { getContext } from "svelte";
 
-    const {confirmDelete} = getContext("deleteList");
+    const {confirmDelete} = getContext("crud");
 	export let tableData = [
 			{
 				id : "dolorem",
@@ -30,9 +30,11 @@
 </script>
 
 {#if permissions.create}
-    <div class="m-2 flex justify-end">
-        <button class="p-3 bg-info rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
-    </div>
+        <slot name="add">
+            <div class="m-2 flex justify-end">
+                <button class="p-3 bg-info rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
+            </div>
+        </slot>
 {/if}
 
 <div class="overflow-x-auto">
@@ -58,8 +60,9 @@
                             <button class="btn btn-warning hover:btn-error" on:click={() => { 
                                 editForm.set(true)
                                 editData = row
-                            } 
-                        }>Edit</button>
+                            }}
+                            >Edit</button>
+                            <slot name="user-menu-edit"></slot>
                     {/if}
                     {#if permissions.delete}
                             <button class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}}>Delete</button>

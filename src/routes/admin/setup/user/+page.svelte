@@ -98,7 +98,7 @@
     }
   }
 
-  async function edit(){
+  async function updateTable(){
     const post = await fetch(import.meta.env.VITE_API_URL + '/user/update/' + editData.id, {
       method: 'POST',
       headers: {
@@ -155,7 +155,7 @@
     }
   }
 
-  setContext('deleteList', {confirmDelete});
+  setContext('crud', {confirmDelete});
 
 </script>
 <div class="table-container">
@@ -311,7 +311,7 @@
               type="submit"
                 class="inline-flex h-8 items-center justify-center rounded-sm
                           bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-                on:click={edit}
+                on:click={updateTable}
               >
                 Save changes
               </button>
