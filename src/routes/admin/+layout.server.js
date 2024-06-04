@@ -1,15 +1,3 @@
-/**
- * @typedef Menu
- * @prop {Data[]} menu
- * 
- * @typedef Data
- * @prop {number} id
- * @prop {string} name
- * @prop {string} url
- * @prop {number} parent_id
- * @prop {Data[]?} children
- */
-
 import { redirect } from '@sveltejs/kit';
 
 export async function load ({ fetch, cookies }) {
@@ -21,7 +9,7 @@ export async function load ({ fetch, cookies }) {
       }
     });
     
-     /**@type {Menu} */
+     /**@type {import('$lib/types/menu.d.js').Menu} */
     let menu = null;
   
     if (response.ok) {
@@ -31,6 +19,6 @@ export async function load ({ fetch, cookies }) {
     }
 
     return {
-      menu: menu.menu 
+      menu: menu 
     }; 
 }

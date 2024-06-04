@@ -2,11 +2,13 @@
 	import Nested from './nested.svelte';
     import { navigating } from '$app/stores';
     import { initializeStores, Toast } from '@skeletonlabs/skeleton';
+    import { menuData } from '$lib/stores/menu';
     /**
      * @type {import('./$types').LayoutData} 
      * */
     export let data;
-    let menu = data.menu;
+    let menu = data.menu.menu;
+    menuData.set(data.menu);
     initializeStores();
 </script>
 <div class="flex flex-row">

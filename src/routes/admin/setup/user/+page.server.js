@@ -18,9 +18,17 @@ export  async function load({ fetch, cookies, url }) {
         }
     })
 
+    const currentUser = await fetch(import.meta.env.VITE_API_URL + '/user/current', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + cookies.get('token')
+        }
+    })
+
     if (permission.status !== 200) {
         throw redirect(301, '/admin')
     }
 
-    return { list: await list.json(), permissions: await permission.json() }
+    return { list: await list.json(), permissions: await permission.json(), user: await currentUser.json()}
 }

@@ -6,8 +6,10 @@
   import EditFormModal from '$lib/components/edit-form-modal.svelte';
   import { editForm, openModal } from "$lib/stores/formModal";
   import {getCookie} from '$lib/helpers/getLocalCookies';
-  import { getToastStore } from '@skeletonlabs/skeleton';
+  import { RecursiveTreeView, getToastStore } from '@skeletonlabs/skeleton';
 	import { setContext } from 'svelte';
+  import { get } from 'svelte/store';
+	import { menuData } from '$lib/stores/menu.js';
   export let data;
 
     $: tableData = data.list.data.data;
@@ -74,7 +76,7 @@
     password : null
   };
 
-  async function get(){
+  async function getTable(){
     const get = await fetch(import.meta.env.VITE_API_URL + '/user/create', {
       method: 'POST',
       headers: {
@@ -156,37 +158,63 @@
     }
   }
 
-  function openPermisModal(){
+  let listMenu;
+  let chekcmenu = ["1"];
+  async function openPermisModal(){
+    const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu/all/1', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookie('token')
+        }
+    })
+    /**
+     * @typedef {Object} Menu
+     * @prop {String} status
+     * @prop {String} message
+     * @prop {import('@skeletonlabs/skeleton').TreeViewNode[]} menu
+     * @prop {String[]} menuChecked
+     */
+
+    /**
+    * @type {Menu}
+    */
+    let response = await menu_list.json();
+    listMenu = response.menu;
+    chekcmenu = response.menuChecked;
+    console.log(Array.isArray(listMenu));
     /**
          * @type {HTMLDialogElement}
     */
-
     // @ts-ignore
     let permisEdit = document.getElementById('permis-edit');
-    permisEdit.showModal()
+     permisEdit.showModal()
   }
 
   setContext('crud', {confirmDelete});
-
 </script>
+
 <div class="table-container">
     <div class="flex w-full flex-col mb-6">
         <h1 class="text-5xl">User Setup</h1>
     </div>
     <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}>
-      
       <button slot="user-menu-edit" class="btn" on:click={openPermisModal}>Edit Permission</button>
     </Table>
 
-    <dialog id="my_modal_2" class="modal">
+    <dialog id="permis-edit" class="modal">
       <div class="modal-box">
-        <h3 class="font-bold text-lg">Hello!</h3>
-        <p class="py-4">Press ESC key or click outside to close</p>
+        <RecursiveTreeView
+        selection
+        multiple
+        relational
+        nodes={listMenu}
+        bind:checkedNodes={chekcmenu}
+            />
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
     </dialog>
+
+    
 
     <FormModal>
         
@@ -258,7 +286,7 @@
             type="submit"
               class="inline-flex h-8 items-center justify-center rounded-sm
                         bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-              on:click={get}
+              on:click={getTable}
             >
               Save changes
             </button>
