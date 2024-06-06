@@ -7,12 +7,11 @@
   import { editForm, openModal } from "$lib/stores/formModal";
   import {getCookie} from '$lib/helpers/getLocalCookies';
   import { RecursiveTreeView, getToastStore } from '@skeletonlabs/skeleton';
-	import { setContext } from 'svelte';
-  import { get } from 'svelte/store';
-	import { menuData } from '$lib/stores/menu.js';
+	import {setContext } from 'svelte';
   export let data;
 
-    $: tableData = data.list.data.data;
+    $:  menu = data.menu.menu;
+    $: tableData = data.list.data;
     let header = data.list.header;
     let permission = data.permissions.permission;
     const toastStore = getToastStore();
@@ -63,7 +62,7 @@
     open: editForm,
   });
 
-  const formData = {
+  let formData = {
     email: '',
     name: '',
     password: '',
@@ -75,6 +74,18 @@
     name : null,
     password : null
   };
+
+  async function fetchTable(){
+    const get = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' +  getCookie('token')
+      },
+    })
+    return await get.json();
+  }
+
 
   async function getTable(){
     const get = await fetch(import.meta.env.VITE_API_URL + '/user/create', {
@@ -88,8 +99,15 @@
 
     const datajson = await get.json();
     if(get.ok){
-      data.list.data = datajson.data;
+      let newtable = fetchTable();
+      data.list.data = (await newtable).data;
+      console.log(data.list.data);
       openModal.set(false);
+      formData = {
+        email: '',
+        name: '',
+        password: '',
+      };
     }
 
     if(get.status === 400){
@@ -160,14 +178,14 @@
 
   let listMenu;
   let chekcmenu = ["1"];
-  async function openPermisModal(){
-    const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu/all/1', {
+  async function openPermisModal(id){
+    const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu/all/' + id, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + getCookie('token')
         }
-    })
+    });
     /**
      * @typedef {Object} Menu
      * @prop {String} status
@@ -199,7 +217,7 @@
         <h1 class="text-5xl">User Setup</h1>
     </div>
     <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}>
-      <button slot="user-menu-edit" class="btn" on:click={openPermisModal}>Edit Permission</button>
+      <button slot="user-menu-edit" class="btn" on:click={()=> openPermisModal(row.id)} let:prop={row}>Edit Permission</button>
     </Table>
 
     <dialog id="permis-edit" class="modal">

@@ -1,20 +1,11 @@
 <script>
+	import { getCookie } from '$lib/helpers/getLocalCookies';
 	import { openModal, editForm } from "$lib/stores/formModal";
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
+    import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 
     const {confirmDelete} = getContext("crud");
-	export let tableData = [
-			{
-				id : "dolorem",
-				name : "ipsum",
-				email : "quia"
-			},
-			{
-				id : "amet",
-				name : "consectetur",
-				email : "adipisci"
-			}
-		];
+	export let tableData;
     export let header = [
         "name",
         "email"
@@ -25,7 +16,45 @@
         "delete" : 1
     };
 
+    
+
     export let editData = null;
+
+    let observer;
+    let loading = false;
+    
+    async function loadMore() {
+        try {
+        if(!tableData.next_page_url) return;
+		// @ts-ignore
+        loading = true
+		const loadMoreTableData = await fetch(tableData.next_page_url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookie('token')
+        }
+        });
+        const data = await loadMoreTableData.json();
+        tableData.data = [...tableData.data, ...data.data.data];
+        tableData.next_page_url = data.data.next_page_url;
+
+        loading = false
+        } catch (error) {
+            loading = false
+            console.log(error)
+        }
+        
+	}
+    
+	$: {
+        if (observer) {
+            infiniteScroll({
+                fetch: loadMore,
+                element: observer,
+            });
+        }
+    }
     
 </script>
 
@@ -48,31 +77,36 @@
             <tr/>
         </thead>
         <tbody>
-            {#each tableData as row}
-                <tr class="hover">
-                    {#each Object.entries(row) as [title, column]}
-                        {#if title !== "id"}
-                            <td>{column}</td>
+            {#each tableData.data as row, i}
+                    <tr class="hover">
+                        {#each Object.entries(row) as [title, column]}
+                            {#if title !== "id"}
+                                <td>{column}</td>
+                            {/if}
+                        {/each}
+                            <td>
+                        {#if permissions.update}
+                                <button class="btn btn-warning hover:btn-error" on:click={() => { 
+                                    editForm.set(true)
+                                    editData = row
+                                }}
+                                >Edit</button>
+                                <slot name="user-menu-edit" prop={row}></slot>
                         {/if}
-                    {/each}
-                        <td>
-                    {#if permissions.update}
-                            <button class="btn btn-warning hover:btn-error" on:click={() => { 
-                                editForm.set(true)
-                                editData = row
-                            }}
-                            >Edit</button>
-                            <slot name="user-menu-edit"></slot>
-                    {/if}
-                    {#if permissions.delete}
-                            <button class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}}>Delete</button>
-                    {/if}
-    
-                        </td>
-    
-                </tr>
+                        {#if permissions.delete}
+                                <button class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}}>Delete</button>
+                        {/if}
+        
+                            </td>
+        
+                    </tr>
             {/each}
         </tbody>
+        <div id="observer" class="h-3" bind:this={observer}></div>
+        
     </table>
+    {#if loading}
+        <div class="loading"></div>
+    {/if}
 </div>
 
