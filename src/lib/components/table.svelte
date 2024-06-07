@@ -3,8 +3,6 @@
 	import { openModal, editForm } from "$lib/stores/formModal";
     import { getContext, onMount } from "svelte";
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
-
-    const {confirmDelete} = getContext("crud");
 	export let tableData;
     export let header = [
         "name",
@@ -59,7 +57,7 @@
 </script>
 
 {#if permissions.create}
-        <slot name="add">
+        <slot name="add-row">
             <div class="m-2 flex justify-end">
                 <button class="p-3 bg-info rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
             </div>
@@ -94,7 +92,7 @@
                                 <slot name="user-menu-edit" prop={row}></slot>
                         {/if}
                         {#if permissions.delete}
-                                <button class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}}>Delete</button>
+                                <slot name="delete-row" prop={row}></slot>
                         {/if}
         
                             </td>

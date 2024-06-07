@@ -100,8 +100,8 @@
     const datajson = await get.json();
     if(get.ok){
       let newtable = fetchTable();
-      data.list.data = (await newtable).data;
-      console.log(data.list.data);
+      data.list = await newtable;
+      console.log(data.list);
       openModal.set(false);
       formData = {
         email: '',
@@ -218,6 +218,12 @@
     </div>
     <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}>
       <button slot="user-menu-edit" class="btn" on:click={()=> openPermisModal(row.id)} let:prop={row}>Edit Permission</button>
+
+      <button slot="delete-row" class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}} let:prop={row}>Delete</button>
+      <div slot="add-row" class="m-2 flex justify-end">
+        
+        <button class="p-3 bg-info rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
+      </div>
     </Table>
 
     <dialog id="permis-edit" class="modal">
