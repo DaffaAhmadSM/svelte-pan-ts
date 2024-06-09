@@ -47,64 +47,30 @@
     /**
      * @type {String[]} 
      */
-     let checkedNodes = ["2"];
+     export let checkedNodes = ["2"];
     /**
-     * @type {String[]} 
+     * @type {number[]} 
      */
-    let indeterminateNodes = ["1"];
-
-    $: {
-        console.log('Checked Nodes ' + checkedNodes);
-        console.log('Indeterminate Nodes ' + indeterminateNodes);
-    }
+    let createGroup = [];
     /**
-     * @type {String[]} 
+     * @type {number[]} 
      */
-    let medums = ['books', 'movies'];
-    let books = ['2']
-
-    $: {
-        console.log('Mediums ' + medums);
-        console.log('Books ' + books);
+    let updateGroup = [];
+    /**
+     * @type {number[]} 
+     */
+    let deleteGroup = [];
+     $: {
+        console.log("create: " + createGroup);
+        console.log("update: " + updateGroup);
+        console.log("delete: " + deleteGroup);
     }
+
 </script>
 
-<div class="modal-box" data-theme="garden">
-    <RecursiveTreeView selection 
-	multiple 
-	relational 
-	nodes={menu} 
-	bind:checkedNodes={checkedNodes}
-    bind:indeterminateNodes={indeterminateNodes}/>
+<div class="modal-box">
 
-    <!-- <TreeView selection multiple>
-        <TreeViewItem bind:group={checkedNodes} name="checkedNodes" value="1">
-            <svelte:fragment slot="lead">(icon)</svelte:fragment>
-            <p>Books</p>
-            <svelte:fragment slot="children">
-                <TreeViewItem bind:group={checkedNodes} name="checkedNodes" value="1">
-                    <p>Clean Code</p>
-                </TreeViewItem>
-                <TreeViewItem bind:group={checkedNodes} name="checkedNodes" value="2">
-                    <p>The Clean Coder</p>
-                </TreeViewItem>
-                <TreeViewItem bind:group={checkedNodes} name="checkedNodes" value="3">
-                    <p>The Art of Unix Programming</p>
-                </TreeViewItem>
-            </svelte:fragment>
-        </TreeViewItem>
-    </TreeView> -->
-
-    <!-- <TreeView selection multiple>
-        {#each menu as item}
-        <TreeViewItem bind:group={checkedNodes} name="checkedNodes" value="2">
-            <p>{item.content}</p>
-            <svelte:fragment slot="children">
-                {#if item.children}
-                        <TreeViewChildren bindGroup={checkedNodes} children={item.children}/>
-                {/if}
-            </svelte:fragment>
-        </TreeViewItem>
-        {/each}
-    </TreeView> -->
+    <TreeView selection multiple>
+        <TreeViewChildren bindGroup={checkedNodes} children={menu} bind:createGroup={createGroup} bind:updateGroup={updateGroup} bind:deleteGroup={deleteGroup} />
+    </TreeView>
 </div>

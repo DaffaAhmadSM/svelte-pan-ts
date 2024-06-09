@@ -1,3 +1,9 @@
+<svelte:head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/themes/light.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/components/drawer/drawer.js"></script>
+
+</svelte:head>
+
 <script>
   import { fade } from 'svelte/transition';
   import { createDialog, melt } from '@melt-ui/svelte';
@@ -6,34 +12,16 @@
   import EditFormModal from '$lib/components/edit-form-modal.svelte';
   import { editForm, openModal } from "$lib/stores/formModal";
   import {getCookie} from '$lib/helpers/getLocalCookies';
-  import { RecursiveTreeView, getToastStore } from '@skeletonlabs/skeleton';
-	import {setContext } from 'svelte';
+  import { RecursiveTreeView } from '@skeletonlabs/skeleton';
+  import { toastTrigger } from '$lib/helpers/toasterTrigger.js';
+	import { setContext } from 'svelte';
+  import CheckboxNested from '$lib/components/checkboxNested.svelte';
   export let data;
 
     $:  menu = data.menu.menu;
     $: tableData = data.list.data;
     let header = data.list.header;
     let permission = data.permissions.permission;
-    const toastStore = getToastStore();
-    /**
-     * 
-     * @param {string} message
-     * @param {string} color
-     */
-    function toast (message, color) {
-      /**
-       * @type {import('@skeletonlabs/skeleton').ToastSettings}
-       */
-      const toastSetting = {
-        message: message,
-        background: color,
-        hideDismiss: true,
-        timeout: 2000,
-        
-      };
-
-      toastStore.trigger(toastSetting);
-    }
     
 
     const {
@@ -76,7 +64,7 @@
   };
 
   async function fetchTable(){
-    const get = await fetch(import.meta.env.VITE_API_URL + '/user/list', {
+    const get = await fetch(import.meta.env.VITE_API_URL + '/user/list' + '?perpage=' + 50, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +99,7 @@
     }
 
     if(get.status === 400){
-      toast(datajson.message, 'bg-red-500');
+      toastTrigger(datajson.message, get.status);
     }
 
     if(get.status === 401){
@@ -132,12 +120,13 @@
       const datajson = await post.json();
     if(post.ok){
       editForm.set(false);
-      data.list.data = datajson.data;
-      toast('User updated successfully', 'bg-green-500');
+      let newtable = fetchTable();
+      data.list = await newtable;
+      toastTrigger('User updated successfully', 200);
     }
 
     if(post.status === 400){
-      toast(datajson.message, 'bg-red-500');
+      toastTrigger(datajson.message, post.status);
     }
 
     if(post.status === 401){
@@ -167,12 +156,13 @@
     const datajson = await del.json();
 
     if(del.ok){
-      data.list.data = datajson.data;
-      toast('User deleted successfully', 'bg-green-500');
+      let newtable = fetchTable();
+      data.list = await newtable;
+      toastTrigger('User deleted successfully', 200);
     }
 
     if(del.status !== 200){
-      toast(datajson.message, 'bg-red-500');
+      toastTrigger(datajson.message, del.status);
     }
   }
 
@@ -210,6 +200,7 @@
   }
 
   setContext('crud', {confirmDelete});
+
 </script>
 
 <div class="table-container">
@@ -227,7 +218,11 @@
     </Table>
 
     <dialog id="permis-edit" class="modal">
-      <div class="modal-box">
+      
+      <!-- <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
         <RecursiveTreeView
         selection
         multiple
@@ -235,7 +230,12 @@
         nodes={listMenu}
         bind:checkedNodes={chekcmenu}
             />
-      </div>
+      </div> -->
+
+      <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} />
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
     </dialog>
 
     

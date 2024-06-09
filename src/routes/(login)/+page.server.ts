@@ -21,8 +21,8 @@ export const actions = {
                 httpOnly: false,
             });
             throw redirect(301, '/admin');
-        } else {
-            return { error: 'Invalid credentials' };
         }
+
+        return { error: 'Invalid credentials' };
 	}
 }

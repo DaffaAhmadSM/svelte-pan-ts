@@ -1,7 +1,7 @@
 <script>
 	import Nested from './nested.svelte';
     import { navigating } from '$app/stores';
-    import { initializeStores, Toast } from '@skeletonlabs/skeleton';
+    import toast, {Toaster} from 'svelte-french-toast'
     import { menuData } from '$lib/stores/menu';
     /**
      * @type {import('./$types').LayoutData} 
@@ -9,7 +9,6 @@
     export let data;
     let menu = data.menu.menu;
     menuData.set(data.menu);
-    initializeStores();
 </script>
 <div class="flex flex-row">
     <aside class="min-w-60 max-w-60 h-screen overflow-scroll fixed">
@@ -30,5 +29,5 @@
     <slot/>
     {/if}
     </div>
-    <div data-theme="wintry"><Toast position='br'/></div>
+    <Toaster/>
 </div>
