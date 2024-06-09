@@ -18,7 +18,16 @@ export async function load ({ fetch, cookies }) {
       throw redirect(302, '/');
     }
 
+    const reqSetting = await fetch(import.meta.env.VITE_API_URL + '/app-setting/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + cookies.get('token')
+      }
+    });
+
     return {
-      menu: menu 
+      menu: menu,
+      setting: await reqSetting.json()
     }; 
 }

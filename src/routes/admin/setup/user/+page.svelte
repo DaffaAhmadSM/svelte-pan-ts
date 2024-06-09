@@ -18,7 +18,6 @@
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
   export let data;
 
-    $:  menu = data.menu.menu;
     $: tableData = data.list.data;
     let header = data.list.header;
     let permission = data.permissions.permission;
@@ -167,7 +166,7 @@
   }
 
   let listMenu;
-  let chekcmenu = ["1"];
+  let chekcmenu;
   async function openPermisModal(id){
     const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu/all/' + id, {
         method: 'GET',

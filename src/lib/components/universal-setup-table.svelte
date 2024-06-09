@@ -3,26 +3,38 @@
 	import { openModal, editForm } from "$lib/stores/formModal";
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger } from '$lib/helpers/toasterTrigger';
+    /**
+     * @type {String}
+     */
     export let fetchUrl;
+    /**
+     * @type {String}
+     */
     export let deleteUrl;
+    /**
+     * @type {String}
+     */
     export let updateUrl;
-    export let setting;
+    export let createUrl;
+    export let data;
     export let formData;
-    export let dataTab;
+    export let AddTableList;
 
+    let setting = data.setting
+    let tableData = data.list.data
+    let dataTab = data.list
+    let header = data.list.header
+    let permissions = data.permissions.permission
 
-    let tableData = dataTab.data
-    export let header = [
-        "name",
-        "email"
-    ];
-    export let permissions = {
-        "create" : 1,
-        "update" : 1,
-        "delete" : 1
-    };
+    let rowId;
 
-    
+    // $: {
+    //     console.log(dataTab)
+    //     console.log(header)
+    // }
+
+    let addModal;
+    let deleteModal;
 
 
     let observer;
@@ -71,13 +83,18 @@
   }
 
     async function createTable(){
-    const createData = await fetch(import.meta.env.VITE_API_URL + '/user/create', {
+
+    let data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+    const createData = await fetch(import.meta.env.VITE_API_URL + createUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'Authorization': 'Bearer ' +  getCookie('token')
       },
-      body: JSON.stringify(formData),
+      body: data,
     })
 
     const datajson = await createData.json();
@@ -120,17 +137,9 @@
         formData = null;
     }
 }
-    /**
-     * @type {HTMLDialogElement}
-    */
-    // @ts-ignore
-    let deleteModal = document.getElementById('confirm-delete');
-    async function confirmDelete(){
-        deleteModal.showModal();
-}
 
     async function deleteTable(){
-        const deleteData = await fetch(import.meta.env.VITE_API_URL + deleteUrl, {
+        const deleteData = await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' +rowId, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -155,7 +164,7 @@
 {#if permissions.create}
         <slot name="add-row">
             <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  openModal.set(true)}>Add</button>
+                <button class="p-3 bg-info rounded-lg" on:click={() =>  addModal.showModal()}>Add</button>
             </div>
         </slot>
 {/if}
@@ -180,15 +189,19 @@
                         {/each}
                             <td>
                         {#if permissions.update}
-                                <button class="btn btn-warning hover:btn-error" on:click={() => { 
-                                    editForm.set(true)
-                                    formData = row
-                                }}
-                                >Edit</button>
-                                <slot name="user-menu-edit" prop={row}></slot>
+                                
+                                <slot name="user-menu-edit" prop={row}>
+                                    <button class="btn btn-warning hover:btn-error" on:click={() => { 
+                                        editForm.set(true)
+                                        formData = row
+                                    }}
+                                    >Edit</button>
+                                </slot>
                         {/if}
                         {#if permissions.delete}
-                                <slot name="delete-row" prop={row}></slot>
+                                <slot name="delete-row" prop={row}>
+                                    <button class="btn btn-primary hover:btn-error" on:click={()=> {rowId=row.id; deleteModal.showModal();}}>Delete</button>
+                                </slot>
                         {/if}
         
                             </td>
@@ -204,11 +217,104 @@
     {/if}
 </div>
 
-<dialog id="confirm-delete" class="modal">
-    <div class="modal-content">
+<dialog id="confirm-delete" class="modal" bind:this={deleteModal}>
+    <div class="modal-box">
         <h1>Are you sure you want to delete this?</h1>
-        <button class="btn btn-error" on:click={confirmDelete}>Yes</button>
-        <button class="btn btn-success" on:click={() => {}}>No</button>
+        <div class="flex justify-end items-end gap-3">
+            <button class="btn btn-error" on:click={deleteTable}>Yes</button>
+            <button class="btn btn-base-200" on:click={() => {deleteModal.close(); rowId=null}}>No</button>
+        </div>
     </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
 </dialog>
+
+<dialog id="add-modal" class="modal" bind:this={addModal}>
+    <div
+        class="overflow-scroll modal-box"
+      >
+        <h2 class="m-0 text-lg font-medium text-primary-400">
+          Add Company
+        </h2>
+        <p class="mb-6 text-sm text-black">
+            Fill in the form below to add a new Company setup.
+        </p>
+        {#each AddTableList as list}
+              {#if list.type === "file" && list.id === "img"}
+                <fieldset class="mb-4 flex items-center gap-5">
+                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                  <input
+                  type="file"
+                  class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered"
+                  id={list.id}
+                  required
+                  on:change={(e) => {
+                    formData[list.id] = e.target.files[0];
+                    console.log(formData[list.id]);
+                  }}
+                  />
+                </fieldset>
+              {/if}
+              {#if list.type === "text"}
+                <fieldset class="mb-4 flex items-center gap-5">
+                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                  <input
+                  class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered"
+                  id={list.id}
+                  required
+                  bind:value={formData[list.id]}
+                  />
+                </fieldset>
+              {/if}
+            {/each}
+
+            <div class="mt-6 flex justify-end gap-4">
+                <button
+                  class="inline-flex h-8 items-center justify-center rounded-sm
+                            bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                    on:click={() => {
+                        addModal.close();
+                    }}
+                >
+                  Cancel
+                  
+                </button>
+                <button
+                type="submit"
+                  class="inline-flex h-8 items-center justify-center rounded-sm
+                            bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
+                  on:click={() => {
+                    createTable();
+                  }}
+                >
+                  Save changes
+                </button>
+              </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+</dialog>
+
+
+<style>
+    /* make transtition for dialog */
+
+    dialog[open] {
+        animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes zoom {
+		from {
+			transform: scale(0.95);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
+
+</style>
 
