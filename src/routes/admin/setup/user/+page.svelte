@@ -1,8 +1,4 @@
-<svelte:head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/themes/light.css" />
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/components/drawer/drawer.js"></script>
 
-</svelte:head>
 
 <script>
   import { fade } from 'svelte/transition';
@@ -12,7 +8,6 @@
   import EditFormModal from '$lib/components/edit-form-modal.svelte';
   import { editForm, openModal } from "$lib/stores/formModal";
   import {getCookie} from '$lib/helpers/getLocalCookies';
-  import { RecursiveTreeView } from '@skeletonlabs/skeleton';
   import { toastTrigger } from '$lib/helpers/toasterTrigger.js';
 	import { setContext } from 'svelte';
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
@@ -88,7 +83,6 @@
     if(get.ok){
       let newtable = fetchTable();
       data.list = await newtable;
-      console.log(data.list);
       openModal.set(false);
       formData = {
         email: '',
@@ -189,7 +183,6 @@
     let response = await menu_list.json();
     listMenu = response.menu;
     chekcmenu = response.menuChecked;
-    console.log(Array.isArray(listMenu));
     /**
          * @type {HTMLDialogElement}
     */

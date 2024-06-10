@@ -60,11 +60,6 @@
      * @type {number[]} 
      */
     let deleteGroup = [];
-     $: {
-        console.log("create: " + createGroup);
-        console.log("update: " + updateGroup);
-        console.log("delete: " + deleteGroup);
-    }
 
 </script>
 

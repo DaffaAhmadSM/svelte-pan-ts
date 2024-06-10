@@ -1,6 +1,6 @@
 <script>
 	import { getCookie } from '$lib/helpers/getLocalCookies';
-	import { openModal, editForm } from "$lib/stores/formModal";
+	import { editForm } from "$lib/stores/formModal";
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger } from '$lib/helpers/toasterTrigger';
     /**
@@ -16,24 +16,21 @@
      */
     export let updateUrl;
     export let createUrl;
+    export let detailUrl = null;
     export let data;
     export let formData;
-    export let AddTableList;
+    export let tableList;
 
     let setting = data.setting
-    let tableData = data.list.data
-    let dataTab = data.list
+    $: dataTab = data.list
+    $: tableData = dataTab.data
     let header = data.list.header
     let permissions = data.permissions.permission
 
     let rowId;
 
-    // $: {
-    //     console.log(dataTab)
-    //     console.log(header)
-    // }
-
     let addModal;
+    let updateModal;
     let deleteModal;
 
 
@@ -99,15 +96,10 @@
 
     const datajson = await createData.json();
     if(createData.ok){
+      formData = null;
       let newtable = fetchTable();
       dataTab = await newtable;
-      console.log(dataTab);
-      openModal.set(false);
-      formData = {
-        email: '',
-        name: '',
-        password: '',
-      };
+      addModal.close();
     }
 
     if(createData.status === 400){
@@ -120,21 +112,25 @@
   }
 
     async function updateTable(){
-        const updateData = await fetch(import.meta.env.VITE_API_URL + updateUrl, {
-        method: 'PUT',
+
+        
+
+        let data = new FormData();
+        for (const key in formData) {
+          data.append(key, formData[key]);
+        }
+        const updateData = await fetch(import.meta.env.VITE_API_URL + updateUrl + '/' + rowId, {
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
             'authorization': 'Bearer ' + getCookie('token')
         },
-        body: JSON.stringify(formData),
+        body: data,
         })
-        const datajson = await updateData.json();
         if(updateData.ok){
-        let newtable = fetchTable();
-        dataTab = await newtable;
-        console.log(dataTab);
-        editForm.set(false);
-        formData = null;
+          let newtable = fetchTable();
+          dataTab = await newtable;
+          updateModal.close();
+          formData = null;
     }
 }
 
@@ -150,7 +146,6 @@
         if(deleteData.ok){
         let newtable = fetchTable();
         dataTab = await newtable;
-        console.log(dataTab);
         deleteModal.close();
 
         if (datajson.status !== 200) {
@@ -158,6 +153,20 @@
         }
     }
 }
+
+    async function detailTable(){
+      const detailData = await fetch(import.meta.env.VITE_API_URL + detailUrl + '/' + rowId, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + getCookie('token')
+          },
+          })
+          updateModal.showModal();
+        let data = await detailData.json();
+        formData = null;
+        formData = data.data;
+    }
     
 </script>
 
@@ -191,9 +200,9 @@
                         {#if permissions.update}
                                 
                                 <slot name="user-menu-edit" prop={row}>
-                                    <button class="btn btn-warning hover:btn-error" on:click={() => { 
-                                        editForm.set(true)
-                                        formData = row
+                                    <button class="btn btn-warning hover:btn-error" on:click={() => {
+                                     rowId = row.id
+                                      detailTable()
                                     }}
                                     >Edit</button>
                                 </slot>
@@ -240,7 +249,7 @@
         <p class="mb-6 text-sm text-black">
             Fill in the form below to add a new Company setup.
         </p>
-        {#each AddTableList as list}
+        {#each tableList as list}
               {#if list.type === "file" && list.id === "img"}
                 <fieldset class="mb-4 flex items-center gap-5">
                   <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
@@ -251,8 +260,8 @@
                   id={list.id}
                   required
                   on:change={(e) => {
+                    // @ts-ignore
                     formData[list.id] = e.target.files[0];
-                    console.log(formData[list.id]);
                   }}
                   />
                 </fieldset>
@@ -300,21 +309,72 @@
 </dialog>
 
 
-<style>
-    /* make transtition for dialog */
+<dialog id="update-modal" class="modal" bind:this={updateModal}>
+  <div
+      class="overflow-scroll modal-box"
+    >
+      <h2 class="m-0 text-lg font-medium text-primary-400">
+        Add Company
+      </h2>
+      <p class="mb-6 text-sm text-black">
+          Fill in the form below to add a new Company setup.
+      </p>
+      {#each tableList as list}
+            {#if list.type === "file" && list.id === "img"}
+              <fieldset class="mb-4 flex items-center gap-5">
+                <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                <input
+                type="file"
+                class="inline-flex h-8 w-full flex-1
+                            rounded-sm px-3 leading-none text-black input input-bordered"
+                id={list.id}
+                required
+                on:change={(e) => {
+                  // @ts-ignore
+                  formData[list.id] = e.target.files[0];
+                }}
+                />
+              </fieldset>
+            {/if}
+            {#if list.type === "text"}
+              <fieldset class="mb-4 flex items-center gap-5">
+                <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                <input
+                class="inline-flex h-8 w-full flex-1
+                            rounded-sm px-3 leading-none text-black input input-bordered"
+                id={list.id}
+                required
+                bind:value={formData[list.id]}
+                />
+              </fieldset>
+            {/if}
+          {/each}
 
-    dialog[open] {
-        animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes zoom {
-		from {
-			transform: scale(0.95);
-		}
-		to {
-			transform: scale(1);
-		}
-	}
-
-</style>
+          <div class="mt-6 flex justify-end gap-4">
+              <button
+                class="inline-flex h-8 items-center justify-center rounded-sm
+                          bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                  on:click={() => {
+                      updateModal.close();
+                  }}
+              >
+                Cancel
+                
+              </button>
+              <button
+              type="submit"
+                class="inline-flex h-8 items-center justify-center rounded-sm
+                          bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
+                on:click={() => {
+                  updateTable();
+                }}
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+          <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+          </form>
+</dialog>
 
