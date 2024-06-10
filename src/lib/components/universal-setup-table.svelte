@@ -1,6 +1,5 @@
 <script>
 	import { getCookie } from '$lib/helpers/getLocalCookies';
-	import { editForm } from "$lib/stores/formModal";
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger } from '$lib/helpers/toasterTrigger';
     /**
@@ -96,7 +95,6 @@
 
     const datajson = await createData.json();
     if(createData.ok){
-      formData = null;
       let newtable = fetchTable();
       dataTab = await newtable;
       addModal.close();
@@ -130,7 +128,6 @@
           let newtable = fetchTable();
           dataTab = await newtable;
           updateModal.close();
-          formData = null;
     }
 }
 
@@ -164,8 +161,15 @@
           })
           updateModal.showModal();
         let data = await detailData.json();
-        formData = null;
-        formData = data.data;
+        if(detailData.ok){
+          formData = data.data;
+        }
+    }
+
+    function nullForm(){
+        for (const key in formData) {
+            formData[key] = '';
+        }
     }
     
 </script>
@@ -173,7 +177,7 @@
 {#if permissions.create}
         <slot name="add-row">
             <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  addModal.showModal()}>Add</button>
+                <button class="p-3 bg-info rounded-lg" on:click={() =>  {addModal.showModal(); nullForm();}}>Add</button>
             </div>
         </slot>
 {/if}
@@ -249,8 +253,9 @@
         <p class="mb-6 text-sm text-black">
             Fill in the form below to add a new Company setup.
         </p>
+        <slot name="aditional-form-create"></slot>
         {#each tableList as list}
-              {#if list.type === "file" && list.id === "img"}
+            {#if list.type === "file" && list.id === "img"}
                 <fieldset class="mb-4 flex items-center gap-5">
                   <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
                   <input
@@ -258,7 +263,6 @@
                   class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered"
                   id={list.id}
-                  required
                   on:change={(e) => {
                     // @ts-ignore
                     formData[list.id] = e.target.files[0];
@@ -273,7 +277,6 @@
                   class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered"
                   id={list.id}
-                  required
                   bind:value={formData[list.id]}
                   />
                 </fieldset>
@@ -319,6 +322,7 @@
       <p class="mb-6 text-sm text-black">
           Fill in the form below to add a new Company setup.
       </p>
+      <slot name="aditional-form-update"></slot>
       {#each tableList as list}
             {#if list.type === "file" && list.id === "img"}
               <fieldset class="mb-4 flex items-center gap-5">
@@ -328,7 +332,6 @@
                 class="inline-flex h-8 w-full flex-1
                             rounded-sm px-3 leading-none text-black input input-bordered"
                 id={list.id}
-                required
                 on:change={(e) => {
                   // @ts-ignore
                   formData[list.id] = e.target.files[0];
@@ -343,7 +346,6 @@
                 class="inline-flex h-8 w-full flex-1
                             rounded-sm px-3 leading-none text-black input input-bordered"
                 id={list.id}
-                required
                 bind:value={formData[list.id]}
                 />
               </fieldset>

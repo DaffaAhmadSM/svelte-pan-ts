@@ -26,8 +26,13 @@ export async function load ({ fetch, cookies }) {
       }
     });
 
+    let setting = await reqSetting.json();
+    if (reqSetting.ok) {
+      cookies.set('setting', setting, { path: '/' , httpOnly: false });
+    }
+
     return {
       menu: menu,
-      setting: await reqSetting.json()
+      setting: setting
     }; 
 }
