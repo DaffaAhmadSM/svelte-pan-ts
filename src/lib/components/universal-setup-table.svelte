@@ -168,7 +168,7 @@
 
     function nullForm(){
         for (const key in formData) {
-            formData[key] = '';
+            formData[key] = null;
         }
     }
     
