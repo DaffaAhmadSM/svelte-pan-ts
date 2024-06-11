@@ -296,6 +296,18 @@
                   />
                 </fieldset>
               {/if}
+              {#if list.type === "date"}
+                <fieldset class="mb-4 flex items-center gap-5">
+                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                  <input
+                  type="date"
+                  class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered"
+                  id={list.id}
+                  bind:value={formData[list.id]}
+                  />
+                </fieldset>
+              {/if}
             {/each}
 
             <div class="mt-6 flex justify-end gap-4">
@@ -376,6 +388,18 @@
                   placeholder="1.00"
                   step="0.01"
                   min="1.00"
+                  bind:value={formData[list.id]}
+                  />
+                </fieldset>
+              {/if}
+              {#if list.type === "date"}
+                <fieldset class="mb-4 flex items-center gap-5">
+                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
+                  <input
+                  type="date"
+                  class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered"
+                  id={list.id}
                   bind:value={formData[list.id]}
                   />
                 </fieldset>
