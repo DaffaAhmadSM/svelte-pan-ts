@@ -1,4 +1,5 @@
 <script>
+	import { sequence } from '@melt-ui/pp';
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
     export let data;
 
@@ -30,7 +31,7 @@
 
 <div class="table-container">
     <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Company Setup</h1>
+        <h1 class="text-5xl">Number sequence Setup</h1>
     </div>
     <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}></UniversalSetupTable>
 </div>
