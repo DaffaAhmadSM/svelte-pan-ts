@@ -21,16 +21,16 @@
     ]
 
 
-  const fetchUrl = '/working-hour/all';
-  const updateUrl = '/working-hour/update';
-  const deleteUrl = '/working-hour/delete';
-  const createUrl = '/working-hour/create';
-  const detailUrl = '/working-hour/detail';
+  const fetchUrl = '/classification-of-tax-payer/list';
+  const updateUrl = '/classification-of-tax-payer/update';
+  const deleteUrl = '/classification-of-tax-payer/delete';
+  const createUrl = '/classification-of-tax-payer/create';
+  const detailUrl = '/classification-of-tax-payer/detail';
 </script>
 
 <div class="table-container">
     <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Working Hour Setup</h1>
+        <h1 class="text-5xl">Classification of Tax Payer Setup</h1>
     </div>
     <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}></UniversalSetupTable>
 </div>
