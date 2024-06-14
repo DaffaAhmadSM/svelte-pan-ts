@@ -180,11 +180,13 @@
     let search;
     let timer;
     async function searchTable(){
-        clearTimeout(timer);
-        timer = setTimeout(async() => {
+      clearTimeout(timer);
+      timer = setTimeout(async() => {
+        loading = true;
           if(search == ''){
             let newtable = await fetchTable();
             dataTab = newtable;
+            loading = false;
             return;
         }
         const searchTable = fetch(import.meta.env.VITE_API_URL + searchUrl, {
@@ -198,10 +200,12 @@
             searchTable.then(res => res.json())
             .then(data => {
                 dataTab = data;
+                loading = false;
             })
         }, 750);
+
     }
-    
+    $: console.log(loading)
 </script>
 <div class='max-w-md mx-auto'>
   <div class="relative flex items-center w-full h-12 rounded-lg">
@@ -228,8 +232,10 @@
             </div>
         </slot>
 {/if}
-
-<div class="table-container">
+{#if loading}
+  <div class="loading"></div>
+  {:else}
+  <div class="table-container">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -275,6 +281,8 @@
         <div class="loading"></div>
     {/if}
 </div>
+{/if}
+
 
 <dialog id="confirm-delete" class="modal" bind:this={deleteModal}>
     <div class="modal-box">
