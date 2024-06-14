@@ -118,10 +118,9 @@
         <h1 class="text-5xl">General Setup</h1>
     </div>
     <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        {@debug numberSequenceAll}
         <svelte:fragment slot="aditional-form-create">
             <fieldset class="mb-4 flex items-center gap-5">
-                <label class="w-[90px] text-right text-black">Number Sequence</label>
+                <div class="w-[90px] text-right text-black">Number Sequence</div>
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
                     {#if numberSequenceAll}
@@ -134,7 +133,7 @@
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-update">
             <fieldset class="mb-4 flex items-center gap-5">
-                <label class="w-[90px] text-right text-black">Number Sequence</label>
+                <div class="w-[90px] text-right text-black">Number Sequence</div>
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
                     {#if numberSequenceAll}

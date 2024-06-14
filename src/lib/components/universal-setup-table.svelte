@@ -16,6 +16,7 @@
     export let updateUrl;
     export let createUrl;
     export let detailUrl = null;
+    export let searchUrl = null;
     export let data;
     export let formData;
     export let tableList;
@@ -165,8 +166,8 @@
           updateModal.showModal();
         let data = await detailData.json();
         if(detailData.ok){
-          formData = data.data;
           rowId = row;
+          formData = data.data;
         }
     }
 
@@ -175,9 +176,51 @@
             formData[key] = null;
         }
     }
+
+    let search;
+    let timer;
+    async function searchTable(){
+        clearTimeout(timer);
+        timer = setTimeout(async() => {
+          if(search == ''){
+            let newtable = await fetchTable();
+            dataTab = newtable;
+            return;
+        }
+        const searchTable = fetch(import.meta.env.VITE_API_URL + searchUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getCookie('token')
+            },
+            body: JSON.stringify({search: search})
+            })
+            searchTable.then(res => res.json())
+            .then(data => {
+                dataTab = data;
+            })
+        }, 750);
+    }
     
 </script>
+<div class='max-w-md mx-auto'>
+  <div class="relative flex items-center w-full h-12 rounded-lg">
+      
 
+      <input
+      class="input input-bordered w-full max-w-xs bg-white"
+      type="text"
+      id="search"
+      bind:value={search}
+      on:input={searchTable}
+      placeholder="Search something.." /> 
+      <button class="grid place-items-center h-full w-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+  </div>
+</div>
 {#if permissions.create}
         <slot name="add-row" prop={addModal} nullform={nullForm}>
             <div class="m-2 flex justify-end">
@@ -186,8 +229,8 @@
         </slot>
 {/if}
 
-<div class="overflow-x-auto">
-    <table class="table">
+<div class="table-container">
+    <table class="table table-hover">
         <thead>
             <tr>
                 {#each Object.values(header) as columnHeading}

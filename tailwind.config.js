@@ -32,7 +32,7 @@ export default {
 		daisyui
 	],
 	daisyui: {
-		themes: ["light", "dark", "garden"],
+		themes: ["light", "dark", "garden", "dim"],
 	},
 }
 						
