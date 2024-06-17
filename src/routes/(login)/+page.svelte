@@ -29,6 +29,7 @@
     <div class="h-screen w-screen flex items-center justify-center">
         <div class="w-screen">
             <form class="max-w-sm mx-auto" method="POST">
+                <div class="relative -mb-px h-px w-full bg-gradient-to-r from-transparent via-sky-300 to-transparent"></div>
                 <div class="mb-5">
                 <h1 class="text-4xl">Login</h1>
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>

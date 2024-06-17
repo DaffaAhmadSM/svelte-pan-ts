@@ -23,6 +23,10 @@ export const actions = {
             throw redirect(301, '/admin');
         }
 
+        if (response.status !== 200) {
+            return { error: 'Invalid credentials' };
+        }
+
         return { error: 'Invalid credentials' };
 	}
 }

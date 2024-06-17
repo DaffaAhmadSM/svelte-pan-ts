@@ -2,6 +2,7 @@
 	import { getCookie } from '$lib/helpers/getLocalCookies';
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger } from '$lib/helpers/toasterTrigger';
+	import { Toaster } from 'svelte-french-toast';
     /**
      * @type {String}
      */
@@ -179,14 +180,15 @@
 
     let search;
     let timer;
+    let tableLoading = false;
     async function searchTable(){
       clearTimeout(timer);
       timer = setTimeout(async() => {
-        loading = true;
+        tableLoading = true;
           if(search == ''){
             let newtable = await fetchTable();
             dataTab = newtable;
-            loading = false;
+            tableLoading = false;
             return;
         }
         const searchTable = fetch(import.meta.env.VITE_API_URL + searchUrl, {
@@ -200,12 +202,11 @@
             searchTable.then(res => res.json())
             .then(data => {
                 dataTab = data;
-                loading = false;
-            })
+                tableLoading = false;
+              })
         }, 750);
 
     }
-    $: console.log(loading)
 </script>
 <div class='max-w-md mx-auto'>
   <div class="relative flex items-center w-full h-12 rounded-lg">
@@ -232,8 +233,10 @@
             </div>
         </slot>
 {/if}
-{#if loading}
-  <div class="loading"></div>
+{#if tableLoading}
+<div class="flex items-center justify-center">
+  <div class="loading" />
+</div>
   {:else}
   <div class="table-container">
     <table class="table table-hover">
@@ -278,7 +281,7 @@
         
     </table>
     {#if loading}
-        <div class="loading"></div>
+    <div class="loading" />
     {/if}
 </div>
 {/if}
@@ -297,7 +300,8 @@
     </form>
 </dialog>
 
-<dialog id="add-modal" class="modal" bind:this={addModal}>
+<dialog id="add-modal" class="modal" bind:this={addModal} popover="manual">
+  <Toaster />
     <div
         class="overflow-scroll modal-box"
       >

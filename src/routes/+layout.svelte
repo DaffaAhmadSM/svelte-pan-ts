@@ -1,6 +1,9 @@
 <script>
 	import '../app.css';
-	import { LightSwitch } from '@skeletonlabs/skeleton';
+import { ModeWatcher, toggleMode } from "mode-watcher";
+
 </script>
-<LightSwitch />
+<ModeWatcher />
+
+<button on:click={toggleMode}>Toggle</button>
 <slot/>

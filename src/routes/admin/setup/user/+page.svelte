@@ -11,11 +11,14 @@
   import { toastTrigger } from '$lib/helpers/toasterTrigger.js';
 	import { setContext } from 'svelte';
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Root } from 'postcss';
   export let data;
 
     $: tableData = data.list.data;
     let header = data.list.header;
     let permission = data.permissions.permission;
+    let dialogPermis = false;
     
 
     const {
@@ -183,24 +186,25 @@
     let response = await menu_list.json();
     listMenu = response.menu;
     chekcmenu = response.menuChecked;
-    /**
-         * @type {HTMLDialogElement}
-    */
-    // @ts-ignore
-    let permisEdit = document.getElementById('permis-edit');
-     permisEdit.showModal()
+    dialogPermis=true
   }
 
   setContext('crud', {confirmDelete});
-
 </script>
+<Dialog.Root bind:open={dialogPermis} preventScroll={false}>
+  <Dialog.Portal>
+    <Dialog.Content class="overflow-scroll max-h-96">
+      <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} />
+    </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>
 
-<div class="table-container">
+<div class="table-container" data-theme="wintry">
     <div class="flex w-full flex-col mb-6">
         <h1 class="text-5xl">User Setup</h1>
     </div>
     <Table bind:tableData={tableData} header={header} permissions={permission} bind:editData={editData}>
-      <button slot="user-menu-edit" class="btn" on:click={()=> openPermisModal(row.id)} let:prop={row}>Edit Permission</button>
+      <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(row.id); }} let:prop={row}>Edit Permission</button>
 
       <button slot="delete-row" class="btn btn-primary hover:btn-error" on:click={()=>{confirmDelete(row.id)}} let:prop={row}>Delete</button>
       <div slot="add-row" class="m-2 flex justify-end">
@@ -209,26 +213,7 @@
       </div>
     </Table>
 
-    <dialog id="permis-edit" class="modal">
-      
-      <!-- <div class="modal-box">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <RecursiveTreeView
-        selection
-        multiple
-        relational
-        nodes={listMenu}
-        bind:checkedNodes={chekcmenu}
-            />
-      </div> -->
 
-      <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} />
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
 
     
 

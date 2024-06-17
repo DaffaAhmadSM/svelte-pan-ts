@@ -31,7 +31,7 @@
                 <label><input type="checkbox" value={child.id} bind:group={deleteGroup}>delete</label>
             </div>
         {#if child.children}
-            <svelte:self children={child.children} bindGroup={bindGroup} bind:createGroup={createGroup} bind:updateGroup={updateGroup} bind:deleteGroup={deleteGroup} />
+            <svelte:self children={child.children} bind:bindGroup={bindGroup} bind:createGroup={createGroup} bind:updateGroup={updateGroup} bind:deleteGroup={deleteGroup} />
         {/if}
         </svelte:fragment>
     </TreeViewItem>
