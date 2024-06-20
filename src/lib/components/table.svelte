@@ -40,7 +40,6 @@
         loading = false
         } catch (error) {
             loading = false
-            console.log(error)
         }
         
 	}

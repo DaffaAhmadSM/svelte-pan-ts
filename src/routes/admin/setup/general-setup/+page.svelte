@@ -91,7 +91,6 @@
     }
 
     async function numberSequenceChange(e){
-        console.log(e.target.value);
         const res = await fetch(import.meta.env.VITE_API_URL + '/number-sequence/detail/' + e.target.value, {
             method: 'GET',
             headers: {
@@ -101,7 +100,7 @@
         });
 
         const data = await res.json();
-        formData.customer = data.data.code + data.data.current_number;
+        formData.customer = data.data.code;
     }
 
     
@@ -144,9 +143,9 @@
                 </select>
             </fieldset>
         </svelte:fragment>
-        <svelte:fragment slot="add-row" let:prop={modal} let:nullform={nullform}>
+        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
             <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  {modal.showModal(); nullform(); getNumberSequenceAll();}}>Add</button>
+                <button class="p-3 bg-info rounded-lg" on:click={() =>  {openAddRow(); nullform(); getNumberSequenceAll();}}>Add</button>
             </div>
         </svelte:fragment>
         <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>

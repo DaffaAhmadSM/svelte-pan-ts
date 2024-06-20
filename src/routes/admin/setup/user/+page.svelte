@@ -2,6 +2,7 @@
 
 <script>
   import { fade } from 'svelte/transition';
+  import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
   import { createDialog, melt } from '@melt-ui/svelte';
   import Table from '$lib/components/table.svelte';
   import FormModal from '$lib/components/form-modal.svelte';
@@ -11,8 +12,7 @@
   import { toastTrigger } from '$lib/helpers/toasterTrigger.js';
 	import { setContext } from 'svelte';
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
-	import * as Dialog from '$lib/components/ui/dialog';
-	import { Root } from 'postcss';
+	import {Dialog} from 'bits-ui';
   export let data;
 
     $: tableData = data.list.data;
@@ -47,11 +47,6 @@
     open: editForm,
   });
 
-  let formData = {
-    email: '',
-    name: '',
-    password: '',
-  };
 
   let editData = {
     id : null,
@@ -190,16 +185,62 @@
   }
 
   setContext('crud', {confirmDelete});
+
+  let formData = {
+        name: null,
+        email: null,
+        password: null,
+    }
+
+    let tableList = [
+      {
+        name: "name",
+        id: "name",
+      
+        type: "text"
+      },
+      {
+        name: "email",
+        id: "email",
+        type: "text"
+      },
+      {
+        name: "password",
+        id: "password",
+        type: "text"
+      },
+    ]
+
+  const fetchUrl = '/user/list';
+  const updateUrl = '/user/update';
+  const deleteUrl = '/user/delete';
+  const createUrl = '/user/create';
+  const detailUrl = '/user/detail';
+  const searchUrl = '/user/search';
 </script>
-<Dialog.Root bind:open={dialogPermis} preventScroll={false}>
+<Dialog.Root bind:open={dialogPermis}>
   <Dialog.Portal>
-    <Dialog.Content class="overflow-scroll max-h-96">
+    <Dialog.Overlay
+        transitionConfig={{ duration: 150 }}
+        class="fixed inset-0 z-50 bg-black/50"
+      />
+      <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
       <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} />
     </Dialog.Content>
   </Dialog.Portal>
 </Dialog.Root>
 
-<div class="table-container" data-theme="wintry">
+<div class="table-container">
+  <div class="flex w-full flex-col mb-6">
+      <h1 class="text-5xl">User Setup</h1>
+  </div>
+  <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList}>
+    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); }} let:id={id}>Edit Permission</button>
+
+  </UniversalSetupTable>
+</div>
+
+<!-- <div class="table-container">
     <div class="flex w-full flex-col mb-6">
         <h1 class="text-5xl">User Setup</h1>
     </div>
@@ -381,5 +422,5 @@
       </div>
     </EditFormModal>
 
-</div>
+</div> -->
 

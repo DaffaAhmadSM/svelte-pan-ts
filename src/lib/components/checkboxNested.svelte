@@ -70,11 +70,7 @@
         if (item.children) {
         item.children.forEach(child => toggleItem(child, isChecked));
         }
-    console.log(checkedNodes);
     
-  }
-  function isChecked(item) {
-    return checkedNodes.includes(item);
   }
 </script>
 

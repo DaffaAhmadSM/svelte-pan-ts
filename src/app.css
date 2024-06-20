@@ -76,7 +76,7 @@
     @apply bg-background text-foreground;
   }
   .loading {
-    @apply rounded-full h-10 w-10 dark:bg-white bg-gray-600 animate-ping;
+    @apply w-12 h-12 rounded-full animate-spin border-4 border-solid dark:border-white border-gray-600 border-t-transparent dark:border-t-gray-800;
   }
   
 }
