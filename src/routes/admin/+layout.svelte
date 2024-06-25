@@ -1,7 +1,7 @@
 <script>
 	import Nested from './nested.svelte';
     import { navigating } from '$app/stores';
-    import toast, {Toaster} from 'svelte-french-toast'
+    import {Toaster} from 'svelte-sonner'
     import { initializeStores, Modal } from '@skeletonlabs/skeleton';
 
     initializeStores();
@@ -34,5 +34,5 @@
     {/if}
     </div>
     <Modal />
-    <Toaster/>
+    <Toaster expand={true} position="top-center" richColors/>
 </div>

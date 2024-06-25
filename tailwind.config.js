@@ -13,7 +13,7 @@ const config = {
 			'../**/*.{html,js,svelte,ts}'
 		)
 	],
-	safelist: ["dark"],
+	safelist: ["dark",],
 	theme: {
 		container: {
 			center: true,

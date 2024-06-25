@@ -1,47 +1,50 @@
-import toast from 'svelte-french-toast'
+import {toast} from 'svelte-sonner'
 /**
  * 
  * @param {String} message 
- * @param {String} color
+ * @param {any} toastId
  * @param {number} status
  */
-export function toastTrigger (message, status = 200, color = 'green') {
+export function toastTrigger (message, toastId = null, status = 200) {
+    if (toastId !== null) {
+        switch (status) {
+            case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
+                toast.success(message, {id: toastId})
+                break;
+            case 400 || 401 || 404 || 500 || 503 || 504:
+                toast.error(message, {id: toastId})
+                break;
+            default:
+                toast(message, {id: toastId})
+                break;
+        }
+        return;
+    }
     let icon = ''
     switch (status) {
         case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
-            icon = '✅'
-            color = 'background: #00A96E;'
+            toast.success(message)
             break;
         case 400 || 401 || 404 || 500 || 503 || 504:
-            icon = '❌'
-            color = 'background: #FF5861;'
+            toast.error(message)
             break;
         default:
-            icon = '❗'
-            color = 'background: #00B5FF;'
+            toast(message)
             break;
     }
-
-    toast(message, {
-        icon: icon,
-        style: color,
-        duration: 3000,
-        position: 'top-center',
-    })
   }
 
   /**
- * 
- * @param {String} successMessage 
- * @param {String} error
  * @param {Promise} fetch
  */
-  export function toastTriggerPromise (successMessage, error, fetch) {
+  export function toastTriggerPromise (fetch) {
     toast.promise(
         fetch,
         {
             loading: 'Saving...',
-            success: successMessage,
+            success: (data) => {
+                return 'Saved!'
+            },
             error: 'Could not save.',
         }
     )

@@ -1,8 +1,10 @@
 <script>
 	import { getCookie } from '$lib/helpers/getLocalCookies';
     import { infiniteScroll } from '$lib/helpers/itersectionObserver';
-	import { toastTrigger } from '$lib/helpers/toasterTrigger';
+	import { toastTrigger, toastTriggerPromise } from '$lib/helpers/toasterTrigger';
   import {Dialog} from 'bits-ui';
+	import { Root } from 'postcss';
+	import { toast } from 'svelte-sonner';
     /**
      * @type {String}
      */
@@ -46,7 +48,6 @@
 
     let observer;
     let loading = false;
-    let modalLoading = false;
     async function loadMore() {
         try {
         if(!tableData.next_page_url) return;
@@ -91,7 +92,6 @@
   }
 
     async function createTable(){
-    modalLoading = true
     let data = new FormData();
     for (const key in formData) {
       // check if the value not null
@@ -108,16 +108,18 @@
       body: data,
     })
 
+    const toastId = toast.loading('Creating...');
     const datajson = await createData.json();
-    modalLoading = false;
     if(createData.ok){
       let newtable = fetchTable();
       dataTab = await newtable;
       addModal = false;
     }
-
+    if(createData.status === 200){
+        toastTrigger(datajson.message, toastId, 200);
+      }
     if(createData.status === 400){
-      toastTrigger(datajson.message, );
+      toastTrigger(datajson.message, toastId, 400);
     }
 
     if(createData.status === 401){
@@ -126,7 +128,6 @@
   }
 
     async function updateTable(){
-      modalLoading = true
         let data = new FormData();
         for (const key in formData) {
           // check if the value not null
@@ -141,7 +142,6 @@
         },
         body: data,
         })
-        modalLoading = false;
         if(updateData.ok){
           let newtable = fetchTable();
           dataTab = await newtable;
@@ -157,14 +157,15 @@
             'Authorization': 'Bearer ' + getCookie('token')
         },
         })
-        const datajson = await deleteData.json();
+        const toastId = toast.loading('Deleting...');
+        let datajson = await deleteData.json();
         if(deleteData.ok){
         let newtable = fetchTable();
         dataTab = await newtable;
         deleteModal=false;
 
         if (datajson.status !== 200) {
-            toastTrigger(datajson.message, datajson.status);
+          toast.success(datajson.message, {id:toastId});
         }
     }
 }
@@ -255,6 +256,7 @@
     <table class="table table-hover">
         <thead>
             <tr>
+                    <th>No</th>
                 {#each Object.values(header) as columnHeading}
                     <th>{columnHeading}</th>
                 {/each}
@@ -264,11 +266,14 @@
         <tbody>
             {#each tableData.data as row, i}
                     <tr class="hover">
-                        {#each Object.entries(row) as [title, column]}
-                            {#if title !== "id"}
-                                <td>{column}</td>
-                            {/if}
-                        {/each}
+                        <slot name="table-row" row={row} index={i}>
+                            <td>{i+1}</td>
+                          {#each Object.entries(row) as [title, column]}
+                              {#if title !== "id"}
+                                  <td>{column}</td>
+                              {/if}
+                          {/each}
+                        </slot>
                             <td>
                         {#if permissions.update}
                                 <slot name="user-menu-edit" id={row.id}></slot>
@@ -297,12 +302,6 @@
     {#if loading}
     <div class="loading" />
     {/if}
-</div>
-{/if}
-
-{#if modalLoading}
-<div class="fixed inset-0 z-99 bg-black/50">
-  <div class="loading"></div>
 </div>
 {/if}
 
