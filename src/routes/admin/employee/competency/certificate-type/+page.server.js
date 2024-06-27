@@ -1,5 +1,5 @@
 export  async function load({ fetch, cookies, url }) {
-    const list = await fetch(import.meta.env.VITE_API_URL + '/calendar-holiday/list', {
+    const list = await fetch(import.meta.env.VITE_API_URL + '/certificate-type/list', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

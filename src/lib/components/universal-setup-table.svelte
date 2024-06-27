@@ -1,9 +1,8 @@
 <script>
 	import { getCookie } from '$lib/helpers/getLocalCookies';
-    import { infiniteScroll } from '$lib/helpers/itersectionObserver';
-	import { toastTrigger, toastTriggerPromise } from '$lib/helpers/toasterTrigger';
+  import { infiniteScroll } from '$lib/helpers/itersectionObserver';
+	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
   import {Dialog} from 'bits-ui';
-	import { Root } from 'postcss';
 	import { toast } from 'svelte-sonner';
     /**
      * @type {String}
@@ -49,11 +48,12 @@
     let observer;
     let loading = false;
     async function loadMore() {
+      let page = setting.sizePage ? setting.sizePage : 70;
         try {
         if(!tableData.next_page_url) return;
 		// @ts-ignore
         loading = true
-		const loadMoreTableData = await fetch(tableData.next_page_url, {
+		const loadMoreTableData = await fetch(tableData.next_page_url+ '&perpage=' + page, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -92,6 +92,7 @@
   }
 
     async function createTable(){
+    const toastId = toastTriggerLoading('Creating...');
     let data = new FormData();
     for (const key in formData) {
       // check if the value not null
@@ -108,18 +109,15 @@
       body: data,
     })
 
-    const toastId = toast.loading('Creating...');
     const datajson = await createData.json();
     if(createData.ok){
       let newtable = fetchTable();
       dataTab = await newtable;
       addModal = false;
+      return toastTrigger(datajson.message, toastId, 200);
     }
-    if(createData.status === 200){
-        toastTrigger(datajson.message, toastId, 200);
-      }
-    if(createData.status === 400){
-      toastTrigger(datajson.message, toastId, 400);
+    if(createData.status !== 200){
+      toastTrigger(datajson.message, toastId, createData.status);
     }
 
     if(createData.status === 401){
@@ -128,6 +126,8 @@
   }
 
     async function updateTable(){
+        const toastId = toastTriggerLoading('Updating...');
+
         let data = new FormData();
         for (const key in formData) {
           // check if the value not null
@@ -142,14 +142,20 @@
         },
         body: data,
         })
+        let datajson = await updateData.json();
         if(updateData.ok){
           let newtable = fetchTable();
           dataTab = await newtable;
           updateModal=false;
-    }
+          return toastTrigger(datajson.message, toastId, 200);
+      }
+      if (updateData.status !== 200) {
+        toastTrigger(datajson.message, toastId, updateData.status);
+      }
 }
 
     async function deleteTable(){
+        const toastId = toastTriggerLoading('Deleting...');
         const deleteData = await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' +rowId, {
         method: 'post',
         headers: {
@@ -157,17 +163,16 @@
             'Authorization': 'Bearer ' + getCookie('token')
         },
         })
-        const toastId = toast.loading('Deleting...');
         let datajson = await deleteData.json();
         if(deleteData.ok){
         let newtable = fetchTable();
         dataTab = await newtable;
         deleteModal=false;
-
-        if (datajson.status !== 200) {
-          toast.success(datajson.message, {id:toastId});
-        }
-    }
+        return toastTrigger(datajson.message, toastId, 200);
+      }
+      if (deleteData.status !== 200) {
+        toastTrigger(datajson.message, toastId, deleteData.status);
+      }
 }
 
     async function detailTable(row){
@@ -222,28 +227,24 @@
 
     }
 </script>
-<div class='max-w-md mx-auto'>
-  <div class="relative flex items-center w-full h-12 rounded-lg">
-      
 
-      <input
-      class="input input-bordered w-full max-w-xs bg-white"
-      type="text"
-      id="search"
-      bind:value={search}
-      on:input={searchTable}
-      placeholder="Search something.." /> 
-      <button class="grid place-items-center h-full w-12">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </button>
-  </div>
-</div>
 {#if permissions.create}
         <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={openAddRow}>
-            <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  {addModal = true; nullForm();}}>Add</button>
+            <div class="flex justify-between m-2">
+                <div id="search-bar" class="w-96 bg-white rounded-md shadow-lg z-10">
+                  <div class="flex items-center justify-center p-2">
+                      <input type="text" placeholder="Search here"
+                          bind:value={search}
+                          on:input={searchTable}
+                          class="w-full rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
+                      <button
+                          on:click={searchTable}
+                          class="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50">
+                          Search
+                      </button>
+                  </div>
+                </div>
+                <button class=" px-5 py-3 gap-x-2 text-sm font-normal text-emerald-800 bg-emerald-100/90 dark:bg-gray-800" on:click={() =>  {addModal = true; nullForm();}}><p class="font-sans font-bold uppercase whitespace-nowrap">Add</p></button>
             </div>
         </slot>
 {/if}
@@ -252,29 +253,36 @@
   <div class="loading" />
 </div>
   {:else}
-  <div class="table-container">
-    <table class="table table-hover">
-        <thead>
+  <div class="p-5 shadow">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto">
+        <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
-                    <th>No</th>
+                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">No</p>
+                    </th>
                 {#each Object.values(header) as columnHeading}
-                    <th>{columnHeading}</th>
+                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">{columnHeading}</p>
+                    </th>
                 {/each}
-                    <th>Action</th>
+                     <slot name="table-header"></slot>
+                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">Action</p>
+                    </th>
             <tr/>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
             {#each tableData.data as row, i}
                     <tr class="hover">
                         <slot name="table-row" row={row} index={i}>
-                            <td>{i+1}</td>
+                            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{i+1}</td>
                           {#each Object.entries(row) as [title, column]}
                               {#if title !== "id"}
-                                  <td>{column}</td>
+                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{column}</td>
                               {/if}
                           {/each}
                         </slot>
-                            <td>
+                            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                         {#if permissions.update}
                                 <slot name="user-menu-edit" id={row.id}></slot>
                                 
