@@ -3,7 +3,8 @@
   import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
   import {Dialog} from 'bits-ui';
-	import { toast } from 'svelte-sonner';
+	import { fade } from 'svelte/transition';
+	import UniversalTableField from './universal-table-field.svelte';
     /**
      * @type {String}
      */
@@ -176,6 +177,8 @@
 }
 
     async function detailTable(row){
+      nullForm();
+      const toastId = toastTriggerLoading('Loading...');
       const detailData = await fetch(import.meta.env.VITE_API_URL + detailUrl + '/' + row, {
           method: 'GET',
           headers: {
@@ -183,11 +186,17 @@
               'Authorization': 'Bearer ' + getCookie('token')
           },
           })
-          updateModal = true;
+          
         let data = await detailData.json();
         if(detailData.ok){
           rowId = row;
           formData = data.data;
+          updateModal = true;
+          return toastTrigger("Data Loaded", toastId, 200, 500);
+        }
+
+        if(detailData.status !== 200){
+          toastTrigger(data.message, toastId, detailData.status);
         }
     }
 
@@ -281,6 +290,7 @@
                                   <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{column}</td>
                               {/if}
                           {/each}
+                            <slot name="additional-table-row" row={row}></slot>
                         </slot>
                             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                         {#if permissions.update}
@@ -316,6 +326,7 @@
 <Dialog.Root bind:open={deleteModal}>
     <Dialog.Portal>
       <Dialog.Overlay
+        transition={fade}
         transitionConfig={{ duration: 150 }}
         class="fixed inset-0 z-50 bg-black/50"
       />
@@ -332,73 +343,19 @@
 <Dialog.Root bind:open={addModal} closeOnEscape closeOnOutsideClick>
     <Dialog.Portal>
         <Dialog.Overlay
+        transition={fade}
         transitionConfig={{ duration: 150 }}
         class="fixed inset-0 z-50 bg-black/50"
       />
         <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
           <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
-            Add Company
+            Add
           </Dialog.Title>
           <Dialog.Description class="mb-6 text-sm text-black">
-              Fill in the form below to add a new Company setup.
+              Fill in the form below to add a new data.
           </Dialog.Description>
           <slot name="aditional-form-create"></slot>
-          {#each tableList as list}
-              {#if list.type === "file" || list.id === "img"}
-                  <fieldset class="mb-4 flex items-center gap-5">
-                    <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                    <input
-                    type="file"
-                    class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered"
-                    id={list.id}
-                    on:change={(e) => {
-                      // @ts-ignore
-                      formData[list.id] = e.target.files[0];
-                    }}
-                    />
-                  </fieldset>
-                {/if}
-                {#if list.type === "text"}
-                  <fieldset class="mb-4 flex items-center gap-5">
-                    <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                    <input
-                    class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered"
-                    id={list.id}
-                    disabled={list.disabled}
-                    bind:value={formData[list.id]}
-                    />
-                  </fieldset>
-                {/if}
-                {#if list.type === "number"}
-                  <fieldset class="mb-4 flex items-center gap-5">
-                    <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                    <input
-                    type="number"
-                    class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered"
-                    id={list.id}
-                    placeholder="1.00"
-                    step="0.01"
-                    min="1.00"
-                    bind:value={formData[list.id]}
-                    />
-                  </fieldset>
-                {/if}
-                {#if list.type === "date"}
-                  <fieldset class="mb-4 flex items-center gap-5">
-                    <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                    <input
-                    type="date"
-                    class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered"
-                    id={list.id}
-                    bind:value={formData[list.id]}
-                    />
-                  </fieldset>
-                {/if}
-          {/each}
+          <UniversalTableField {tableList} formData={formData} />
         
 
           <div class="mt-6 flex justify-end gap-4">
@@ -430,75 +387,20 @@
 
 <Dialog.Root bind:open={updateModal} closeOnEscape closeOnOutsideClick>
   <Dialog.Portal>
-      <Dialog.Overlay
-      transitionConfig={{ duration: 150 }}
-      class="fixed inset-0 z-50 bg-black/50"
-    />
+    <Dialog.Overlay
+    transition={fade}
+    transitionConfig={{ duration: 150 }}
+    class="fixed inset-0 z-50 bg-black/50"
+  />
       <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
         <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
-          Add Company
+          Edit
         </Dialog.Title>
         <Dialog.Description class="mb-6 text-sm text-black">
-            Fill in the form below to add a new Company setup.
+            Fill in the form below to edit data.
         </Dialog.Description>
         <slot name="aditional-form-update"></slot>
-        {#each tableList as list}
-            {#if list.type === "file" || list.id === "img"}
-                <fieldset class="mb-4 flex items-center gap-5">
-                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                  <input
-                  type="file"
-                  class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered"
-                  id={list.id}
-                  on:change={(e) => {
-                    // @ts-ignore
-                    formData[list.id] = e.target.files[0];
-                  }}
-                  />
-                </fieldset>
-              {/if}
-              {#if list.type === "text"}
-                <fieldset class="mb-4 flex items-center gap-5">
-                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                  <input
-                  class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered"
-                  id={list.id}
-                  disabled={list.disabled}
-                  bind:value={formData[list.id]}
-                  />
-                </fieldset>
-              {/if}
-              {#if list.type === "number"}
-                <fieldset class="mb-4 flex items-center gap-5">
-                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                  <input
-                  type="number"
-                  class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered"
-                  id={list.id}
-                  placeholder="1.00"
-                  step="0.01"
-                  min="1.00"
-                  bind:value={formData[list.id]}
-                  />
-                </fieldset>
-              {/if}
-              {#if list.type === "date"}
-                <fieldset class="mb-4 flex items-center gap-5">
-                  <label class="w-[90px] text-right text-black" for="code"> {list.name} </label>
-                  <input
-                  type="date"
-                  class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered"
-                  id={list.id}
-                  bind:value={formData[list.id]}
-                  />
-                </fieldset>
-              {/if}
-        {/each}
-      
+        <UniversalTableField {tableList} {formData} />
 
         <div class="mt-6 flex justify-end gap-4">
             <button

@@ -4,9 +4,10 @@ import {toast} from 'svelte-sonner'
  * @param {String} message 
  * @param {null | string | number} toastId
  * @param {number} status
+ * @param {number} duration
  */
-export function toastTrigger (message, toastId = null, status = 200) {
-    const toastDuration = 3000
+export function toastTrigger (message, toastId = null, status = 200, duration = 3000) {
+    const toastDuration = duration
     if (toastId !== null) {
         switch (status) {
             case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
