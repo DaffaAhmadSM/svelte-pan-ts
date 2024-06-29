@@ -1,12 +1,14 @@
 <script>
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
+	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger.js';
     export let data;
 
     let formData = {
         type: null,
         description: null,
-        certificate_classification_id: null
+        certificate_classification_id: null,
+        required_renewal: null
     }
 
     let tableList = [
@@ -25,7 +27,8 @@
   let classificationAll;
 
   async function getCertificationAll(){
-        const res = await fetch(import.meta.env.VITE_API_URL + 'certificate-classification/list', {
+
+        const res = await fetch(import.meta.env.VITE_API_URL + '/certificate-classification/list', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,19 +36,6 @@
             }
         });
         classificationAll = await res.json();
-    }
-  
-    async function certificateClassificationChange(e){
-        const res = await fetch(import.meta.env.VITE_API_URL + 'certificate-classification/detail/' + e.target.value, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': 'Bearer ' + getCookie('token')
-            }
-        });
-
-        const data = await res.json();
-        formData.certificate_classification_id = data.data.id;
     }
 
   const fetchUrl = '/certificate-type/list';
@@ -59,7 +49,7 @@
     <div class="flex w-full flex-col mb-6">
         <h1 class="text-5xl">Certificate Classification</h1>
     </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
+    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{index + 1}</td>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.type}</td>
@@ -68,12 +58,33 @@
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-create">
             <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Number Sequence</div>
+                <div class="w-[90px] text-right text-black">Classification</div>
                 <select name="number_sequence" bind:value={formData.certificate_classification_id} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered" on:change={certificateClassificationChange}>
+                              rounded-sm px-3 leading-none text-black input input-bordered">
                     {#if classificationAll}
                         {#each classificationAll.data.data as classification}
-                            <option value={classification.id}>{classification.code}</option>
+                            <option value={classification.id}>{classification.classification}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Renewal</div>
+                <select name="number_sequence" bind:value={formData.required_renewal} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    <option value="yes">yes</option>
+                    <option value="no">no</option>
+                </select>
+            </fieldset>
+        </svelte:fragment>
+        <svelte:fragment slot="aditional-form-update">
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Classification</div>
+                <select name="number_sequence" bind:value={formData.certificate_classification_id} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if classificationAll}
+                        {#each classificationAll.data.data as classification}
+                            <option value={classification.id}>{classification.classification}</option>
                         {/each}
                     {/if}
                 </select>

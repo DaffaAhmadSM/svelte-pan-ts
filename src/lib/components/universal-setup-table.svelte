@@ -441,7 +441,7 @@
         <Dialog.Description class="mb-6 text-sm text-black">
             Fill in the form below to add a new Company setup.
         </Dialog.Description>
-        <slot name="aditional-form-create"></slot>
+        <slot name="aditional-form-update"></slot>
         {#each tableList as list}
             {#if list.type === "file" || list.id === "img"}
                 <fieldset class="mb-4 flex items-center gap-5">
