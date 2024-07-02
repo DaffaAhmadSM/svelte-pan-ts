@@ -34,6 +34,29 @@ export function toastTrigger (message, toastId = null, status = 200, duration = 
             break;
     }
   }
+
+  /**
+ * 
+ * @param {String} message 
+ * @param {null | string | number} toastId
+ * @param {number} status
+ * @param {number} duration
+ */
+export function toastTriggerUpdate (message, toastId, status = 200, duration = 3000) {
+    const toastDuration = duration
+        switch (status) {
+            case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
+                toast.success(message, {id: toastId, duration: toastDuration})
+                break;
+            case 400 || 401 || 404 || 500 || 503 || 504:
+                toast.error(message, {id: toastId, duration: toastDuration})
+                break;
+            default:
+                toast(message, {id: toastId, duration: toastDuration})
+                break;
+        }
+        return;
+  }
 /**
  * 
  * @param {String} message 

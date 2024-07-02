@@ -1,5 +1,5 @@
 export  async function load({ fetch, cookies, url }) {
-    const list = await fetch(import.meta.env.VITE_API_URL + '/number-sequence/list', {
+    const list = await fetch(import.meta.env.VITE_API_URL + '/customer-contract/list', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

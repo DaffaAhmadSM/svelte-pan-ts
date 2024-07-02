@@ -123,7 +123,7 @@
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
                     {#if numberSequenceAll}
-                        {#each numberSequenceAll.data.data as numberSequence}
+                        {#each numberSequenceAll.data as numberSequence}
                             <option value={numberSequence.id}>{numberSequence.code}</option>
                         {/each}
                     {/if}
@@ -136,7 +136,7 @@
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
                               rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
                     {#if numberSequenceAll}
-                        {#each numberSequenceAll.data.data as numberSequence}
+                        {#each numberSequenceAll.data as numberSequence}
                             <option value={numberSequence.id}>{numberSequence.code}</option>
                         {/each}
                     {/if}
@@ -144,9 +144,7 @@
             </fieldset>
         </svelte:fragment>
         <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  {openAddRow(); nullform(); getNumberSequenceAll();}}>Add</button>
-            </div>
+            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getNumberSequenceAll();}}><p>Add</p></button>
         </svelte:fragment>
         <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
             <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getNumberSequenceAll();}}>Edit</button>

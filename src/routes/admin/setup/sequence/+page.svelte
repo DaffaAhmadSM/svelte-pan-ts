@@ -21,7 +21,7 @@
     ]
 
 
-  const fetchUrl = '/number-sequence/all';
+  const fetchUrl = '/number-sequence/list';
   const updateUrl = '/number-sequence/update';
   const deleteUrl = '/number-sequence/delete';
   const createUrl = '/number-sequence/create';

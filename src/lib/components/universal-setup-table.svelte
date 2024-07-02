@@ -238,61 +238,62 @@
 </script>
 
 {#if permissions.create}
-        <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={openAddRow}>
-            <div class="flex justify-between m-2">
-                <div id="search-bar" class="w-96 bg-white rounded-md shadow-lg z-10">
-                  <div class="flex items-center justify-center p-2">
-                      <input type="text" placeholder="Search here"
-                          bind:value={search}
-                          on:input={searchTable}
-                          class="w-full rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
-                      <button
-                          on:click={searchTable}
-                          class="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50">
-                          Search
-                      </button>
-                  </div>
-                </div>
-                <button class=" px-5 py-3 gap-x-2 text-sm font-normal text-emerald-800 bg-emerald-100/90 dark:bg-gray-800" on:click={() =>  {addModal = true; nullForm();}}><p class="font-sans font-bold uppercase whitespace-nowrap">Add</p></button>
+        
+        <div class="flex justify-between m-2">
+            <div id="search-bar" class="w-96 bg-white rounded-md shadow-lg z-10">
+              <div class="flex items-center justify-center p-2">
+                  <input type="text" placeholder="Search here"
+                      bind:value={search}
+                      on:input={searchTable}
+                      class="w-full rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent">
+                  <button
+                      on:click={searchTable}
+                      class="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50">
+                      Search
+                  </button>
+              </div>
             </div>
-        </slot>
+          <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={openAddRow}>
+            <button class="button-table-add" on:click={() =>  {addModal = true; nullForm();}}><p>Add</p></button>
+          </slot>
+        </div>
 {/if}
 {#if tableLoading}
 <div class="fixed left-0 top-0 z-99 w-full h-full flex items-center justify-center">
   <div class="loading" />
 </div>
   {:else}
-  <div class="p-5 shadow">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto">
-        <thead class="bg-gray-50 dark:bg-gray-800">
+  <div class="container-table">
+    <table class="table-style">
+        <thead class="table-thead">
             <tr>
-                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">No</p>
+                    <th scope="col" class="table-header">
+                      <p>No</p>
                     </th>
                 {#each Object.values(header) as columnHeading}
-                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">{columnHeading}</p>
+                    <th scope="col" class="table-header">
+                      <p>{columnHeading}</p>
                     </th>
                 {/each}
                      <slot name="table-header"></slot>
-                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <p class="block antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">Action</p>
+                    <th scope="col" class="table-header">
+                      <p>Action</p>
                     </th>
             <tr/>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+        <tbody class="table-tbody">
             {#each tableData.data as row, i}
                     <tr class="hover">
                         <slot name="table-row" row={row} index={i}>
-                            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{i+1}</td>
+                            <td class="table-td">{i+1}</td>
                           {#each Object.entries(row) as [title, column]}
                               {#if title !== "id"}
-                                  <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{column}</td>
+                                  <td class="table-td">{column}</td>
                               {/if}
                           {/each}
                             <slot name="additional-table-row" row={row}></slot>
                         </slot>
-                            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                            <td class="table-td">
                         {#if permissions.update}
                                 <slot name="user-menu-edit" id={row.id}></slot>
                                 
@@ -313,8 +314,8 @@
         
                     </tr>
             {/each}
+            <tr id="observer" class="h-4" bind:this={observer}></tr>
         </tbody>
-        <div id="observer" class="h-3" bind:this={observer}></div>
         
     </table>
     {#if loading}

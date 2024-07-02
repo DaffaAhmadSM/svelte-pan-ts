@@ -21,7 +21,7 @@
     ]
 
 
-  const fetchUrl = '/working-hour/all';
+  const fetchUrl = '/working-hour/list';
   const updateUrl = '/working-hour/update';
   const deleteUrl = '/working-hour/delete';
   const createUrl = '/working-hour/create';

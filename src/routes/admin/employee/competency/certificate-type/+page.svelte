@@ -51,10 +51,10 @@
     </div>
     <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
-            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{index + 1}</td>
-            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.type}</td>
-            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.description}</td>
-            <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.classification.classification}</td>
+            <td class="table-td">{index + 1}</td>
+            <td class="table-td">{row.type}</td>
+            <td class="table-td">{row.description}</td>
+            <td class="table-td">{row.classification.classification}</td>
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-create">
             <fieldset class="mb-4 flex items-center gap-5">
