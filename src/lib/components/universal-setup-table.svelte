@@ -33,8 +33,15 @@
     let rowId;
 
     let addModal;
-    function openAddRow(){
+    function openAddRow(func = null){
+        const ToastId = toastTriggerLoading('Loading...');
+        if(func !== null){
+          for (let i = 0; i <func.length; i++) {
+            func[i]();
+          }
+        }
         addModal = true;
+        toastTrigger('Loaded', ToastId, 200, 500);
     }
     let updateModal;
     function openEditRow(){
@@ -109,20 +116,21 @@
       },
       body: data,
     })
-    if (!createData.ok){
-      toastTrigger("Failed to Create data", toastId, createData.status);
+    if(createData.status === 500){
+      return toastTrigger('Internal Server Error', toastId, createData.status);
     }
+    
     const datajson = await createData.json();
+    if (!createData.ok){
+      return toastTrigger(datajson.message, toastId, createData.status);
+    }
+    if(createData.status === 401){
+      window.location.href = '/login';
+    }
     let newtable = fetchTable();
     dataTab = await newtable;
     addModal = false;
     return toastTrigger(datajson.message, toastId, 200);
-    
-    
-
-    if(createData.status === 401){
-      window.location.href = '/login';
-    }
   }
 
     async function updateTable(){

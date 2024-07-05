@@ -105,7 +105,7 @@
                 <select name="number_sequence" bind:value={formData.customer_id} class="table-field-input">
                     {#if customerAll}
                         {#each customerAll.data as customer}
-                            <option value={customer.id}>{customer.name}</option>
+                            <option value={customer.id}>{customer.no}</option>
                         {/each}
                     {/if}
                 </select>
@@ -127,7 +127,7 @@
                 <select name="number_sequence" bind:value={formData.customer_id} class="table-field-input">
                     {#if customerAll}
                         {#each customerAll.data as customer}
-                            <option value={customer.id}>{customer.name}</option>
+                            <option value={customer.id}>{customer.no}</option>
                         {/each}
                     {/if}
                 </select>

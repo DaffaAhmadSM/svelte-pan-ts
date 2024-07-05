@@ -17,7 +17,6 @@
             name: "Code",
             id: "code",
             type: "text",
-            disabled : true
         },
         {
             name: "Contract No",
@@ -54,7 +53,7 @@
 
 <div class="w-full overflow-auto">
     <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Customer Contract</h1>
+        <h1 class="text-5xl">Customer calendar holiday</h1>
     </div>
     <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
@@ -70,7 +69,7 @@
                 <select name="number_sequence" bind:value={formData.customer_id} class="table-field-input">
                     {#if customerAll}
                         {#each customerAll.data as customer}
-                            <option value={customer.id}>{customer.name}</option>
+                            <option value={customer.id}>{customer.no}</option>
                         {/each}
                     {/if}
                 </select>
@@ -82,7 +81,7 @@
                 <select name="number_sequence" bind:value={formData.customer_id} class="table-field-input">
                     {#if customerAll}
                         {#each customerAll.data as customer}
-                            <option value={customer.id}>{customer.name}</option>
+                            <option value={customer.id}>{customer.no}</option>
                         {/each}
                     {/if}
                 </select>

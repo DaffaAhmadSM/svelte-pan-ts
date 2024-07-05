@@ -6,7 +6,7 @@ import {toast} from 'svelte-sonner'
  * @param {number} status
  * @param {number} duration
  */
-export function toastTrigger (message, toastId = null, status = 200, duration = 3000) {
+export function toastTrigger (message = "request error", toastId = null, status = 200, duration = 3000) {
     const toastDuration = duration
     if (toastId !== null) {
         switch (status) {
