@@ -109,17 +109,16 @@
       },
       body: data,
     })
-
+    if (!createData.ok){
+      toastTrigger("Failed to Create data", toastId, createData.status);
+    }
     const datajson = await createData.json();
-    if(createData.ok){
-      let newtable = fetchTable();
-      dataTab = await newtable;
-      addModal = false;
-      return toastTrigger(datajson.message, toastId, 200);
-    }
-    if(createData.status !== 200){
-      toastTrigger(datajson.message, toastId, createData.status);
-    }
+    let newtable = fetchTable();
+    dataTab = await newtable;
+    addModal = false;
+    return toastTrigger(datajson.message, toastId, 200);
+    
+    
 
     if(createData.status === 401){
       window.location.href = '/login';

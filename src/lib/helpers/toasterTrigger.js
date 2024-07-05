@@ -10,10 +10,24 @@ export function toastTrigger (message, toastId = null, status = 200, duration = 
     const toastDuration = duration
     if (toastId !== null) {
         switch (status) {
-            case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
+            case 200:
+            case 201:
+            case 202:
+            case 203:
+            case 204:
+            case 205:
+            case 206:
+            case 207:
+            case 208:
+            case 226:
                 toast.success(message, {id: toastId, duration: toastDuration})
                 break;
-            case 400 || 401 || 404 || 500 || 503 || 504:
+            case 400:
+            case 401:
+            case 404:
+            case 500:
+            case 503:
+            case 504:
                 toast.error(message, {id: toastId, duration: toastDuration})
                 break;
             default:
@@ -23,10 +37,25 @@ export function toastTrigger (message, toastId = null, status = 200, duration = 
         return;
     }
     switch (status) {
-        case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
+        case 200:
+        case 201:
+        case 202:
+        case 203:
+        case 204:
+        case 205:
+        case 206:
+        case 207:
+        case 208:
+        case 226:
             toast.success(message, {duration: toastDuration})
             break;
-        case 400 || 404 || 500 || 503 || 504:
+        case 400:
+        case 400:
+        case 401:
+        case 404:
+        case 500:
+        case 503:
+        case 504:
             toast.error(message, {duration: toastDuration})
             break;
         default:
@@ -45,10 +74,24 @@ export function toastTrigger (message, toastId = null, status = 200, duration = 
 export function toastTriggerUpdate (message, toastId, status = 200, duration = 3000) {
     const toastDuration = duration
         switch (status) {
-            case 200 || 201 || 202 || 203 || 204 || 205 || 206 || 207 || 208 || 226:
+            case 200:
+            case 201:
+            case 202:
+            case 203:
+            case 204:
+            case 205:
+            case 206:
+            case 207:
+            case 208:
+            case 226:
                 toast.success(message, {id: toastId, duration: toastDuration})
                 break;
-            case 400 || 401 || 404 || 500 || 503 || 504:
+            case 400:
+            case 401:
+            case 404:
+            case 500:
+            case 503:
+            case 504:
                 toast.error(message, {id: toastId, duration: toastDuration})
                 break;
             default:
