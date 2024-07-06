@@ -17,7 +17,7 @@
     --card-foreground: 0 0% 3.9%;
  
     --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+    /* --input: 0 0% 89.8%; */
  
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
@@ -50,7 +50,7 @@
     --card-foreground: 0 0% 98%;
  
     --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+    /* --input: 0 0% 14.9%; */
  
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
@@ -112,7 +112,7 @@
   }
 
   .table-field-input {
-    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black input
+    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black
   }
 
   .table-field-label {
@@ -129,9 +129,9 @@
 }
 
 @layer components{
-  input[type="checkbox"] {
+  /* input[type="checkbox"] {
     @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
-  }
+  } */
 
   
 }

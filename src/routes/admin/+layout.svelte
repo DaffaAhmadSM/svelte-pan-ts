@@ -1,12 +1,9 @@
 <script>
+	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
 	import Nested from './nested.svelte';
     import { navigating } from '$app/stores';
-    import {Toaster} from 'svelte-sonner'
-    import { initializeStores, Modal } from '@skeletonlabs/skeleton';
-
-    initializeStores();
+    import {Toaster} from 'svelte-sonner';
     import { menuData } from '$lib/stores/menu';
-	import { onMount } from 'svelte';
     /**
      * @type {import('./$types').LayoutData} 
      * */
@@ -30,9 +27,12 @@
             <span class="loading loading-spinner loading-sm"></span>
         </div>
     {:else}
-    <slot/>
+
+    <div class="flex flex-col">
+        <Breadcrumbs/>
+        <slot/>
+    </div>
     {/if}
     </div>
-    <Modal />
     <Toaster expand={true} position="top-center" richColors/>
 </div>

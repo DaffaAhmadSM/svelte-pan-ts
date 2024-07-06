@@ -65,17 +65,6 @@
             'Authorization': 'Bearer ' + getCookie('token')
         }
     });
-    /**
-     * @typedef {Object} Menu
-     * @prop {String} status
-     * @prop {String} message
-     * @prop {import('@skeletonlabs/skeleton').TreeViewNode[]} menu
-     * @prop {String[]} menuChecked
-     */
-
-    /**
-    * @type {Menu}
-    */
     let response = await menu_list.json();
     if(menu_list.ok){
       listMenu = response.menu;

@@ -1,47 +1,6 @@
 <script>
 	import CheckboxNested from '$lib/components/checkboxNested.svelte';
-	import TreeViewChildren from './treeViewChildren.svelte';
-	import {TreeView} from '@skeletonlabs/skeleton';
-    /**
-     * @type {import('@skeletonlabs/skeleton').TreeViewNode[]}
-     */
-    export let menu = [
-        {
-        id: '0',
-        content: 'menu',
-        children: [
-            {
-                id: '1',
-                content: 'Item 1',
-                children: [
-                    {
-                        id: '2',
-                        content: 'Item 1.1',
-                        children: []
-                    },
-                    {
-                        id: '3',
-                        content: 'Item 1.2',
-                    }
-                ]
-            },
-            {
-                id: '4',
-                content: 'Item 2',
-                children: [
-                    {
-                        id: '5',
-                        content: 'Item 2.1',
-                    },
-                    {
-                        id: '6',
-                        content: 'Item 2.2',
-                    }
-                ]
-            }
-        ]
-    }
-];
+    export let menu;
 
     /**
      * @type {String[]} 
