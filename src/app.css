@@ -75,6 +75,22 @@
   body {
     @apply bg-background text-foreground;
   }
+
+}
+
+@layer components{
+  /* input[type="checkbox"] {
+    @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
+  } */
+
+  .btn {
+    @apply px-3 py-2
+  }
+ 
+  
+}
+
+@layer utilities {
   .loading {
     @apply w-12 h-12 rounded-full animate-spin border-4 border-solid dark:border-white border-gray-600 border-t-transparent dark:border-t-gray-800;
   }
@@ -112,7 +128,7 @@
   }
 
   .table-field-input {
-    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black
+    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black border border-gray-300
   }
 
   .table-field-label {
@@ -126,12 +142,8 @@
   .table-td {
     @apply px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap
   }
-}
 
-@layer components{
-  /* input[type="checkbox"] {
-    @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
-  } */
-
-  
+  .table-container {
+    @apply w-full overflow-auto
+  }
 }

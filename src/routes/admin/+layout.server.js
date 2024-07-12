@@ -14,6 +14,7 @@ export async function load ({ fetch, cookies }) {
   
     if (response.ok) {
      menu = await response.json();
+     cookies.set('user_id', String(menu.user.id), { path: '/' , httpOnly: false });
     } else {
       throw redirect(302, '/');
     }

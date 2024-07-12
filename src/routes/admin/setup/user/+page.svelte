@@ -7,6 +7,9 @@
 	import { setContext } from 'svelte';
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
 	import {Dialog} from 'bits-ui';
+	import { fade } from 'svelte/transition';
+	import { menuData } from '$lib/stores/menu';
+	import { get } from 'svelte/store';
   export let data;
     let dialogPermis = false;
 
@@ -28,7 +31,7 @@
     }
   }
   /**
-   * 
+   *
    * @param {number} id
    * @returns {Promise<void>}
    */
@@ -56,7 +59,15 @@
 
   let listMenu;
   let chekcmenu;
+  let userSelected;
+  function setUserSelected(id){
+    userSelected = id;
+  }
+
   async function openPermisModal(id){
+    menuCreate = [];
+    menuUpdate = [];
+    menuDelete = [];
     const toastId = toastTriggerLoading('Loading...');
     const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu/all/' + id, {
         method: 'GET',
@@ -69,6 +80,9 @@
     if(menu_list.ok){
       listMenu = response.menu;
       chekcmenu = response.menuChecked;
+      menuCreate = response.menuCreate;
+      menuUpdate = response.menuUpdate;
+      menuDelete = response.menuDelete;
       dialogPermis=true;
       return toastTrigger("Data Loaded", toastId, 200, 500);
     }
@@ -78,7 +92,64 @@
     }
   }
 
-  setContext('crud', {confirmDelete});
+  let menuCreate;
+  let menuUpdate;
+  let menuDelete;
+
+  async function updatePermiss(){
+    const toastId = toastTriggerLoading('Loading...');
+    let array = [];
+
+    chekcmenu.forEach(id => {
+      array.push({
+        user_id : userSelected,
+        menu_id: id,
+        create: menuCreate.includes(id) ? 1 : 0,
+        update: menuUpdate.includes(id) ? 1 : 0,
+        delete: menuDelete.includes(id) ? 1 : 0
+      });
+    });
+
+    const update = await fetch(import.meta.env.VITE_API_URL + '/update-menu', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getCookie('token')
+      },
+      body: JSON.stringify({data: array, user_id: userSelected})
+    }).then((res) => {
+      if(res.ok){
+        dialogPermis = false;
+        return toastTrigger("Permission updated", toastId, res.status, 2000);
+      }
+      return res.json().then((err) => {
+        toastTrigger(err.message, toastId, res.status, 2000);
+      });
+    }).catch((err) => {
+      toastTrigger("Failed to update permission", toastId, 500, 2000);
+    });
+
+
+
+    if (userSelected == data.menu.user.id){
+      updateMenu();
+    }
+  }
+
+  async function updateMenu(){
+    const menu_list = await fetch(import.meta.env.VITE_API_URL + '/menu', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookie('token')
+        }
+    });
+    let response = await menu_list.json();
+    if(menu_list.ok){
+      console.log("oke");
+      menuData.set(response);
+    }
+  }
 
   let formData = {
         name: null,
@@ -90,7 +161,7 @@
       {
         name: "name",
         id: "name",
-      
+
         type: "text"
       },
       {
@@ -115,11 +186,36 @@
 <Dialog.Root bind:open={dialogPermis}>
   <Dialog.Portal>
     <Dialog.Overlay
+        transition={fade}
         transitionConfig={{ duration: 150 }}
         class="fixed inset-0 z-50 bg-black/50"
       />
       <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
-      <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} />
+        <div class="flex flex-col">
+          <CheckboxNested bind:menu={listMenu} bind:checkedNodes={chekcmenu} bind:createGroup={menuCreate} bind:updateGroup={menuUpdate} bind:deleteGroup={menuDelete} />
+          <div class="mt-6 flex justify-end gap-4">
+            <button
+              class="inline-flex h-8 items-center justify-center rounded-sm
+                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                on:click={() => {
+                    dialogPermis = false;
+                }}
+            >
+              Cancel
+
+            </button>
+            <button
+            type="submit"
+              class="inline-flex h-8 items-center justify-center rounded-sm
+                        bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
+              on:click={() => {
+                updatePermiss();
+              }}
+            >
+              Save changes
+            </button>
+                </div>
+        </div>
     </Dialog.Content>
   </Dialog.Portal>
 </Dialog.Root>
@@ -129,8 +225,7 @@
       <h1 class="text-5xl">User Setup</h1>
   </div>
   <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList}>
-    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); }} let:id={id}>Edit Permission</button>
+    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>Edit Permission</button>
 
   </UniversalSetupTable>
 </div>
-
