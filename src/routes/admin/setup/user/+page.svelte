@@ -161,17 +161,20 @@
       {
         name: "name",
         id: "name",
+        required: true,
 
         type: "text"
       },
       {
         name: "email",
         id: "email",
+        required: true,
         type: "text"
       },
       {
         name: "password",
         id: "password",
+        required: true,
         type: "text"
       },
     ]
