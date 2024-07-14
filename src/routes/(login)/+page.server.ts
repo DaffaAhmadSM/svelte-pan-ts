@@ -5,7 +5,7 @@ export const actions = {
         const data = await event.request.formData();
         const email = data.get('email');
         const password = data.get('password');
-        const response = await fetch(import.meta.env.VITE_API_URL + '/login', {
+        const response = await event.fetch(import.meta.env.VITE_API_URL + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
