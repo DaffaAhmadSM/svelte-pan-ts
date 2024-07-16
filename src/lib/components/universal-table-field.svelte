@@ -1,4 +1,6 @@
 <script>
+	import AutocompleteComponents from "./autocompleteComponents.svelte";
+
     export let tableList;
     export let formData;
 </script>
@@ -86,7 +88,15 @@
         {/if}
         {#if list.type === "select"}
         <fieldset class="table-fieldset">
-            <div class="flex">
+            <AutocompleteComponents
+                fieldLable="{list.name}"
+                items={list.options}
+                labelFieldName="name"
+                valueFieldName="value"
+                bind:bindValue={formData[list.id]}
+                required={list.required}
+            />
+            <!-- <div class="flex">
                 <label class="table-field-label" for="code"> {list.name} </label>
                 {#if list.required}
                 <svg class="ast"><use xlink:href="#asterisk"></use></svg>
@@ -100,7 +110,7 @@
             {#each list.options as option}
                 <option value={option.value}>{option.name}</option>
             {/each}
-            </select>
+            </select> -->
             
         </fieldset>
         {/if}

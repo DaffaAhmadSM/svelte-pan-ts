@@ -132,7 +132,7 @@
   }
 
   .table-field-label {
-    @apply w-[90px] text-right text-black
+    @apply w-[90px] text-black text-start
   }
 
   .table-tbody{
