@@ -247,6 +247,7 @@
 {#if permissions.create}
         
         <div class="flex justify-between m-2">
+          {#if searchUrl != null}
             <div id="search-bar" class="w-96 bg-white rounded-md shadow-lg z-10">
               <div class="flex items-center justify-center p-2">
                   <input type="text" placeholder="Search here"
@@ -260,6 +261,7 @@
                   </button>
               </div>
             </div>
+          {/if}
           <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={openAddRow}>
             <button class="button-table-add" on:click={() =>  {addModal = true; nullForm();}}><p>Add</p></button>
           </slot>
