@@ -8,10 +8,16 @@
     export let searchFunction = null;
     export let required = false;
 
+    let disabled = false
+
     let searchObj = null
     if (bindValue !== null) {
         console.log(bindValue)
          searchObj = items.find(item => item[valueFieldName] === bindValue)
+    }
+
+    if (items.length === 0) {
+        disabled = true
     }
 </script>
 
@@ -44,6 +50,7 @@
         bind:value={bindValue}
         maxItemsToShowInList={20}
         debug={true}
+        disabled={disabled}
         >
         </AutoComplete>
     {/if}
