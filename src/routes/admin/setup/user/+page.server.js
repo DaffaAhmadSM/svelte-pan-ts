@@ -26,9 +26,5 @@ export  async function load({ fetch, cookies, url }) {
         }
     })
 
-    if (permission.status !== 200) {
-        throw redirect(301, '/admin')
-    }
-
     return { list: await list.json(), permissions: await permission.json(), user: await currentUser.json()}
 }
