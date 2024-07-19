@@ -119,14 +119,14 @@
     if(createData.status === 500){
       return toastTrigger('Internal Server Error', toastId, createData.status);
     }
-    
+    if(createData.status === 401){
+      window.location.href = '/login';
+    }
     const datajson = await createData.json();
     if (!createData.ok){
       return toastTrigger(datajson.message, toastId, createData.status);
     }
-    if(createData.status === 401){
-      window.location.href = '/login';
-    }
+    
     let newtable = fetchTable();
     dataTab = await newtable;
     addModal = false;
