@@ -12,8 +12,15 @@
 
     let searchObj = null
     if (bindValue !== null) {
-        console.log(bindValue)
-         searchObj = items.find(item => item[valueFieldName] === bindValue)
+        if (typeof bindValue === 'string') {
+            try {
+                searchObj = items.find(item => item[valueFieldName].toLowerCase() == bindValue.toLowerCase())
+            } catch (error) {
+                console.log(error)
+            }
+        }else{
+            searchObj = items.find(item => item[valueFieldName] == bindValue)
+        }
     }
 
     if (items.length === 0) {
@@ -49,7 +56,6 @@
         bind:selectedItem={searchObj}
         bind:value={bindValue}
         maxItemsToShowInList={20}
-        debug={true}
         disabled={disabled}
         >
         </AutoComplete>
