@@ -434,13 +434,11 @@
   const createUrl = '/employee-data/create';
   const detailUrl = '/employee-data/detail';
   const searchUrl = '/employee-data/search';
+  const namePage = 'Employee Data';
 </script>
 
 <div class="w-full overflow-auto">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Employee Data</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
 
         <!-- <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>

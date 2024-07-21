@@ -5,6 +5,7 @@
   import {Dialog} from 'bits-ui';
 	import { fade } from 'svelte/transition';
 	import UniversalTableField from './universal-table-field.svelte';
+  export let namePage = "Table";
     /**
      * @type {String}
      */
@@ -243,6 +244,9 @@
 
     }
 </script>
+<div class="flex w-full flex-col mb-6">
+  <h1 class="text-5xl">{namePage}</h1>
+</div>
 
 {#if permissions.create}
         

@@ -74,13 +74,11 @@
   const deleteUrl = '/customer-contract/delete';
   const createUrl = '/customer-contract/create';
   const detailUrl = '/customer-contract/detail';
+    const namePage = 'Customer Contract';
 </script>
 
 <div class="w-full overflow-auto">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Customer Contract</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.code}</td>

@@ -47,13 +47,11 @@
   const deleteUrl = '/job-task/delete';
   const createUrl = '/job-task/create';
   const detailUrl = '/job-task/detail';
+  const namePage = 'Job Task Setup';
 </script>
 
 <div class="table-container">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Job Task</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{index + 1}</td>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.job_task}</td>

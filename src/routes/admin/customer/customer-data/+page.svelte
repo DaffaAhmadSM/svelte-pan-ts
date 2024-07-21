@@ -106,13 +106,11 @@
   const deleteUrl = '/customer/delete';
   const createUrl = '/customer/create';
   const detailUrl = '/customer/detail';
+  const namePage = 'Customer Data';
 </script>
 
 <div class="table-container">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Customer Data</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="aditional-form-create">
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Number Sequence</div>

@@ -14,7 +14,7 @@
 
 <div class="flex flex-row text-wrap text-start font-sans">
 	<aside
-		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col justify-between overflow-y-scroll bg-slate-50 p-2"
+		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col justify-between overflow-y-scroll bg-slate-200 p-2"
 	>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
 			{#each menu as item}

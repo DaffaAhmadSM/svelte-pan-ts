@@ -1,4 +1,5 @@
 <script>
+	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
     export let data;
@@ -67,46 +68,35 @@
   const deleteUrl = '/overtime-multiplication-setup/delete';
   const createUrl = '/overtime-multiplication-setup/create';
   const detailUrl = '/overtime-multiplication-setup/detail';
+    const namePage = 'Overtime Multiplication Setup';
 </script>
 
 <div class="table-container">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Overtime Multiplication Setup</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
     <svelte:fragment slot="aditional-form-create">
-        <fieldset class="mb-4 flex items-center gap-5">
-            <div class="w-[90px] text-right text-black">Multiplication Calculator</div>
-            <select name="multiplication_setup" bind:value={formData.multiplication_calc_id} class="inline-flex h-8 w-full flex-1
-                            rounded-sm px-3 leading-none text-black input input-bordered">
-                {#if multiplicationCalcAll}
-                    {#each multiplicationCalcAll.data.data as multiplicationCalc}
-                        <option value={multiplicationCalc.id}>{multiplicationCalc.code}</option>
-                    {/each}
-                {/if}
-            </select>
-        </fieldset>
+        {#await getMultiplicationAll() then _}
+            <AutocompleteComponents
+                fieldLable="Multiplication Calculator"
+                items={multiplicationCalcAll.data}
+                labelFieldName="code"
+                valueFieldName="id"
+                bind:bindValue={formData.multiplication_calc_id}
+                required={true}
+            />
+            
+        {/await}
     </svelte:fragment>
     <svelte:fragment slot="aditional-form-update">
-        <fieldset class="mb-4 flex items-center gap-5">
-            <div class="w-[90px] text-right text-black">Multiplication Calculator</div>
-            <select name="multiplication_setup" bind:value={formData.multiplication_calc_id} class="inline-flex h-8 w-full flex-1
-                            rounded-sm px-3 leading-none text-black input input-bordered">
-                {#if multiplicationCalcAll}
-                    {#each multiplicationCalcAll.data.data as multiplicationCalc}
-                        <option value={multiplicationCalc.id}>{multiplicationCalc.code}</option>
-                    {/each}
-                {/if}
-            </select>
-        </fieldset>
-    </svelte:fragment>
-    <svelte:fragment slot="add-row" let:prop={modal} let:nullform={nullform}>
-        <div class="m-2 flex justify-end">
-            <button class="p-3 bg-info rounded-lg" on:click={() =>  {modal.showModal(); nullform(); getMultiplicationAll();}}>Add</button>
-        </div>
-    </svelte:fragment>
-    <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-        <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id.main_id); getMultiplicationAll();}}>Edit</button>
+        {#await getMultiplicationAll() then _}
+            <AutocompleteComponents
+                fieldLable="Multiplication Calculator"
+                items={multiplicationCalcAll.data}
+                labelFieldName="code"
+                valueFieldName="id"
+                bind:bindValue={formData.multiplication_calc_id}
+                required={true}
+            />
+        {/await}
     </svelte:fragment>
 
     </UniversalSetupTable>

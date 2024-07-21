@@ -185,6 +185,7 @@
   const createUrl = '/user/create';
   const detailUrl = '/user/detail';
   const searchUrl = '/user/search';
+  const namePage = 'User Setup';
 </script>
 <Dialog.Root bind:open={dialogPermis}>
   <Dialog.Portal>
@@ -224,11 +225,8 @@
 </Dialog.Root>
 
 <div class="table-container">
-  <div class="flex w-full flex-col mb-6">
-      <h1 class="text-5xl">User Setup</h1>
-  </div>
-  <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList}>
-    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>Edit Permission</button>
+  <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}>
+    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>Permission</button>
 
   </UniversalSetupTable>
 </div>

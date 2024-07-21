@@ -90,13 +90,11 @@
   const deleteUrl = '/employee-education/delete';
   const createUrl = '/employee-education/create';
   const detailUrl = '/employee-education/detail';
+  const namePage = 'Employee Education';
 </script>
 
 <div class="w-full overflow-auto">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Employee education</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.employee.no}</td>

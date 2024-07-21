@@ -41,13 +41,11 @@
   const deleteUrl = '/position/delete';
   const createUrl = '/position/create';
   const detailUrl = '/position/detail';
+  const namePage = 'Position Setup';
 </script>
 
 <div class="table-container">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Position</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.name}</td>

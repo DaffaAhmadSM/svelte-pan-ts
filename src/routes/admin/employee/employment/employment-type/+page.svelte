@@ -46,12 +46,10 @@
   const createUrl = '/employment-type/create';
   const detailUrl = '/employment-type/detail';
   const searchUrl = '/employment-type/search';
+    const namePage = 'Employment Type';
 </script>
 
 <div class="w-full overflow-auto">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Employment Type</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
     </UniversalSetupTable>
 </div>

@@ -78,13 +78,11 @@
   const createUrl = '/leave-category/create';
   const detailUrl = '/leave-category/detail';
   const searchUrl = '/leave-category/search';
+  const namePage = 'Leave Category';
 </script>
 
 <div class="w-full overflow-auto">
-    <div class="flex w-full flex-col mb-6">
-        <h1 class="text-5xl">Leave Category</h1>
-    </div>
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.employee.no}</td>
@@ -118,13 +116,6 @@
                         required={true}
                     />
             {/await}
-        </svelte:fragment>
-
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getEmployeeAll();}}><p>Add</p></button>
-        </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getEmployeeAll();}}>Edit</button>
         </svelte:fragment>
         
     </UniversalSetupTable>
