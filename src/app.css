@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
  
 @layer base {
   :root {
@@ -100,7 +102,7 @@
   }
 
   .button-table-add p {
-    @apply font-sans font-bold uppercase whitespace-nowrap
+    @apply font-poppins font-bold uppercase whitespace-nowrap
   }
 
   .container-table {
@@ -116,7 +118,7 @@
   }
 
   .table-header p {
-    @apply block antialiased font-sans text-sm font-normal leading-none opacity-70
+    @apply block antialiased font-poppins text-sm font-normal leading-none opacity-70
   }
 
   .table-thead {

@@ -12,9 +12,9 @@
 	$: menu = $menuData.menu;
 </script>
 
-<div class="flex flex-row text-wrap text-start font-sans">
+<div class="flex flex-row text-wrap text-start font-poppins">
 	<aside
-		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col justify-between overflow-y-scroll bg-slate-200 p-2"
+		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col justify-between overflow-y-scroll bg-slate-100"
 	>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
 			{#each menu as item}
@@ -23,7 +23,7 @@
 				</ul>
 			{/each}
 		</div>
-		<div class="mt-6 flex flex-row items-center justify-between">
+		<div class="mt-6 flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
 			<div class="flex flex-col items-start gap-x-2">
 				<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
 					{data.menu.user.name}
@@ -61,7 +61,7 @@
 			</div>
 		{:else}
 			<div class="flex flex-col">
-				<Breadcrumbs />
+				<!-- <Breadcrumbs /> -->
 				<slot />
 			</div>
 		{/if}
