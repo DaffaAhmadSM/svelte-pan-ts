@@ -87,6 +87,10 @@
             {
                 name: "Female",
                 value: "female"
+            },
+            {
+                name: "None",
+                value: "none"
             }
         ],
         required: false,
@@ -123,6 +127,10 @@
             {
                 name: "O",
                 value: "O"
+            },
+            {
+                name: "None",
+                value: "none"
             }
         ],
         required: false,
@@ -155,6 +163,10 @@
             {
                 name: "Confucian",
                 value: "Confucian"
+            },
+            {
+                name: "None",
+                value: "none"
             }
         ],
         required: false,
@@ -174,7 +186,7 @@
     {
         name: "Email",
         id: "email",
-        type: "email",
+        type: "text",
         required: false,
     },
     {
@@ -426,6 +438,8 @@
         });
 
         numberSequenceAll = await res.json();
+
+        console.log(formData);
     }
 
   const fetchUrl = '/employee-data/list';
