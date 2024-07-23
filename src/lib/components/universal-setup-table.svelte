@@ -1,4 +1,5 @@
 <script>
+	import UniversalDetailMeta from './universal-detail-meta.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
   import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
@@ -45,14 +46,11 @@
         toastTrigger('Loaded', ToastId, 200, 500);
     }
     let updateModal;
-    function openEditRow(){
-        updateModal = true;
-    }
-    let deleteModal;
-    function openDeleteRow(){
-        deleteModal = true;
-    }
 
+    let deleteModal;
+
+    let detailModal;
+    export let detailMeta = null;
 
     let observer;
     let loading = false;
@@ -184,7 +182,7 @@
       }
 }
 
-    async function detailTable(row){
+    async function updateDetailTable(row){
       nullForm();
       const toastId = toastTriggerLoading('Loading...');
       const detailData = await fetch(import.meta.env.VITE_API_URL + detailUrl + '/' + row, {
@@ -208,11 +206,54 @@
         }
     }
 
+    let detailTableData;
+    async function detailTable(row){
+      nullForm();
+      const toastId = toastTriggerLoading('Loading...');
+      const detailData = await fetch(import.meta.env.VITE_API_URL + detailUrl + '/' + row, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + getCookie('token')
+          },
+          })
+          
+        detailTableData = await detailData.json();
+        if(detailData.ok){
+          detailModal=true;
+          return toastTrigger("Data Loaded", toastId, 200, 500);
+        }
+
+        if(detailData.status !== 200){
+          toastTrigger(data.message, toastId, detailData.status);
+        }
+    }
+
     function nullForm(){
         for (const key in formData) {
             formData[key] = null;
         }
     }
+
+
+  function getValueByPath(obj, path) {
+    try {
+      let keys = path.split('.');
+      let currentLevel = obj;
+      for (let key of keys) {
+        if (currentLevel && typeof currentLevel === 'object' && key in currentLevel) {
+          currentLevel = currentLevel[key];
+        } else {
+          currentLevel = undefined;
+          break;
+        }
+      }
+      return currentLevel !== undefined && currentLevel !== null ? currentLevel : "No data";
+    } catch (error) {
+      console.error("Error accessing nested property:", error);
+      return "No data";
+    }
+  }
 
     let search;
     let timer;
@@ -311,9 +352,9 @@
                         {#if permissions.update}
                                 <slot name="user-menu-edit" id={row.id}></slot>
                                 
-                                <slot name="edit-row" prop={row} detailTable={detailTable} rowId={rowId}>
+                                <slot name="edit-row" prop={row} detailTable={updateDetailTable} rowId={rowId}>
                                     <button class="btn btn-warning hover:btn-error" on:click={() => {
-                                      detailTable(row.id)
+                                      updateDetailTable(row.id)
                                     }}>
                                     <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
@@ -342,6 +383,12 @@
                                         </svg>
                                     </button>
                                 </slot>
+                        {/if}
+
+                        {#if detailMeta !== null}
+                            <button class="btn btn-primary hover:btn-error" on:click={()=> {detailTable(row.id);}}>
+                               Detail
+                            </button>
                         {/if}
         
                             </td>
@@ -459,6 +506,34 @@
               Save changes
             </button>
         </div>
+      </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>
+
+<Dialog.Root bind:open={detailModal} closeOnEscape closeOnOutsideClick>
+  <Dialog.Portal>
+    <Dialog.Overlay
+    transition={fade}
+    transitionConfig={{ duration: 150 }}
+    class="fixed inset-0 z-50 bg-black/50"
+  />
+      <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
+        <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
+          Detail
+        </Dialog.Title>
+        <Dialog.Description class="mb-6 text-sm text-black">
+            Detail {namePage}
+        </Dialog.Description>
+
+        {#each detailMeta as data}
+
+          <UniversalDetailMeta
+            detailname={data.name}
+            detailData={getValueByPath(detailTableData.data, data.id)}
+            detailType={data.type}
+          />
+        {/each}
+
       </Dialog.Content>
   </Dialog.Portal>
 </Dialog.Root>

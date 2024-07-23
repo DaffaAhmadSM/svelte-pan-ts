@@ -94,6 +94,79 @@
       }
     ]
 
+    let detailMeta = [
+      {
+        name: "code",
+        id: "code",
+        type: "text"
+      },
+      {
+        name: "name",
+        id: "name",
+        type: "text"
+      },
+      {
+        name: "country",
+        id: "country",
+        type: "text"
+      },
+      {
+        name: "city",
+        id: "city",
+        type: "text"
+      },
+      {
+        name: "Post Code",
+        id: "post_code",
+        type: "text"
+      },
+      {
+        name: "address",
+        id: "address",
+        type: "text"
+      },
+      {
+        name: "phone",
+        id: "phone",
+        type: "text"
+      },
+      {
+        name: "fax",
+        id: "fax",
+        type: "text"
+      },
+      {
+        name: "email",
+        id: "email",
+        type: "text"
+      },
+      {
+        name: "homepage",
+        id: "homepage",
+        type: "url"
+      },
+      {
+        name: "Picture",
+        id: "img_logo",
+        type: "img"
+      },
+      {
+        name: "Bank Name",
+        id: "bank_name",
+        type: "text"
+      },
+      {
+        name: "Bank Address",
+        id: "bank_address",
+        type: "text"
+      },
+      {
+        name: "Bank Account Number",
+        id: "bank_account_no",
+        type: "text"
+      }
+    ]
+
 
   const fetchUrl = '/company/list';
   const updateUrl = '/company/update';
@@ -105,5 +178,5 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
+    <UniversalSetupTable {detailMeta} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
 </div>
