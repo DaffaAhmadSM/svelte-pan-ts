@@ -4,26 +4,93 @@
 	import { navigating } from '$app/stores';
 	import { Toaster } from 'svelte-sonner';
 	import { menuData } from '$lib/stores/menu';
+	import { getCookie } from '$lib/helpers/getLocalCookies';
 	/**
 	 * @type {import('./$types').LayoutData}
 	 * */
 	export let data;
 	menuData.set(data.menu);
 	$: menu = $menuData.menu;
+
+	let timer;
+	let search;
+	let loading = false;
+	let dataMenuSearch = [];
+
+	// Filter function
+    function searchMenu(menu, query) {
+        if (!query) return menu;
+
+        function search(items) {
+			if (!Array.isArray(items)) return [];
+            return items
+                .map(item => {
+                    if (item.name.toLowerCase().includes(query.toLowerCase())) {
+                        return item;
+                    }
+                    if (item.children) {
+                        const filteredChildren = search(item.children);
+                        if (filteredChildren.length) {
+                            return { ...item, children: filteredChildren };
+                        }
+                    }
+                    return null;
+                })
+                .filter(item => item !== null);
+        }
+
+        return search(menu);
+    }
+
+	async function handleSearchMenu() {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            if (search === '') {
+                dataMenuSearch = [];
+                loading = false;
+                return;
+            }
+
+            loading = true;
+
+            // Perform search
+            dataMenuSearch = searchMenu(menu, search);
+            loading = false;
+        }, 500);
+    }
+
+	$: console.log(dataMenuSearch);
 </script>
 
 <div class="flex flex-row text-wrap text-start font-poppins">
 	<aside
-		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col justify-between overflow-y-scroll bg-slate-100"
+		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col overflow-y-scroll bg-slate-100"
 	>
+		<div class="flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
+			<input
+				type="text"
+				class="w-full bg-slate-50 dark:bg-slate-800 text-sm font-medium text-gray-700 dark:text-gray-200 border-0 focus:ring-0 focus:outline-none"
+				placeholder="Search"
+				bind:value={search}
+				on:input={handleSearchMenu}
+			/>
+		</div>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
+			{#if dataMenuSearch.length > 0}
+				{#each dataMenuSearch as item}
+					<ul class="menu text-md flex flex-col font-medium">
+						<Nested menu={item} open={true} highlightedquery={search}/>
+					</ul>
+				{/each}
+			{:else}
 			{#each menu as item}
 				<ul class="menu text-md flex flex-col font-medium">
 					<Nested menu={item} />
 				</ul>
 			{/each}
+			{/if}
 		</div>
-		<div class="mt-6 flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
+		<div class="mt-auto flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
 			<div class="flex flex-col items-start gap-x-2">
 				<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
 					{data.menu.user.name}
