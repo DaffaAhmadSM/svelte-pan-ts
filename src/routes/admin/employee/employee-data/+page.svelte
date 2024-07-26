@@ -24,7 +24,7 @@
     clothes_size: null, // string|max:255
     shoes_size: null, // string|max:255
     entitle_leaved_per_month: null, // numeric|between:0,99999999.99
-    img_picture: null, // image|mimes:jpeg,png,jpg,gif,svg|max:4096
+    img: null, // image|mimes:jpeg,png,jpg,gif,svg|max:4096
     identity_number: null, // string|max:255
     family_card_number: null, // string|max:255
     passport_number: null, // string|max:255
@@ -258,8 +258,8 @@
         required: false,
     },
     {
-        name: "Image Picture",
-        id: "img_picture",
+        name: "Image",
+        id: "img",
         type: "file",
         required: false,
     },
