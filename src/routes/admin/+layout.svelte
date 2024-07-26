@@ -66,15 +66,37 @@
 	<aside
 		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col overflow-y-scroll bg-slate-100"
 	>
-		<div class="flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
-			<input
-				type="text"
-				class="w-full bg-slate-50 dark:bg-slate-800 text-sm font-medium text-gray-700 dark:text-gray-200 border-0 focus:ring-0 focus:outline-none"
-				placeholder="Search"
-				bind:value={search}
-				on:input={handleSearchMenu}
-			/>
+		<div class="flex items-center justify-center mt-3 border-b-2 pb-6">
+			<p>
+				LOGO HERE
+			</p>
 		</div>
+		<div id="profile" class="space-y-3 p-6">
+			<img
+			src={"https://api.dicebear.com/9.x/initials/svg?seed=" + data.menu.user.name}
+			alt="Avatar user"
+			class="w-10 md:w-16 rounded-full mx-auto"
+			/>
+			<div>
+			<h2
+				class="font-medium text-xs md:text-sm text-center text-teal-500"
+			>
+			{data.menu.user.name}
+			</h2>
+			<p class="text-xs text-gray-500 text-center">{data.menu.user.email}</p>
+			</div>
+		</div>
+		<div
+            class="flex rounded-md focus-within:ring-2 p-2"
+          >
+            <input
+              type="text"
+              class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-none"
+              placeholder="Search"
+			  bind:value={search}
+			  on:input={handleSearchMenu}
+            />
+          </div>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
 			{#if dataMenuSearch.length > 0}
 				{#each dataMenuSearch as item}
