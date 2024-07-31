@@ -248,6 +248,10 @@
           break;
         }
       }
+
+      if (currentLevel === null) {
+        return "N/A";
+      }
       return currentLevel !== undefined && currentLevel !== null ? currentLevel : "No data";
     } catch (error) {
       console.error("Error accessing nested property:", error);
@@ -526,12 +530,20 @@
         </Dialog.Description>
 
         {#each detailMeta as data}
-
+          {#if data.type == "array"}
+            <UniversalDetailMeta
+            detailname={data.name}
+            detailData={getValueByPath(detailTableData.data, data.id)}
+            detailType={data.type}
+            arrayGuide={data.arrayGuide}
+          />
+          {:else}
           <UniversalDetailMeta
             detailname={data.name}
             detailData={getValueByPath(detailTableData.data, data.id)}
             detailType={data.type}
           />
+          {/if}
         {/each}
 
       </Dialog.Content>

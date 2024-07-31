@@ -2,6 +2,7 @@
 export let detailname;
 export let detailData;
 export let detailType;
+export let arrayGuide = [];
 </script>
 
 {#if detailType == "text"}
@@ -22,5 +23,27 @@ export let detailType;
     <div class="flex justify-between">
         <p>{detailname}</p>
         <a href={detailData} target="_blank" class="text-blue-500 underline">{detailData}</a>
+    </div>
+{/if}
+
+{#if detailType == "array"}
+    <div class="flex justify-between flex-col">
+        <div class="border-b-2 p-2">{detailname}</div>
+        <ul class="flex flex-col ml-4 gap-2">
+            {#each detailData as item}
+                {#each arrayGuide as guide}
+                {#if guide.main_key}
+                    <li class="flex justify-between font-bold">
+                        <div>{item[guide.id]}</div>
+                    </li>
+                {:else}
+                        <li class="flex justify-between ml-2">
+                            <div>{guide.name} :</div>
+                            <div>{item[guide.id]}</div>
+                        </li>
+                {/if}
+                {/each}
+            {/each}
+        </ul>
     </div>
 {/if}

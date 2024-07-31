@@ -77,6 +77,69 @@
         },
     ]
 
+    let detailMeta = [
+        {
+            name: "Number Sequence",
+            id: "number_sequence.code",
+            type: "text",
+        },
+        {
+            name: "Customer",
+            id: "customer",
+            type: "text",
+        },
+        {
+            name: "Customer Invoice",
+            id: "customer_invoice",
+            type: "text",
+        },
+        {
+            name: "Customer Contract",
+            id: "customer_contract",
+            type: "text",
+        },
+        {
+            name: "Customer Timesheet",
+            id: "customer_timesheet",
+            type: "text",
+        },
+        {
+            name: "Employee",
+            id: "employee",
+            type: "text",
+        },
+        {
+            name: "Leave Request",
+            id: "leave_request",
+            type: "text",
+        },
+        {
+            name: "Leave Adjustment",
+            id: "leave_adjustment",
+            type: "text",
+        },
+        {
+            name: "Timesheet",
+            id: "timesheet",
+            type: "text",
+        },
+        {
+            name: "Invent Journal",
+            id: "invent_journal_id",
+            type: "text",
+        },
+        {
+            name: "Inventory Transaction",
+            id: "invent_trans_id",
+            type: "text",
+        },
+        {
+            name: "Vacancy No",
+            id: "vacancy_no",
+            type: "text",
+        },
+    ]
+
     let numberSequenceAll;
 
     async function getNumberSequenceAll(){
@@ -114,8 +177,9 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {detailMeta}{namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="aditional-form-create">
+            {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
                 <div class="w-[90px] text-right text-black">Number Sequence</div>
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
@@ -127,8 +191,10 @@
                     {/if}
                 </select>
             </fieldset>
+        {/await}
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-update">
+        {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
                 <div class="w-[90px] text-right text-black">Number Sequence</div>
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
@@ -140,12 +206,7 @@
                     {/if}
                 </select>
             </fieldset>
-        </svelte:fragment>
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getNumberSequenceAll();}}><p>Add</p></button>
-        </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getNumberSequenceAll();}}>Edit</button>
+        {/await}
         </svelte:fragment>
     </UniversalSetupTable>
 </div>

@@ -2,6 +2,7 @@
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading, toastTriggerUpdate } from '$lib/helpers/toasterTrigger.js';
+	import { name } from '@melt-ui/svelte';
     export let data;
 
     let formData = {
@@ -26,28 +27,89 @@
         {
             name: "Name",
             id: "name",
-            type: "text"
+            type: "text",
+            required: true
         },
         {
             name: "Address",
             id: "address",
-            type: "text"
+            type: "text",
+            required: true
         },
         {
             name: "Phone",
             id: "phone",
-            type: "text"
+            type: "text",
+            required: true
         },
         {
             name: "Email",
             id: "email",
-            type: "text"
+            type: "text",
+            required: true
         },
         {
             name: "Fax",
             id: "fax",
-            type: "text"
+            type: "text",
+            required: true
         },
+    ]
+
+    let detailMeta = [
+        {
+            name: "No",
+            id: "no",
+            type: "text",
+        },
+        {
+            name: "Name",
+            id: "name",
+            type: "text",
+        },
+        {
+            name: "Address",
+            id: "address",
+            type: "text",
+        },
+        {
+            name: "Phone",
+            id: "phone",
+            type: "text",
+        },
+        {
+            name: "Email",
+            id: "email",
+            type: "text",
+        },
+        {
+            name: "Fax",
+            id: "fax",
+            type: "text",
+        },
+        {
+            name: "Working Hour",
+            id: "working_hour.code",
+            type: "text",
+        },
+        {
+            name: "Working Hour Detail",
+            id: "working_hour.working_hour_detail",
+            type: "array",
+            arrayGuide: [
+                {
+                    name: "Day",
+                    main_key: true,
+                    id: "day",
+                    type: "text"
+                },
+                {
+                    name: "Hours",
+                    id: "hours",
+                    type: "text"
+                },
+            ]
+        }
     ]
 
     let numberSequenceAll;
@@ -110,8 +172,9 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="aditional-form-create">
+            {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Number Sequence</div>
                 <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" on:change={numberSequenceChange}>
@@ -122,28 +185,8 @@
                     {/if}
                 </select>
             </fieldset>
-            <fieldset class="table-fieldset">
-                <div class="table-field-label">Working Hour</div>
-                <select name="number_sequence" bind:value={formData.working_hour_id} class="table-field-input" on:change={workingHourChange}>
-                    {#if workingHourAll}
-                        {#each workingHourAll.data as workingHour}
-                            <option value={workingHour.id}>{workingHour.code}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
-        </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
-            <fieldset class="table-fieldset">
-                <div class="table-field-label">Number Sequence</div>
-                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" on:change={numberSequenceChange}>
-                    {#if numberSequenceAll}
-                        {#each numberSequenceAll.data as numberSequence}
-                            <option value={numberSequence.id}>{numberSequence.code}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
+            {/await}
+            {#await getWorkingHourAll() then }
             <fieldset class="table-fieldset">
                 <label class="table-field-label" for="working_hour">Working Hour</label>
                 <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" on:change={workingHourChange}>
@@ -154,12 +197,34 @@
                     {/if}
                 </select>
             </fieldset>
+            {/await}
         </svelte:fragment>
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getNumberSequenceAll(); getWorkingHourAll();}}><p>Add</p></button>
-        </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getNumberSequenceAll(); getWorkingHourAll();}}>Edit</button>
+        <svelte:fragment slot="aditional-form-update">
+            {#await getNumberSequenceAll() then _}
+            <fieldset class="table-fieldset">
+                <div class="table-field-label">Number Sequence</div>
+                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" on:change={numberSequenceChange}>
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.id}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            {/await}
+            {#await getWorkingHourAll() then }
+            <fieldset class="table-fieldset">
+                <label class="table-field-label" for="working_hour">Working Hour</label>
+                <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" on:change={workingHourChange}>
+                    {#if workingHourAll}
+                        {#each workingHourAll.data as workingHour}
+                            <option value={workingHour.id}>{workingHour.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            {/await}
+            
         </svelte:fragment>
     </UniversalSetupTable>
 </div>
