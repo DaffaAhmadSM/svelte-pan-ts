@@ -400,6 +400,190 @@
         required: false,
     }
 ];
+let detailMeta = [
+    {
+        name: "Name",
+        id: "name",
+        type: "text",
+    },
+    {
+        name: "Type",
+        id: "type",
+        type: "text",
+    },
+    {
+        name: "Search Name",
+        id: "search_name",
+        type: "text",
+    },
+    {
+        name: "Gender",
+        id: "gender",
+        type: "text",
+    },
+    {
+        name: "Birth Date",
+        id: "birth_date",
+        type: "date",
+    },
+    {
+        name: "Birth Place",
+        id: "birth_place",
+        type: "text",
+    },
+    {
+        name: "Blood Type",
+        id: "blood_type",
+        type: "text",
+    },
+    {
+        name: "Religion",
+        id: "religion",
+        type: "text",
+    },
+    {
+        name: "Ethnic Group",
+        id: "ethnic_group",
+        type: "text",
+    },
+    {
+        name: "Phone",
+        id: "phone",
+        type: "text",
+    },
+    {
+        name: "Email",
+        id: "email",
+        type: "email",
+    },
+    {
+        name: "Marital Status",
+        id: "marital_status",
+        type: "text",
+    },
+    {
+        name: "Number of Dependents",
+        id: "number_of_dependents",
+        type: "number",
+    },
+    {
+        name: "Status",
+        id: "status",
+        type: "text",
+    },
+    {
+        name: "Clothes Size",
+        id: "clothes_size",
+        type: "text",
+    },
+    {
+        name: "Shoes Size",
+        id: "shoes_size",
+        type: "text",
+    },
+    {
+        name: "Entitle Leaved per Month",
+        id: "entitle_leaved_per_month",
+        type: "number",
+    },
+    {
+        name: "Image",
+        id: "img_picture",
+        type: "img",
+    },
+    {
+        name: "Identity Number",
+        id: "identity_number",
+        type: "text",
+    },
+    {
+        name: "Family Card Number",
+        id: "family_card_number",
+        type: "text",
+    },
+    {
+        name: "Passport Number",
+        id: "passport_number",
+        type: "text",
+    },
+    {
+        name: "Passport Expired Date",
+        id: "passport_expired_date",
+        type: "date",
+    },
+    {
+        name: "Tax Number",
+        id: "tax_number",
+        type: "text",
+    },
+    {
+        name: "Tax Start Date",
+        id: "tax_start_date",
+        type: "date",
+    },
+    {
+        name: "Tax Paid by Company",
+        id: "tax_paid_by_company",
+        type: "text",
+    },
+    {
+        name: "Tax Calculation Method",
+        id: "tax_calculation_method",
+        type: "text",
+    },
+    {
+        name: "Emergency Contact Name",
+        id: "emergency_contact_name",
+        type: "text",
+    },
+    {
+        name: "Emergency Contact Phone",
+        id: "emergency_contact_phone",
+        type: "text",
+    },
+    {
+        name: "Emergency Contact Address",
+        id: "emergency_contact_address",
+        type: "text",
+    },
+    {
+        name: "Emergency Contact Relationship",
+        id: "emergency_contact_relationship",
+        type: "text",
+    },
+    {
+        name: "Bank Account",
+        id: "bank_account",
+        type: "text",
+    },
+    {
+        name: "Bank Branch",
+        id: "bank_branch",
+        type: "text",
+    },
+    {
+        name: "Bank No",
+        id: "bank_no",
+        type: "text",
+    },
+    {
+        name: "Bank Holder",
+        id: "bank_holder",
+        type: "text",
+    },
+    {
+        name: "BPJS TK",
+        id: "bpjs_tk",
+        type: "text",
+    },
+    {
+        name: "BPJS Medical",
+        id: "bpjs_medical",
+        type: "text",
+    }
+];
+
+
 
     let educationLevelAll;
     async function getEducationLevelAll(){
@@ -452,7 +636,7 @@
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
 
         <!-- <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
