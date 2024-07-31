@@ -1,4 +1,5 @@
 <script>
+	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
     export let data;
@@ -59,40 +60,31 @@
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.job_responsibility.responsibility}</td>
         </svelte:fragment>
 
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  {openAddRow(); nullform(); getResponsibilityAll();}}>Add</button>
-            </div>
-        </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getResponsibilityAll();}}>Edit</button>
-        </svelte:fragment>
-
         <svelte:fragment slot="aditional-form-create">
-            <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Responsibility</div>
-                <select name="number_sequence" bind:value={formData.job_responsibility_id} class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered">
-                    {#if responsibilityAll}
-                        {#each responsibilityAll.data.data as responsibility}
-                            <option value={responsibility.id}>{responsibility.responsibility}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
+            {#await getResponsibilityAll() then _}
+            <AutocompleteComponents
+            fieldLable="Responsibility"
+            items={responsibilityAll.data.data}
+            labelFieldName="responsibility"
+            valueFieldName="id"
+            bind:bindValue={formData.job_responsibility_id}
+            required={true}
+            
+            />
+            {/await}
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-update">
-            <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Responsibility</div>
-                <select name="number_sequence" bind:value={formData.job_responsibility_id} class="inline-flex h-8 w-full flex-1
-                                rounded-sm px-3 leading-none text-black input input-bordered">
-                    {#if responsibilityAll}
-                        {#each responsibilityAll.data.data as responsibility}
-                            <option value={responsibility.id}>{responsibility.responsibility}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
+            {#await getResponsibilityAll() then _}
+            <AutocompleteComponents
+            fieldLable="Responsibility"
+            items={responsibilityAll.data.data}
+            labelFieldName="responsibility"
+            valueFieldName="id"
+            bind:bindValue={formData.job_responsibility_id}
+            required={true}
+            
+            />
+            {/await}
         </svelte:fragment>
     </UniversalSetupTable>
 </div>
