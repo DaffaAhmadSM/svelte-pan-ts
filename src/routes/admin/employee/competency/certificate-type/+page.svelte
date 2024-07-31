@@ -1,5 +1,6 @@
 <script>
-	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
+	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
+import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger.js';
     export let data;
@@ -22,6 +23,16 @@
             id: "description",
             type: "text"
         },
+    ]
+    let renewalitems = [
+        {
+            name: "Yes",
+            value: "yes"
+        },
+        {
+            name: "No",
+            value: "no"
+        }
     ]
 
   let classificationAll;
@@ -55,46 +66,49 @@
             <td class="table-td">{row.classification.classification}</td>
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-create">
-            <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Classification</div>
-                <select name="number_sequence" bind:value={formData.certificate_classification_id} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered">
-                    {#if classificationAll}
-                        {#each classificationAll.data.data as classification}
-                            <option value={classification.id}>{classification.classification}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
-            <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Renewal</div>
-                <select name="number_sequence" bind:value={formData.required_renewal} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered">
-                    <option value="yes">yes</option>
-                    <option value="no">no</option>
-                </select>
-            </fieldset>
+            {#await getCertificationAll() then _}
+            <AutocompleteComponents
+            fieldLable="Classification"
+            items={classificationAll.data.data}
+            labelFieldName="classification"
+            valueFieldName="id"
+            bind:bindValue={formData.certificate_classification_id}
+            required={true}
+            
+            />
+            {/await}
+
+            <AutocompleteComponents
+            fieldLable="Renewal"
+            items={renewalitems}
+            labelFieldName="name"
+            valueFieldName="value"
+            bind:bindValue={formData.required_renewal}
+            required={true}
+            
+            />
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-update">
-            <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Classification</div>
-                <select name="number_sequence" bind:value={formData.certificate_classification_id} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered">
-                    {#if classificationAll}
-                        {#each classificationAll.data.data as classification}
-                            <option value={classification.id}>{classification.classification}</option>
-                        {/each}
-                    {/if}
-                </select>
-            </fieldset>
-        </svelte:fragment>
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <div class="m-2 flex justify-end">
-                <button class="p-3 bg-info rounded-lg" on:click={() =>  {openAddRow(); nullform(); getCertificationAll();}}>Add</button>
-            </div>
-        </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getCertificationAll();}}>Edit</button>
+            {#await getCertificationAll() then _}
+            <AutocompleteComponents
+            fieldLable="Classification"
+            items={classificationAll.data.data}
+            labelFieldName="classification"
+            valueFieldName="id"
+            bind:bindValue={formData.certificate_classification_id}
+            required={true}
+            
+            />
+            {/await}
+            <AutocompleteComponents
+            fieldLable="Renewal"
+            items={renewalitems}
+            labelFieldName="name"
+            valueFieldName="value"
+            bind:bindValue={formData.required_renewal}
+            required={true}
+            
+            />
         </svelte:fragment>
     </UniversalSetupTable>
 </div>
