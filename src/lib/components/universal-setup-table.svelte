@@ -4,6 +4,7 @@
   import { infiniteScroll } from '$lib/helpers/itersectionObserver';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
   import {Dialog} from 'bits-ui';
+  import {getValueByPath} from '$lib/helpers/getObjectValue';
 	import { fade } from 'svelte/transition';
 	import UniversalTableField from './universal-table-field.svelte';
   export let namePage = "Table";
@@ -29,22 +30,10 @@
     let setting = data.setting
     $: dataTab = data.list
     $: tableData = dataTab.data
-    let header = data.list.header
-    let permissions = data.permissions.permission
 
     let rowId;
 
     let addModal;
-    function openAddRow(func = null){
-        const ToastId = toastTriggerLoading('Loading...');
-        if(func !== null){
-          for (let i = 0; i <func.length; i++) {
-            func[i]();
-          }
-        }
-        addModal = true;
-        toastTrigger('Loaded', ToastId, 200, 500);
-    }
     let updateModal;
 
     let deleteModal;
@@ -236,28 +225,7 @@
     }
 
 
-  function getValueByPath(obj, path) {
-    try {
-      let keys = path.split('.');
-      let currentLevel = obj;
-      for (let key of keys) {
-        if (currentLevel && typeof currentLevel === 'object' && key in currentLevel) {
-          currentLevel = currentLevel[key];
-        } else {
-          currentLevel = undefined;
-          break;
-        }
-      }
-
-      if (currentLevel === null) {
-        return "N/A";
-      }
-      return currentLevel !== undefined && currentLevel !== null ? currentLevel : "No data";
-    } catch (error) {
-      console.error("Error accessing nested property:", error);
-      return "No data";
-    }
-  }
+  
 
     let search;
     let timer;
@@ -311,8 +279,8 @@
               </div>
             </div>
           {/if}
-    {#if permissions.create}
-          <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={openAddRow}>
+    {#if data.permissions.permission.create}
+          <slot name="add-row" prop={addModal} nullform={nullForm}}>
             <button class="button-table-add" on:click={() =>  {addModal = true; nullForm();}}><p>Add</p></button>
           </slot>
     {/if}
@@ -329,7 +297,7 @@
                     <th scope="col" class="table-header">
                       <p>No</p>
                     </th>
-                {#each Object.values(header) as columnHeading}
+                {#each Object.values(data.list.header) as columnHeading}
                     <th scope="col" class="table-header">
                       <p>{columnHeading}</p>
                     </th>
@@ -353,7 +321,7 @@
                             <slot name="additional-table-row" row={row}></slot>
                         </slot>
                             <td class="table-td">
-                        {#if permissions.update}
+                        {#if data.permissions.permission.update}
                                 <slot name="user-menu-edit" id={row.id}></slot>
                                 
                                 <slot name="edit-row" prop={row} detailTable={updateDetailTable} rowId={rowId}>
@@ -373,7 +341,7 @@
                                     </button>
                                 </slot>
                         {/if}
-                        {#if permissions.delete}
+                        {#if data.permissions.permission.delete}
                                 <slot name="delete-row" prop={row}>
                                     <button class="btn btn-primary hover:btn-error" on:click={()=> {rowId=row.id; deleteModal=true;}}>
                                       <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
