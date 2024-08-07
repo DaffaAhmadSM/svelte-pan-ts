@@ -622,8 +622,6 @@ let detailMeta = [
         });
 
         numberSequenceAll = await res.json();
-
-        console.log(formData);
     }
 
   const fetchUrl = '/employee-data/list';

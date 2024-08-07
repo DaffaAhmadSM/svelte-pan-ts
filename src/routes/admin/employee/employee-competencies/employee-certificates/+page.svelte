@@ -71,8 +71,6 @@
         employeeAll = await res.json();
     }
 
-    $:console.log(formData)
-
     
 
 

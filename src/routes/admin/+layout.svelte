@@ -58,8 +58,6 @@
             loading = false;
         }, 500);
     }
-
-	$: console.log(dataMenuSearch);
 </script>
 
 <div class="flex flex-row text-wrap text-start font-poppins">

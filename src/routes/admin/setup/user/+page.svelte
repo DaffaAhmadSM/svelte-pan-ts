@@ -146,7 +146,6 @@
     });
     let response = await menu_list.json();
     if(menu_list.ok){
-      console.log("oke");
       menuData.set(response);
     }
   }
