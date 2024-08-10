@@ -311,7 +311,7 @@
         <tbody class="table-tbody">
             {#each tableData.data as row, i}
                     <tr class="hover">
-                        <slot name="table-row" row={row} index={i}>
+                        <slot name="table-row" row={row} header={data.list.header} index={i}>
                             <td class="table-td">{i+1}</td>
                           {#each Object.entries(row) as [title, column]}
                               {#if title !== "id"}
