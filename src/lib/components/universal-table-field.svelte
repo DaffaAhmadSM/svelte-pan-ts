@@ -28,6 +28,7 @@
             type="file"
             class="table-field-input"
             id={list.id}
+            disabled={list.disabled}
             on:change={(e) => {
             // @ts-ignore
             formData[list.id] = e.target.files[0];
@@ -67,6 +68,7 @@
             step="0.01"
             min="1.00"
             bind:value={formData[list.id]}
+            disabled={list.disabled}
             />
         </fieldset>
         {/if}
@@ -81,6 +83,7 @@
             <input
             type="date"
             class="table-field-input"
+            disabled={list.disabled}
             id={list.id}
             bind:value={formData[list.id]}
             />
@@ -95,6 +98,7 @@
                 valueFieldName="value"
                 bind:bindValue={formData[list.id]}
                 required={list.required}
+                disabled={list.disabled}
             />
             <!-- <div class="flex">
                 <label class="table-field-label" for="code"> {list.name} </label>
