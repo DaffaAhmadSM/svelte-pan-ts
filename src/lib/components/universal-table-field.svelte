@@ -98,7 +98,6 @@
                 valueFieldName="value"
                 bind:bindValue={formData[list.id]}
                 required={list.required}
-                disabled={list.disabled}
             />
             <!-- <div class="flex">
                 <label class="table-field-label" for="code"> {list.name} </label>

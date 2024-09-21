@@ -14,7 +14,8 @@
         email: null,
         fax: null,
         description: null,
-        working_hour_id: null
+        working_hour_id: null,
+        compare_type: null,
     }
 
     let tableList = [
@@ -22,7 +23,7 @@
             name: "No",
             id: "no",
             type: "text",
-            disabled : true
+            disabled : false
         },
         {
             name: "Name",
@@ -53,6 +54,17 @@
             id: "fax",
             type: "text",
             required: true
+        },
+        {
+            name: "compare type",
+            id: "compare_type",
+            type: "select",
+            options: [
+                {
+                    name: "MCD",
+                    value: "mcd"
+                },
+            ]
         },
     ]
 

@@ -296,10 +296,10 @@
                         <td class="table-td">{row.date}</td>
                         <td class="table-td">{row.pns_value}</td>
                         <td class="table-td">{row.mcd_value}</td>
-                        {@const difcolor = row.pns_value - row.mcd_value > 0 ? 'bg-red-300' : 'bg-green-300'}
                         {@const diff = row.pns_value - row.mcd_value}
+                        {@const difcolor = diff != 0 ? 'bg-red-300' : 'bg-green-300'}
                         <td class="table-td {difcolor}">{diff}</td>
-                        <td class="table-td {diff > 0 ? 'hidden' : ''}">
+                        <td class="table-td {diff != 0 ? 'hidden' : ''}">
                             <button class="flex bg-green-400 gap-3 p-2 text-white" on:click={()=>{alertResolveModal = true, conflictId = row.id}}>
                                 <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cy="12.5" cx="12.5" r="1.75"></circle> <circle cy="12.5" cx="3.5" r="1.75"></circle> <circle cy="3.5" cx="3.5" r="1.75"></circle> <path d="m12.25 7.25v3m-8.5-4.5v4.5"></path> <path d="m14.25 1.75-3.5 3.5m0-3.5 3.5 3.5"></path> </g></svg>
                                 <p>Resolve</p>

@@ -77,20 +77,19 @@
         {#await getMultiplicationAll() then _}
             <AutocompleteComponents
                 fieldLable="Multiplication Calculator"
-                items={multiplicationCalcAll.data}
+                items={multiplicationCalcAll.data.data}
                 labelFieldName="code"
                 valueFieldName="id"
                 bind:bindValue={formData.multiplication_calc_id}
                 required={true}
             />
-            
         {/await}
     </svelte:fragment>
     <svelte:fragment slot="aditional-form-update">
         {#await getMultiplicationAll() then _}
             <AutocompleteComponents
                 fieldLable="Multiplication Calculator"
-                items={multiplicationCalcAll.data}
+                items={multiplicationCalcAll.data.data}
                 labelFieldName="code"
                 valueFieldName="id"
                 bind:bindValue={formData.multiplication_calc_id}

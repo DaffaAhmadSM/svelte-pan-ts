@@ -325,7 +325,7 @@
                       <slot name="table-row" row={row} header={data.list.header} index={i}>
                           <td class="table-td">{i+1}</td>
                         {#each Object.entries(row) as [title, column]}
-                            {#if title !== "id"}
+                            {#if title !== "id" && title !== "calc_id"}
                                 <td class="table-td">{column}</td>
                             {/if}
                         {/each}
@@ -337,7 +337,7 @@
                               
                               <slot name="edit-row" prop={row} detailTable={updateDetailTable} rowId={rowId}>
                                   <button class="btn btn-warning hover:btn-error" on:click={() => {
-                                    updateDetailTable(row.id)
+                                    updateDetailTable(row.id); console.log(tableData.data);
                                   }}>
                                   <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
