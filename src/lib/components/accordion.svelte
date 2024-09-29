@@ -7,7 +7,7 @@
     }
 </script>
 
-<tr class="bg-red-100">
+<tr class="{classOpen}">
     <slot name="parent" handleClick={handleClick} open={open}/>
 </tr>
 {#if open}

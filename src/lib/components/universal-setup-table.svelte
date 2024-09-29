@@ -11,16 +11,16 @@
     /**
      * @type {String}
      */
-    export let fetchUrl;
+    export let fetchUrl = null;
     /**
      * @type {String}
      */
-    export let deleteUrl;
+    export let deleteUrl = null;
     /**
      * @type {String}
      */
-    export let updateUrl;
-    export let createUrl;
+    export let updateUrl = null;
+    export let createUrl = null;
     export let detailUrl = null;
     export let searchUrl = null;
     export let data;
@@ -50,7 +50,7 @@
 		// @ts-ignore
         loading = true
         let loadMoreTableData;
-        if (search == '') {
+        if (search == '' || search == null || search == undefined) {
         loadMoreTableData = await fetch(tableData.next_page_url+ '&perpage=' + page, {
           method: 'GET',
           headers: {

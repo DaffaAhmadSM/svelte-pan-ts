@@ -348,11 +348,11 @@
                 <!-- <button class="btn btn-primary hover:btn-error" on:click={()=> {detailTable(row.id);}}>
                     Detail
                 </button> -->
-                {#if row.status == "draft"}
-                <button class="flex gap-2" on:click={()=> {moveConfirm = true; currentMoveId=row.id}}>
-                  <svg width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#33d17a"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#33d17a" d="M14.5 14h-13c-.828 0-1.5.67-1.5 1.5S.672 17 1.5 17h13c.828 0 1.5-.67 1.5-1.5s-.672-1.5-1.5-1.5zM14.5 7h-13C.672 7 0 7.672 0 8.5S.672 10 1.5 10h13c.828 0 1.5-.672 1.5-1.5S15.328 7 14.5 7z"></path> <path fill="#33d17a" d="M23.71 16.29l-2-2c-.2-.19-.45-.29-.71-.29s-.51.1-.71.29l-2 2c-.28.29-.37.72-.21 1.09.15.38.52.62.92.62h.5v1.5c0 .83-.67 1.5-1.5 1.5H1.5c-.83 0-1.5.67-1.5 1.5S.67 24 1.5 24H18c2.48 0 4.5-2.02 4.5-4.5V18h.5c.4 0 .77-.24.92-.62.16-.37.07-.8-.21-1.09zM14.5 0h-13C.672 0 0 .672 0 1.5S.672 3 1.5 3h13c.828 0 1.5-.672 1.5-1.5S15.328 0 14.5 0z"></path> </g></svg>
-                  <p>Move to timesheet</p>
-                </button>
+                {#if row.pns_mcd_diff_count == 0}
+                  <a class="flex gap-2" href="/admin/timesheet/compare-pns-mcd/overtimecalc/{row.random_string}?menuid={data.paramsurl}">
+                    <svg width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#33d17a"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#33d17a" d="M14.5 14h-13c-.828 0-1.5.67-1.5 1.5S.672 17 1.5 17h13c.828 0 1.5-.67 1.5-1.5s-.672-1.5-1.5-1.5zM14.5 7h-13C.672 7 0 7.672 0 8.5S.672 10 1.5 10h13c.828 0 1.5-.672 1.5-1.5S15.328 7 14.5 7z"></path> <path fill="#33d17a" d="M23.71 16.29l-2-2c-.2-.19-.45-.29-.71-.29s-.51.1-.71.29l-2 2c-.28.29-.37.72-.21 1.09.15.38.52.62.92.62h.5v1.5c0 .83-.67 1.5-1.5 1.5H1.5c-.83 0-1.5.67-1.5 1.5S.67 24 1.5 24H18c2.48 0 4.5-2.02 4.5-4.5V18h.5c.4 0 .77-.24.92-.62.16-.37.07-.8-.21-1.09zM14.5 0h-13C.672 0 0 .672 0 1.5S.672 3 1.5 3h13c.828 0 1.5-.672 1.5-1.5S15.328 0 14.5 0z"></path> </g></svg>
+                    <p>Overtime Calculation</p>
+                  </a>
                 {/if}
               </td>
               
