@@ -3,6 +3,8 @@
 
     export let tableList;
     export let formData;
+
+    console.log(formData);
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"style="display:none;">
@@ -24,16 +26,23 @@
                 <svg class="ast"><use xlink:href="#asterisk"></use></svg>
                 {/if}
             </div>
-            <input
-            type="file"
-            class="table-field-input"
-            id={list.id}
-            disabled={list.disabled}
-            on:change={(e) => {
-            // @ts-ignore
-            formData[list.id] = e.target.files[0];
-            }}
-            />
+            <div class="flex flex-col w-full">
+                <input
+                type="file"
+                class="!px-0 table-field-input file:rounded-md file:mr-4 file:border-0 file:py-2 file:px-4 file:bg-slate-100 file:text-slate-500 file:cursor-pointer"
+                id={list.id}
+                disabled={list.disabled}
+                on:change={(e) => {
+                // @ts-ignore
+                formData[list.id] = e.target.files[0];
+                }}
+                />
+                {#if list.showFileName}
+                <div class="w-full text-center text-slate-500">
+                    {formData[list.id]?.name ? formData[list.id].name : "No file selected"}
+                </div>
+                {/if}
+            </div>
         </fieldset>
         {/if}
         {#if list.type === "text"}

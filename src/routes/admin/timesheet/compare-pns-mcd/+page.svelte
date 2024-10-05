@@ -17,6 +17,16 @@
         customer_id: null,
     }
 
+    let dumpformData = {
+        filename: null,
+        from_date: null,
+        to_date: null,
+        description: null,
+        csvmcd: null,
+        csvpns: null,
+        customer_id: null,
+    }
+
     let tableList = [
         {
             name: "Filename",
@@ -41,12 +51,14 @@
         {
             name: "CSV MCD",
             id: "csvmcd",
-            type: "file"
+            type: "file",
+            showFileName: true
         },
         {
             name: "CSV PNS",
             id: "csvpns",
-            type: "file"
+            type: "file",
+            showFileName: true
         }
     ]
 
@@ -54,16 +66,10 @@
 
     let addModal = false;
     let moveConfirm = false;
+    let dataDetail = false;
     let currentMoveId = null;
 
     let tableLoading = false;
-
-    const updateUrl = '';
-    const createUrl = '';
-    const detailUrl = '';
-    const SearchUrl = '/timesheet/search/';
-    const namePage = 'Compare PNS MCD';
-    const searchUrl=null;
     const deleteUrl = "/timesheet/delete-pns-mcd";
     const fetchUrl = "/timesheet/list-pns-mcd";
 
@@ -122,6 +128,8 @@
   }
 
 
+  let tempMcddata;
+  let tempPnsdata;
   async function createTable() {
     const toastId = toastTriggerLoading("importing data...");
     const tempTimesheet = await fetch(import.meta.env.VITE_API_URL + "/timesheet/create-temp-timesheet", {
@@ -169,24 +177,22 @@
     //   body: pnsCsv
     // })
 
-    const [tempMcd, tempPNS] = await Promise.all([
-      fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-mcd", {
+    const tempMcd = await fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-mcd", {
         method: 'POST',
         headers: {
           // 'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' +  getCookie('token')
         },
         body: mcdCsv
-      }),
-      fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-pns", {
+      });
+     const tempPNS = await fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-pns", {
         method: 'POST',
         headers: {
           // 'Content-Type': 'multipart/form-data',
           'Authorization': 'Bearer ' +  getCookie('token')
         },
         body: pnsCsv
-      })
-    ]);
+      });
 
     if (!tempMcd.ok && !tempPNS.ok) {
         await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + tempTimesheetJson.data.id, {
@@ -212,6 +218,11 @@
 
     data.list = await fetchTable();
     addModal = false;
+    tempMcddata = await tempMcd.json();
+    tempPnsdata = await tempPNS.json();
+
+    dataDetail = true;
+    formData = dumpformData;
     return toastTrigger("data imported", toastId, 200);
   }
 
@@ -325,20 +336,6 @@
               <td class="table-td truncate max-w-20">{row.description}</td>
               <td class="table-td">{row.status}</td>
               <td class="table-td flex items-center gap-4">
-                {#if row.status == "draft"}
-                <button class="btn btn-primary hover:btn-error flex gap-2" on:click={() => deleteRow(row.id)}>
-                  <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-
-                    <g id="SVGRepo_iconCarrier"> <path d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z" fill="#e01b24"/> <path d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z" fill="#e01b24"/> </g>
-
-                    </svg>
-                    <p>delete</p>
-                </button>
-                {/if}
                 <a class="" href="/admin/timesheet/compare-pns-mcd/{row.random_string}">
                   <div class="flex gap-2">
                     <svg fill="#3584e4" width="18px" height="18px" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" stroke="#3584e4"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="7.872"></g><g id="SVGRepo_iconCarrier"> <title></title> <g> <path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path> <path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path> <path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path> </g> </g></svg>
@@ -353,6 +350,27 @@
                     <svg width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#33d17a"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#33d17a" d="M14.5 14h-13c-.828 0-1.5.67-1.5 1.5S.672 17 1.5 17h13c.828 0 1.5-.67 1.5-1.5s-.672-1.5-1.5-1.5zM14.5 7h-13C.672 7 0 7.672 0 8.5S.672 10 1.5 10h13c.828 0 1.5-.672 1.5-1.5S15.328 7 14.5 7z"></path> <path fill="#33d17a" d="M23.71 16.29l-2-2c-.2-.19-.45-.29-.71-.29s-.51.1-.71.29l-2 2c-.28.29-.37.72-.21 1.09.15.38.52.62.92.62h.5v1.5c0 .83-.67 1.5-1.5 1.5H1.5c-.83 0-1.5.67-1.5 1.5S.67 24 1.5 24H18c2.48 0 4.5-2.02 4.5-4.5V18h.5c.4 0 .77-.24.92-.62.16-.37.07-.8-.21-1.09zM14.5 0h-13C.672 0 0 .672 0 1.5S.672 3 1.5 3h13c.828 0 1.5-.672 1.5-1.5S15.328 0 14.5 0z"></path> </g></svg>
                     <p>Overtime Calculation</p>
                   </a>
+                {/if}
+
+                {#if row.status == "verified"}
+                  <a class="flex gap-2" href="#">
+                    <p>Move to Timesheet</p>
+                  </a>
+                {/if}
+
+                {#if row.status == "draft"}
+                <button class="btn btn-primary hover:btn-error flex gap-2" on:click={() => deleteRow(row.id)}>
+                  <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+                    <g id="SVGRepo_iconCarrier"> <path d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z" fill="#e01b24"/> <path d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z" fill="#e01b24"/> </g>
+
+                    </svg>
+                    <p>delete</p>
+                </button>
                 {/if}
               </td>
               
@@ -401,6 +419,7 @@
                             bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
                     on:click={() => {
                         addModal = false;
+                        formData = dumpformData;
                     }}
                 >
                   Cancel
@@ -462,3 +481,39 @@
       </Dialog.Content>
   </Dialog.Portal>
 </Dialog.Root>
+
+
+<Dialog.Root bind:open={dataDetail} closeOnEscape closeOnOutsideClick>
+  <Dialog.Portal>
+      <Dialog.Overlay
+      transition={fade}
+      transitionConfig={{ duration: 150 }}
+      class="fixed inset-0 z-50 bg-black/50"
+    />
+      <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
+        <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
+          Detail Imported Data
+        </Dialog.Title>
+        <Dialog.Description class="mb-6 text-sm text-black">
+          <div class="flex flex-row justify-between">
+            <p>Total pns data: {tempPnsdata?.count}</p>
+            <p>Total mcd data: {tempMcddata?.count}</p>
+          </div>
+        </Dialog.Description>
+       
+        <div class="mt-6 flex justify-end gap-4">
+            <button
+              class="inline-flex h-8 items-center justify-center rounded-sm
+                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                on:click={() => {
+                    dataDetail = false;
+                }}
+            >
+              Close
+
+            </button>
+        </div>
+      </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>
+

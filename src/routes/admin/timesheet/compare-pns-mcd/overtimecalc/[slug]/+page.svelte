@@ -6,9 +6,11 @@
 	import { Dialog } from 'bits-ui';
 	import { fade } from 'svelte/transition';
 	import Accordion from '$lib/components/accordion.svelte';
+	import { infiniteScroll } from '$lib/helpers/itersectionObserver.js';
     export let data;
     let alertVerify = false;
     $: list = data.list;
+    $: dataTable = list.data;
 
     const fetchUrl = "/temp-timesheet/overtime-list/" + data.slug;
     const updateUrl = "/temp-timesheet/overtime-update";
@@ -69,6 +71,55 @@
         goto(`/admin/timesheet/compare-pns-mcd?menuid=${data.paramsurl}`);
         toastTrigger('Verified', toastId, 200);
     }
+
+    let observer;
+    let loading = false;
+    let search = '';
+    async function loadMore() {
+        // console.log(dataTable.data);
+      let page = 75;
+        try {
+        if(!dataTable.next_page_url) return;
+		// @ts-ignore
+        loading = true
+        let loadMoreTableData;
+        if (search == '' || search == null || search == undefined) {
+        loadMoreTableData = await fetch(dataTable.next_page_url+ '&perpage=' + page, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + getCookie('token')
+          }
+          });
+      } else {
+          loadMoreTableData = await fetch(dataTable.next_page_url + '&perpage=' + page, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + getCookie('token')
+          },
+
+          body: JSON.stringify({ search: search })
+          });
+      }
+        const response = await loadMoreTableData.json();
+        dataTable.data = [...dataTable.data, ...response.data.data];
+        dataTable.next_page_url = response.data.next_page_url;
+
+        loading = false
+        } catch (error) {
+            loading = false
+        }
+        
+	}
+	$: {
+        if (observer) {
+            infiniteScroll({
+                fetch: loadMore,
+                element: observer,
+            });
+        }
+    }
 </script>
 
 <div class="table-container">
@@ -78,6 +129,7 @@
     </div>
     <table class="table-style">
         <thead class="table-thead">
+            <th class="table-header">No</th>
             <th class="table-header">UID</th>
             <th class="table-header">Employee No</th>
             <th class="table-header">Date</th>
@@ -89,9 +141,10 @@
             <th class="table-header">Paid Hour</th>
         </thead>
         <tbody>
-        {#each list.data.data as row, index}
+        {#each dataTable.data as row, index}
             <Accordion>
                 <svelte:fragment slot="parent" let:handleClick let:open>
+                    <td class="table-td">{index + 1}</td>
                     <td class="table-td flex gap-2" on:click={handleClick}>
                         <svg class="w-5 h-5 text-gray-500 transition {open?'-rotate-90':'rotate-90'}" xmlns="http://www.w3.org/2000/svg"
                         width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -113,7 +166,7 @@
                 <svelte:fragment slot="child">
                     <td class="table-container m-3" colspan="4">
                         <div class="p-3">
-                            <h1>Detail Overtime {row.custom_id}</h1>
+                            <h1 class="text-xl text-center">Detail Overtime {row.custom_id}</h1>
                             <table class="table-style">
                                 <thead class="table-thead">
                                     <th class="table-header">Multiplication Code</th>
@@ -136,6 +189,14 @@
                                             <td class="table-td">{ovRow.multiplication_setup.to_hours}</td>
                                         </tr>
                                     {/each}
+
+                                    {#if row.overtime_timesheet.length == 0 && row.overtime_hours > 0}
+                                        {@const day = new Date(row.date).getDay()}
+                                        {@const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']}
+                                        <tr>
+                                            <td class="table-td text-6xl" colspan="7">Overtime setup not found for {dayName[day]}</td>
+                                        </tr>
+                                    {/if}
                                 </tbody>
                             </table>
                         </div>
@@ -143,6 +204,10 @@
                 </svelte:fragment>
             </Accordion>
         {/each}
+        <tr id="observer" class="h-4" bind:this={observer}></tr>
+            {#if loading}
+            <div class="loading" />
+            {/if}
         </tbody>
     </table>
 
