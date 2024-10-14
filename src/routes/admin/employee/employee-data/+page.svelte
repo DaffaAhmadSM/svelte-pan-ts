@@ -1,8 +1,14 @@
 <script>
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
+	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
+	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
+	import { Dialog } from 'bits-ui';
+	import { fade } from 'svelte/transition';
     export let data;
+
+    let setting = data.setting;
 
     let formData = {
     number_sequence_id: null, // required|exists:number_sequences,id
@@ -583,6 +589,20 @@ let detailMeta = [
     }
 ];
 
+    let formImportExcel = {
+        file: null
+    }
+
+    let tableimport = [
+        {
+            name: "File",
+            id: "file",
+            type: "file",
+            required: true,
+            showFileName: true,
+        }
+    ];
+
 
 
     let educationLevelAll;
@@ -624,6 +644,46 @@ let detailMeta = [
         numberSequenceAll = await res.json();
     }
 
+    let modalImportExcel = false;
+    async function importfromexcel() {
+        const toastId = toastTriggerLoading('Importing data, please wait...');
+        let formData = new FormData();
+        formData.append('file', formImportExcel.file);
+        const res = await fetch(import.meta.env.VITE_API_URL + '/employee-data/import', {
+            method: 'POST',
+            headers: {
+                'authorization': 'Bearer ' + getCookie('token')
+            },
+            body: formData
+        });
+
+        if (!res.ok) {
+            toastTrigger('Failed to import data', toastId, res.status);
+            return;
+        }
+
+        const resData = await res.json();
+
+        let refetch = fetchTable();
+        data.list = await refetch;
+        modalImportExcel = false;
+        
+        toastTrigger('Data imported successfully', toastId, res.status);
+    }
+
+    
+    async function fetchTable(){
+    let page = setting.sizePage ? setting.sizePage : 70;
+    const get = await fetch(import.meta.env.VITE_API_URL + fetchUrl + '?perpage=' + page, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' +  getCookie('token')
+      },
+    })
+    return await get.json();
+  }
+
   const fetchUrl = '/employee-data/list';
   const updateUrl = '/employee-data/update';
   const deleteUrl = '/employee-data/delete';
@@ -634,7 +694,7 @@ let detailMeta = [
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {detailMeta} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
 
         <!-- <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
@@ -644,6 +704,10 @@ let detailMeta = [
             <td class="table-td">{row.gender}</td>
             <td class="table-td">{row.search_name}</td>
         </svelte:fragment> -->
+
+        <svelte:fragment slot="add-slots">
+            <button class="button-table-add" on:click={()=> modalImportExcel = true}>Import from excel</button>
+        </svelte:fragment>
 
         <svelte:fragment slot="aditional-form-create">
             {#await getTaxClassAll() then _} 
@@ -713,3 +777,44 @@ let detailMeta = [
         
     </UniversalSetupTable>
 </div>
+
+<Dialog.Root bind:open={modalImportExcel} closeOnEscape closeOnOutsideClick>
+    <Dialog.Portal>
+        <Dialog.Overlay
+        transition={fade}
+        transitionConfig={{ duration: 150 }}
+        class="fixed inset-0 z-50 bg-black/50"
+      />
+        <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
+          <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
+            Add
+          </Dialog.Title>
+          <Dialog.Description class="mb-6 text-sm text-black">
+              Fill in the form below to add a new data.
+          </Dialog.Description>
+          <UniversalTableField tableList={tableimport} formData={formImportExcel} />
+          <div class="mt-6 flex justify-end gap-4">
+              <button
+                class="inline-flex h-8 items-center justify-center rounded-sm
+                          bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                  on:click={() => {
+                      modalImportExcel = false;
+                  }}
+              >
+                Cancel
+
+              </button>
+              <button
+              type="submit"
+                class="inline-flex h-8 items-center justify-center rounded-sm
+                          bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
+                on:click={() => {
+                  importfromexcel();
+                }}
+              >
+                Save changes
+              </button>
+          </div>
+        </Dialog.Content>
+    </Dialog.Portal>
+</Dialog.Root>
