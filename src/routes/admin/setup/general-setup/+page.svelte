@@ -4,7 +4,6 @@
     export let data;
 
     let formData = {
-        number_sequence_id: null,
         customer: null,
         customer_invoice: null,
         customer_contract: null,
@@ -18,71 +17,9 @@
         vacancy_no: null,
     }
 
-    let tableList = [
-        {
-            name: "Customer",
-            id: "customer",
-            type: "text",
-            disabled: true
-        },
-        {
-            name: "Customer Invoice",
-            id: "customer_invoice",
-            type: "text"
-        },
-        {
-            name: "Customer Contract",
-            id: "customer_contract",
-            type: "text"
-        },
-        {
-            name: "Customer Timesheet",
-            id: "customer_timesheet",
-            type: "text"
-        },
-        {
-            name: "Employee",
-            id: "employee",
-            type: "text"
-        },
-        {
-            name: "Leave Request",
-            id: "leave_request",
-            type: "text"
-        },
-        {
-            name: "Leave Adjustment",
-            id: "leave_adjustment",
-            type: "text"
-        },
-        {
-            name: "Timesheet",
-            id: "timesheet",
-            type: "text"
-        },
-        {
-            name: "Invent Journal",
-            id: "invent_journal_id",
-            type: "text"
-        },
-        {
-            name: "Inventory Transaction",
-            id: "invent_trans_id",
-            type: "text"
-        },
-        {
-            name: "Vacancy No",
-            id: "vacancy_no",
-            type: "text"
-        },
-    ]
+    let tableList = []
 
     let detailMeta = [
-        {
-            name: "Number Sequence",
-            id: "number_sequence.code",
-            type: "text",
-        },
         {
             name: "Customer",
             id: "customer",
@@ -181,32 +118,252 @@
         <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Number Sequence</div>
-                <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
+                <div class="w-[90px] text-right text-black">Customer</div>
+                <select name="number_sequence" bind:value={formData.customer} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
                     {#if numberSequenceAll}
                         {#each numberSequenceAll.data as numberSequence}
-                            <option value={numberSequence.id}>{numberSequence.code}</option>
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
                         {/each}
                     {/if}
                 </select>
             </fieldset>
-        {/await}
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Invoice</div>
+                <select name="number_sequence" bind:value={formData.customer_invoice} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Contract</div>
+                <select name="number_sequence" bind:value={formData.customer_contract} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Timesheet</div>
+                <select name="number_sequence" bind:value={formData.customer_timesheet} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Employee</div>
+                <select name="number_sequence" bind:value={formData.employee} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Leave Request</div>
+                <select name="number_sequence" bind:value={formData.leave_request} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Leave Adjustment</div>
+                <select name="number_sequence" bind:value={formData.leave_adjustment} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Timesheet</div>
+                <select name="number_sequence" bind:value={formData.timesheet} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Invent Journal</div>
+                <select name="number_sequence" bind:value={formData.invent_journal_id} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Invent Transaction</div>
+                <select name="number_sequence" bind:value={formData.invent_trans_id} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Vacancy No</div>
+                <select name="number_sequence" bind:value={formData.vacancy_no} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            {/await}
         </svelte:fragment>
         <svelte:fragment slot="aditional-form-update">
         {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
-                <div class="w-[90px] text-right text-black">Number Sequence</div>
-                <select name="number_sequence" bind:value={formData.number_sequence_id} class="inline-flex h-8 w-full flex-1
-                              rounded-sm px-3 leading-none text-black input input-bordered" on:change={numberSequenceChange}>
+                <div class="w-[90px] text-right text-black">Customer</div>
+                <select name="number_sequence" bind:value={formData.customer} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
                     {#if numberSequenceAll}
                         {#each numberSequenceAll.data as numberSequence}
-                            <option value={numberSequence.id}>{numberSequence.code}</option>
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
                         {/each}
                     {/if}
                 </select>
             </fieldset>
-        {/await}
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Invoice</div>
+                <select name="number_sequence" bind:value={formData.customer_invoice} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Contract</div>
+                <select name="number_sequence" bind:value={formData.customer_contract} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Customer Timesheet</div>
+                <select name="number_sequence" bind:value={formData.customer_timesheet} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Employee</div>
+                <select name="number_sequence" bind:value={formData.employee} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Leave Request</div>
+                <select name="number_sequence" bind:value={formData.leave_request} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Leave Adjustment</div>
+                <select name="number_sequence" bind:value={formData.leave_adjustment} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Timesheet</div>
+                <select name="number_sequence" bind:value={formData.timesheet} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Invent Journal</div>
+                <select name="number_sequence" bind:value={formData.invent_journal_id} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Invent Transaction</div>
+                <select name="number_sequence" bind:value={formData.invent_trans_id} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            <fieldset class="mb-4 flex items-center gap-5">
+                <div class="w-[90px] text-right text-black">Vacancy No</div>
+                <select name="number_sequence" bind:value={formData.vacancy_no} class="inline-flex h-8 w-full flex-1
+                              rounded-sm px-3 leading-none text-black input input-bordered">
+                    {#if numberSequenceAll}
+                        {#each numberSequenceAll.data as numberSequence}
+                            <option value={numberSequence.code}>{numberSequence.code}</option>
+                        {/each}
+                    {/if}
+                </select>
+            </fieldset>
+            {/await}
         </svelte:fragment>
     </UniversalSetupTable>
 </div>

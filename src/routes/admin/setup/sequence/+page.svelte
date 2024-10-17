@@ -5,6 +5,9 @@
     let formData = {
         code: null,
         description: null,
+        starting_number: null,
+        ending_number: null,
+        prefix: null,
     }
 
     let tableList = [
@@ -17,7 +20,22 @@
             name: "Description",
             id: "description",
             type: "text"
-        }
+        },
+        {
+            name: "Starting Number",
+            id: "starting_number",
+            type: "number"
+        },
+        {
+            name: "Ending Number",
+            id: "ending_number",
+            type: "number"
+        },
+        {
+            name: "Prefix",
+            id: "prefix",
+            type: "text"
+        },
     ]
 
 
