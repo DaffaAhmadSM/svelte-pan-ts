@@ -291,7 +291,7 @@
     </div>
   {/if}
 {#if data.permissions.permission.create}
-  <slot name="add-row" prop={addModal} nullform={nullForm}}>
+  <slot name="add-row" prop={addModal} nullform={nullForm} openAddRow={()=>(addModal=true)}>
     <div class="flex gap-5">
       <slot name="add-slots"></slot>
       <button class="button-table-add" on:click={() =>  {addModal = true; nullForm();}}><p>Add</p></button>

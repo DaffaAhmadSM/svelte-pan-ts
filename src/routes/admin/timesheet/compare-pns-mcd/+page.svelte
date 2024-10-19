@@ -353,9 +353,9 @@
                 {/if}
 
                 {#if row.status == "verified"}
-                  <a class="flex gap-2" href="#">
+                  <button class="flex gap-2" on:click={()=> moveToTimesheet(row.id)}>
                     <p>Move to Timesheet</p>
-                  </a>
+                  </button>
                 {/if}
 
                 {#if row.status == "draft"}

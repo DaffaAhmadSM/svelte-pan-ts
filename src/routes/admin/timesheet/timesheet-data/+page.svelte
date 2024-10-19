@@ -254,9 +254,9 @@
         return await res.json();
     }
 
-    async function  moveToTimesheet(id) {
+    async function  moveToCustomerTimesheet(id) {
         const toastId = toastTriggerLoading('Moving...');
-        const res = await fetch(import.meta.env.VITE_API_URL + '/timesheet/move-to-timesheet/' + id, {
+        const res = await fetch(import.meta.env.VITE_API_URL + '/timesheet/generate-customer-timesheet/' + id, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -267,6 +267,13 @@
             moveConfirm = false;
             data.list = await fetchTable();
             return toastTrigger("Data Moved", toastId, 200, 500);
+        }
+
+        let message = await res.json();
+
+        if (!res.ok) {
+            moveConfirm = false;
+            return toastTrigger(message.message, toastId, res.status);
         }
 
         return toastTrigger(data.list.data.message, toastId, res.status);
@@ -340,9 +347,9 @@
                     <span>Detail</span>
                   </div>
                 </a>
-                <!-- <button class="btn btn-primary hover:btn-error" on:click={()=> {detailTable(row.id);}}>
-                    Detail
-                </button> -->
+                <button class="btn btn-primary hover:btn-error" on:click={()=> {moveConfirm = true; currentMoveId=row.id}}>
+                    Generate Customer Timesheet
+                </button>
               </td>
               
             </tr>
@@ -421,10 +428,10 @@
     />
       <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
         <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
-          Add
+          Move Confirm
         </Dialog.Title>
         <Dialog.Description class="mb-6 text-sm text-black">
-            Move Temporary File to Timesheet
+            Move File to Customer Timesheet
         </Dialog.Description>
        
         <div class="mt-6 flex justify-end gap-4">
@@ -443,7 +450,7 @@
               class="inline-flex h-8 items-center justify-center rounded-sm
                         bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
               on:click={() => {
-                moveToTimesheet(currentMoveId);
+                moveToCustomerTimesheet(currentMoveId);
               }}
             >
               Move

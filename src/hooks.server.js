@@ -21,12 +21,10 @@ export async function handle({ event, resolve }) {
         })
         
         if(fetchAuthCheck.status === 401) {
-            return new Response(null, {
-                status: 302,
-                headers: {
-                    'Location': '/'
-                }
-            })
+            event.cookies.getAll().forEach(cookie => {
+                event.cookies.delete(cookie.name, {path: '/'});
+            });
+            throw redirect(307, '/');
         }
     }
 	const response = await resolve(event);
