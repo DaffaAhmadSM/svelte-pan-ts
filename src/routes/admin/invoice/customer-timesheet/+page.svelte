@@ -70,7 +70,7 @@
 
     let tableLoading = false;
     const deleteUrl = "/timesheet/delete-pns-mcd";
-    const fetchUrl = "/timesheet/list-pns-mcd";
+    const fetchUrl = "/customer-timesheet/list";
 
 
     $: tableData = data.list.data
@@ -254,9 +254,9 @@
         return await res.json();
     }
 
-    async function  moveToCustomerTimesheet(id) {
-        const toastId = toastTriggerLoading('Moving...');
-        const res = await fetch(import.meta.env.VITE_API_URL + '/timesheet/generate-customer-timesheet/' + id, {
+    async function  generateCustomerInvoice(id) {
+        const toastId = toastTriggerLoading('Generating...');
+        const res = await fetch(import.meta.env.VITE_API_URL + '/customer-timesheet/generate-invoice/' + id, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -266,12 +266,13 @@
         if (res.ok) {
             moveConfirm = false;
             data.list = await fetchTable();
-            return toastTrigger("Data Moved", toastId, 200, 500);
+            return toastTrigger("Data Generated", toastId, 200, 500);
         }
 
         let message = await res.json();
 
         if (!res.ok) {
+            console.log("res not ok");
             moveConfirm = false;
             return toastTrigger(message.message, toastId, res.status);
         }
@@ -299,10 +300,6 @@
                       </div>
                   </div>
               <!-- {/if} -->
-  
-              <button class="text-center text-xl bg-emerald-400/35 p-3" on:click={() => addModal = true}>
-                  Add +
-              </button>
       </div>
   </div>
   
@@ -348,11 +345,11 @@
                     <span>Detail</span>
                   </div>
                 </a>
-                {#if row.status == 'open'}
+                <!-- {#if row.status == 'open'} -->
                 <button class="btn btn-primary hover:btn-error" on:click={()=> {moveConfirm = true; currentMoveId=row.id}}>
                     Generate Invoice
                 </button>
-                {/if}
+                <!-- {/if} -->
               </td>
               
             </tr>
@@ -431,10 +428,10 @@
     />
       <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
         <Dialog.Title class="m-0 text-lg font-medium text-primary-400">
-          Move Confirm
+          Generate
         </Dialog.Title>
         <Dialog.Description class="mb-6 text-sm text-black">
-            Move File to Customer Timesheet
+           Generate Customer Invoice?
         </Dialog.Description>
        
         <div class="mt-6 flex justify-end gap-4">
@@ -453,7 +450,7 @@
               class="inline-flex h-8 items-center justify-center rounded-sm
                         bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
               on:click={() => {
-                moveToCustomerTimesheet(currentMoveId);
+                generateCustomerInvoice(currentMoveId);
               }}
             >
               Move
