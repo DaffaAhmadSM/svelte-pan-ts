@@ -193,8 +193,9 @@
         },
         body: pnsCsv
       });
+      
 
-    if (!tempMcd.ok && !tempPNS.ok) {
+    if (!tempMcd.ok || !tempPNS.ok) {
         await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + tempTimesheetJson.data.id, {
             method: 'POST',
             headers: {
@@ -202,7 +203,7 @@
                 'Authorization': 'Bearer ' + getCookie('token')
             }
         });
-        return toastTrigger(tempMcd.statusText, toastId, tempMcd.status);
+        return toastTrigger("failed to import", toastId, 500);
     }
 
     await fetch(import.meta.env.VITE_API_URL + '/timesheet/compare-pns-mcd', {

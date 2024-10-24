@@ -312,10 +312,7 @@
                                 <h1>Detail PNS</h1>
                                 <table class="table-style">
                                     <thead class="table-thead">
-                                        <th class="table-header">Kronos Job Number</th>
-                                        <th class="table-header">Oracle Job Number</th>
                                         <th class="table-header">Employee Name</th>
-                                        <th class="table-header">Parent ID</th>
                                         <th class="table-header">Date (YYYY-MM-DD)</th>
                                         <th class="table-header">Value</th>
                                         <th class="table-header">Action</th>
@@ -323,10 +320,7 @@
                                     <tbody>
                                         {#each row.pns_ids as pnsrow}
                                             <tr>
-                                                <td class="table-td">{pnsrow.kronos_job_number}</td>
-                                                <td class="table-td">{pnsrow.oracle_job_number}</td>
                                                 <td class="table-td">{pnsrow.employee_name}</td>
-                                                <td class="table-td">{pnsrow.parent_id}</td>
                                                 <td class="table-td">{pnsrow.date}</td>
                                                 <td class="table-td">{pnsrow.value}</td>
                                                 <td class="table-td">
