@@ -6,11 +6,11 @@
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { Dialog } from 'bits-ui';
 	import { fade } from 'svelte/transition';
-    export let data;
+  let { data = $bindable() } = $props();
 
     let setting = data.setting;
 
-    let formData = {
+    let formData = $state({
     number_sequence_id: null, // required|exists:number_sequences,id
     name: null, // string|max:255
     type: null, // in:employee,freelance
@@ -50,7 +50,7 @@
     bank_holder: null, // string|max:255
     bpjs_tk: null, // string|max:255
     bpjs_medical: null // string|max:255
-    };
+    });
 
     let tableList = [
     {
@@ -605,7 +605,7 @@ let detailMeta = [
 
 
 
-    let educationLevelAll;
+    let educationLevelAll = $state();
     async function getEducationLevelAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/education-level/all', {
             method: 'GET',
@@ -618,7 +618,7 @@ let detailMeta = [
         educationLevelAll = await res.json();
     }
 
-    let taxClassAll;
+    let taxClassAll = $state();
     async function getTaxClassAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/classification-of-tax-payer/all', {
             method: 'GET',
@@ -631,7 +631,7 @@ let detailMeta = [
         taxClassAll = await res.json();
     }
 
-    let numberSequenceAll;
+    let numberSequenceAll = $state();
     async function getNumberSequenceAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/number-sequence/all', {
             method: 'GET',
@@ -644,7 +644,7 @@ let detailMeta = [
         numberSequenceAll = await res.json();
     }
 
-    let modalImportExcel = false;
+    let modalImportExcel = $state(false);
     async function importfromexcel() {
         const toastId = toastTriggerLoading('Importing data, please wait...');
         let formData = new FormData();
@@ -705,11 +705,13 @@ let detailMeta = [
             <td class="table-td">{row.search_name}</td>
         </svelte:fragment> -->
 
-        <svelte:fragment slot="add-slots">
-            <button class="button-table-add" on:click={()=> modalImportExcel = true}>Import from excel</button>
+        <!-- @migration-task: migrate this slot by hand, `add-slots` is an invalid identifier -->
+  <svelte:fragment slot="add-slots">
+            <button class="button-table-add" onclick={()=> modalImportExcel = true}>Import from excel</button>
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getTaxClassAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Classification Tax Payer"
@@ -742,7 +744,8 @@ let detailMeta = [
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getTaxClassAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Classification Tax Payer"
@@ -797,7 +800,7 @@ let detailMeta = [
               <button
                 class="inline-flex h-8 items-center justify-center rounded-sm
                           bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-                  on:click={() => {
+                  onclick={() => {
                       modalImportExcel = false;
                   }}
               >
@@ -808,7 +811,7 @@ let detailMeta = [
               type="submit"
                 class="inline-flex h-8 items-center justify-center rounded-sm
                           bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-                on:click={() => {
+                onclick={() => {
                   importfromexcel();
                 }}
               >

@@ -1,4 +1,5 @@
 <script>
+    import CheckboxListElement from './checkboxListElement.svelte';
 function toggleItem(item, isChecked) {
 if (isChecked) {
     if (!checkedNodes.includes(item.id)) {
@@ -11,15 +12,14 @@ if (item.children) {
 item.children.forEach(child => toggleItem(child, isChecked));
 }
 }   
-export let item;
-export let checkedNodes = [];
+    let { item, checkedNodes = $bindable([]) } = $props();
 </script>
 
 <li>
     {#if item.children}
     <details class="flex items-center gap-2 p-2 font-medium marker:content-none hover:cursor-pointer">
     <summary class="flex flex-row">
-        <input type="checkbox" checked={checkedNodes.includes(item.id)} on:change={e => toggleItem(item, e.target.checked)} id="parent"/>
+        <input type="checkbox" checked={checkedNodes.includes(item.id)} onchange={e => toggleItem(item, e.target.checked)} id="parent"/>
         <span class="text-gray-900 gap-2 pl-2">{item.content}</span>
         <svg class="w-5 h-5 text-gray-500 transition" xmlns="http://www.w3.org/2000/svg"
         width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -29,12 +29,12 @@ export let checkedNodes = [];
         </svg>
     </summary>
         <article class="mx-4">
-                <svelte:self menu={item.children} bind:checkedNodes={checkedNodes}/>
+                <CheckboxListElement menu={item.children} bind:checkedNodes={checkedNodes}/>
         </article>
     </details>
     {:else}
         <label class="flex items-center gap-2 p-2 font-medium marker:content-none hover:cursor-pointer">
-            <input type="checkbox" checked={checkedNodes.includes(item.id)} on:change={e => toggleItem(item, e.target.checked)} />
+            <input type="checkbox" checked={checkedNodes.includes(item.id)} onchange={e => toggleItem(item, e.target.checked)} />
             {item.content}
         </label>
     {/if}

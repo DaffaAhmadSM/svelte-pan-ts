@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<th>` is invalid inside `<thead>` -->
 <script>
 	import { getCookie } from '$lib/helpers/getLocalCookies';
 	import Accordion from '$lib/components/accordion.svelte';

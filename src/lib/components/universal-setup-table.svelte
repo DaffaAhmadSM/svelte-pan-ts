@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script>
 	import UniversalDetailMeta from './universal-detail-meta.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
@@ -301,26 +302,26 @@
 </div>
 {#if tableLoading}
 <div class="fixed left-0 top-0 z-99 w-full h-full flex items-center justify-center">
-  <div class="loading" />
+  <div class="loading"></div>
 </div>
 {:else}
 <div class="container-table">
     <table class="table-style">
       <thead class="table-thead">
-        <tr>
-          <th scope="col" class="table-header">
-            <p>No</p>
-          </th>
-          {#each Object.values(data.list.header) as columnHeading}
-              <th scope="col" class="table-header">
-                <p>{columnHeading}</p>
-              </th>
-          {/each}
-          <slot name="table-header"></slot>
-          <th scope="col" class="table-header">
-            <p>Action</p>
-          </th>
-        <tr/>
+          <tr>
+            <th scope="col" class="table-header">
+              <p>No</p>
+            </th>
+            {#each Object.values(data.list.header) as columnHeading}
+                <th scope="col" class="table-header">
+                  <p>{columnHeading}</p>
+                </th>
+            {/each}
+            <slot name="table-header"></slot>
+            <th scope="col" class="table-header">
+              <p>Action</p>
+            </th>
+          </tr>
       </thead>
       <tbody class="table-tbody">
           {#each tableData.data as row, i}
@@ -339,7 +340,7 @@
                               <slot name="user-menu-edit" id={row.id}></slot>
                               
                               <slot name="edit-row" prop={row} detailTable={updateDetailTable} rowId={rowId}>
-                                  <button class="btn btn-warning hover:btn-error" on:click={() => {
+                                  <button aria-label="update" class="btn btn-warning hover:btn-error" on:click={() => {
                                     updateDetailTable(row.id); console.log(tableData.data);
                                   }}>
                                   <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -357,7 +358,7 @@
                       {/if}
                       {#if data.permissions.permission.delete}
                               <slot name="delete-row" prop={row}>
-                                  <button class="btn btn-primary hover:btn-error" on:click={()=> {rowId=row.id; deleteModal=true;}}>
+                                  <button aria-label="delete" class="btn btn-primary hover:btn-error" on:click={()=> {rowId=row.id; deleteModal=true;}}>
                                     <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
                                       <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -385,7 +386,7 @@
       </tbody>
     </table>
     {#if loading}
-    <div class="loading" />
+    <div class="loading" ></div>
     {/if}
 </div>
 {/if}

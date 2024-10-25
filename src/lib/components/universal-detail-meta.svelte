@@ -1,8 +1,10 @@
 <script>
-export let detailname;
-export let detailData;
-export let detailType;
-export let arrayGuide = [];
+    let {
+        detailname,
+        detailData,
+        detailType,
+        arrayGuide = []
+    } = $props();
 </script>
 
 {#if detailType == "text"}

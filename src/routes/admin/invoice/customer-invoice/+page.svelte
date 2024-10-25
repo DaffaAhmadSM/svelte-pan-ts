@@ -1,9 +1,9 @@
 <script>
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
-    }
+    let formData = $state({
+    })
 
     let tableList = [
     ]

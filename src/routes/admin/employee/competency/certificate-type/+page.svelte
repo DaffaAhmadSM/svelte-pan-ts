@@ -3,14 +3,14 @@
 import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         type: null,
         description: null,
         certificate_classification_id: null,
         required_renewal: null
-    }
+    })
 
     let tableList = [
         {
@@ -35,7 +35,7 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
         }
     ]
 
-  let classificationAll;
+  let classificationAll = $state();
 
   async function getCertificationAll(){
 
@@ -59,13 +59,15 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 
 <div class="table-container">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.type}</td>
             <td class="table-td">{row.description}</td>
             <td class="table-td">{row.classification.classification}</td>
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getCertificationAll() then _}
             <AutocompleteComponents
             fieldLable="Classification"
@@ -88,7 +90,8 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
             
             />
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getCertificationAll() then _}
             <AutocompleteComponents
             fieldLable="Classification"

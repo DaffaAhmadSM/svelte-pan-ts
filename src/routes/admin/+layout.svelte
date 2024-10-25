@@ -5,17 +5,22 @@
 	import { Toaster } from 'svelte-sonner';
 	import { menuData } from '$lib/stores/menu';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
+	
 	/**
-	 * @type {import('./$types').LayoutData}
-	 * */
-	export let data;
+	 * @typedef {Object} Props
+	 * @property {import('./$types').LayoutData} data
+	 * @property {import('svelte').Snippet} [children]
+	 */
+
+	/** @type {Props} */
+	let { data, children } = $props();
 	menuData.set(data.menu);
-	$: menu = $menuData.menu;
+	let menu = $derived($menuData.menu);
 
 	let timer;
-	let search;
+	let search = $state();
 	let loading = false;
-	let dataMenuSearch = [];
+	let dataMenuSearch = $state([]);
 
 	// Filter function
     function searchMenu(menu, query) {
@@ -92,7 +97,7 @@
               class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-none"
               placeholder="Search"
 			  bind:value={search}
-			  on:input={handleSearchMenu}
+			  oninput={handleSearchMenu}
             />
           </div>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
@@ -149,7 +154,7 @@
 		{:else}
 			<div class="flex flex-col">
 				<!-- <Breadcrumbs /> -->
-				<slot />
+				{@render children?.()}
 			</div>
 		{/if}
 	</div>

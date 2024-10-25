@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<th>` is invalid inside `<thead>` -->
 <script>
 	import  UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
     import { goto } from '$app/navigation';

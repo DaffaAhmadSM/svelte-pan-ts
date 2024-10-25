@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script>
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { fade } from 'svelte/transition';
@@ -306,26 +307,26 @@
   <div class="container-table">
     {#if tableLoading}
     <div class="fixed left-0 top-0 z-99 w-full h-full flex items-center justify-center">
-      <div class="loading" />
+      <div class="loading"></div>
     </div>
     {:else}
     <div class="container-table">
       <table class="table-style">
         <thead class="table-thead">
-          <tr>
-            <th scope="col" class="table-header">
-              <p>No</p>
-            </th>
-            {#each Object.values(data.list.header) as columnHeading}
-                <th scope="col" class="table-header">
-                  <p>{columnHeading}</p>
-                </th>
-            {/each}
-            <slot name="table-header"></slot>
-            <th scope="col" class="table-header">
-              <p>Action</p>
-            </th>
-          <tr/>
+            <tr>
+              <th scope="col" class="table-header">
+                <p>No</p>
+              </th>
+              {#each Object.values(data.list.header) as columnHeading}
+                  <th scope="col" class="table-header">
+                    <p>{columnHeading}</p>
+                  </th>
+              {/each}
+              <slot name="table-header"></slot>
+              <th scope="col" class="table-header">
+                <p>Action</p>
+              </th>
+            </tr>
         </thead>
         <tbody class="table-tbody">
           {#each data.list.data.data as row, i}
@@ -358,7 +359,7 @@
         </tbody>
       </table>
       {#if loading}
-      <div class="loading" />
+      <div class="loading" ></div>
       {/if}
     </div>
     {/if}

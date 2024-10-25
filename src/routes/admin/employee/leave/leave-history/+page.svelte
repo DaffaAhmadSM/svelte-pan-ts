@@ -4,9 +4,9 @@
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { getValueByPath } from '$lib/helpers/getObjectValue';
 	import { name } from '@melt-ui/svelte';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         employee_id: null,
         date: null,
         trans_type: null, // Leave, Entitle
@@ -16,7 +16,7 @@
         from_date_time: null, //date
         to_date_time: null, //date
         remarks: null,
-    }
+    })
 
     let tableList = [
         {
@@ -99,7 +99,7 @@
 
     ]
 
-    let employeeAll;
+    let employeeAll = $state();
     async function getEmployeeAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/employee-data/all', {
             method: 'GET',
@@ -124,14 +124,16 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:header let:index let:row>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:header let:index let:row>
             <td class="table-td">{index + 1}</td>
             {#each Object.entries(header) as [key, value]}
                 <td class="table-td">{getValueByPath(row, key)}</td>
             {/each}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getEmployeeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Employee"
@@ -144,7 +146,8 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getEmployeeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Employee"

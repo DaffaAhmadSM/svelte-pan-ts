@@ -3,9 +3,9 @@
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading, toastTriggerUpdate } from '$lib/helpers/toasterTrigger.js';
 	import { name } from '@melt-ui/svelte';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         number_sequence_id: null,
         no: null,
         name: null,
@@ -16,7 +16,7 @@
         description: null,
         working_hour_id: null,
         compare_type: null,
-    }
+    })
 
     let tableList = [
         {
@@ -124,8 +124,8 @@
         }
     ]
 
-    let numberSequenceAll;
-    let workingHourAll;
+    let numberSequenceAll = $state();
+    let workingHourAll = $state();
 
     async function getWorkingHourAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/working-hour/all', {
@@ -185,11 +185,12 @@
 
 <div class="table-container">
     <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Number Sequence</div>
-                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" on:change={numberSequenceChange}>
+                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" onchange={numberSequenceChange}>
                     {#if numberSequenceAll}
                         {#each numberSequenceAll.data as numberSequence}
                             <option value={numberSequence.id}>{numberSequence.code}</option>
@@ -201,7 +202,7 @@
             {#await getWorkingHourAll() then }
             <fieldset class="table-fieldset">
                 <label class="table-field-label" for="working_hour">Working Hour</label>
-                <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" on:change={workingHourChange}>
+                <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" onchange={workingHourChange}>
                     {#if workingHourAll}
                         {#each workingHourAll.data as workingHour}
                             <option value={workingHour.id}>{workingHour.code}</option>
@@ -211,11 +212,12 @@
             </fieldset>
             {/await}
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Number Sequence</div>
-                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" on:change={numberSequenceChange}>
+                <select name="number_sequence" bind:value={formData.number_sequence_id} class="table-field-input" onchange={numberSequenceChange}>
                     {#if numberSequenceAll}
                         {#each numberSequenceAll.data as numberSequence}
                             <option value={numberSequence.id}>{numberSequence.code}</option>
@@ -227,7 +229,7 @@
             {#await getWorkingHourAll() then }
             <fieldset class="table-fieldset">
                 <label class="table-field-label" for="working_hour">Working Hour</label>
-                <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" on:change={workingHourChange}>
+                <select name="working_hour" bind:value={formData.working_hour_id} class="table-field-input" onchange={workingHourChange}>
                     {#if workingHourAll}
                         {#each workingHourAll.data as workingHour}
                             <option value={workingHour.id}>{workingHour.code}</option>

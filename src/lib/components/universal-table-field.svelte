@@ -1,8 +1,7 @@
 <script>
 	import AutocompleteComponents from "./autocompleteComponents.svelte";
 
-    export let tableList;
-    export let formData;
+  let { tableList, formData = $bindable() } = $props();
 
     console.log(formData);
 </script>
@@ -32,7 +31,7 @@
                 class="!px-0 table-field-input file:rounded-md file:mr-4 file:border-0 file:py-2 file:px-4 file:bg-slate-100 file:text-slate-500 file:cursor-pointer"
                 id={list.id}
                 disabled={list.disabled}
-                on:change={(e) => {
+                onchange={(e) => {
                 // @ts-ignore
                 formData[list.id] = e.target.files[0];
                 }}

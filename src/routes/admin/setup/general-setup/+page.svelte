@@ -1,9 +1,9 @@
 <script>
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         customer: null,
         customer_invoice: null,
         customer_contract: null,
@@ -15,7 +15,7 @@
         invent_journal_id: null,
         invent_trans_id: null,
         vacancy_no: null,
-    }
+    })
 
     let tableList = []
 
@@ -77,7 +77,7 @@
         },
     ]
 
-    let numberSequenceAll;
+    let numberSequenceAll = $state();
 
     async function getNumberSequenceAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/number-sequence/all', {
@@ -115,7 +115,8 @@
 
 <div class="table-container">
     <UniversalSetupTable {detailMeta}{namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
                 <div class="w-[90px] text-right text-black">Customer</div>
@@ -240,7 +241,8 @@
             </fieldset>
             {/await}
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
         {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
                 <div class="w-[90px] text-right text-black">Customer</div>

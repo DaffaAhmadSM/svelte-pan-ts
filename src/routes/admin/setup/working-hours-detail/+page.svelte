@@ -2,13 +2,13 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         working_hours_id: null,
         hours: null,
         day: null,
-    };
+    });
 
     let tableList = [
     {
@@ -55,7 +55,7 @@
     },
 ];
 
-    let workingHourAll;
+    let workingHourAll = $state();
     async function getWorkingHour (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/working-hour/all', {
             method: 'GET',
@@ -80,13 +80,15 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.working_hour.code}</td>
             <td class="table-td">{row.day}</td>
             <td class="table-td">{row.hours}</td>
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getWorkingHour() then _} 
                     <AutocompleteComponents
                         fieldLable="Working Hour"
@@ -99,7 +101,8 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
                 {#await getWorkingHour() then _} 
                 <AutocompleteComponents
                     fieldLable="Working Hour"

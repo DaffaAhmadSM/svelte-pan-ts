@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<th>` is invalid inside `<thead>` -->
 <script>
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
@@ -273,12 +274,14 @@
     <Tabs.Content value="compare" class="pt-3">
         <table class="table-style">
             <thead class="table-thead">
-                <th class="table-header">Employee Name</th>
-                <th class="table-header">Date</th>
-                <th class="table-header">PNS QTY</th>
-                <th class="table-header">MCD QTY</th>
-                <th class="table-header">DIFF</th>
-                <th class="table-header">Action</th>
+                <tr>
+                    <th class="table-header">Employee Name</th>
+                    <th class="table-header">Date</th>
+                    <th class="table-header">PNS QTY</th>
+                    <th class="table-header">MCD QTY</th>
+                    <th class="table-header">DIFF</th>
+                    <th class="table-header">Action</th>
+                </tr>
             </thead>
             <tbody class="table-body">
                 {#each data.diff.data as row, index}
@@ -312,10 +315,12 @@
                                 <h1>Detail PNS</h1>
                                 <table class="table-style">
                                     <thead class="table-thead">
-                                        <th class="table-header">Employee Name</th>
-                                        <th class="table-header">Date (YYYY-MM-DD)</th>
-                                        <th class="table-header">Value</th>
-                                        <th class="table-header">Action</th>
+                                        <tr>
+                                            <th class="table-header">Employee Name</th>
+                                            <th class="table-header">Date (YYYY-MM-DD)</th>
+                                            <th class="table-header">Value</th>
+                                            <th class="table-header">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         {#each row.pns_ids as pnsrow}
@@ -324,7 +329,7 @@
                                                 <td class="table-td">{pnsrow.date}</td>
                                                 <td class="table-td">{pnsrow.value}</td>
                                                 <td class="table-td">
-                                                    <button title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id; stateEdit.id = pnsrow.id; stateEdit.side = "pns"; formData.kronos_job_number = pnsrow.kronos_job_number; formData.oracle_job_number = pnsrow.oracle_job_number; formData.employee_name = pnsrow.employee_name; formData.parent_id = pnsrow.parent_id; formData.date = pnsrow.date; formData.value = pnsrow.value}}>
+                                                    <button aria-label="edit" title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id; stateEdit.id = pnsrow.id; stateEdit.side = "pns"; formData.kronos_job_number = pnsrow.kronos_job_number; formData.oracle_job_number = pnsrow.oracle_job_number; formData.employee_name = pnsrow.employee_name; formData.parent_id = pnsrow.parent_id; formData.date = pnsrow.date; formData.value = pnsrow.value}}>
                                                         <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
                                                             <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -345,13 +350,15 @@
                                 <h1>Detail MCD</h1>
                                 <table class="table-style">
                                     <thead class="table-thead">
-                                        <th class="table-header">Kronos Job Number</th>
-                                        <th class="table-header">Oracle Job Number</th>
-                                        <th class="table-header">Employee Name</th>
-                                        <th class="table-header">Parent iD</th>
-                                        <th class="table-header">Date</th>
-                                        <th class="table-header">Value</th>
-                                        <th class="table-header">Action</th>
+                                        <tr>
+                                            <th class="table-header">Kronos Job Number</th>
+                                            <th class="table-header">Oracle Job Number</th>
+                                            <th class="table-header">Employee Name</th>
+                                            <th class="table-header">Parent iD</th>
+                                            <th class="table-header">Date</th>
+                                            <th class="table-header">Value</th>
+                                            <th class="table-header">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         {#each row.mcd_ids as mcdrow}
@@ -363,7 +370,7 @@
                                                 <td class="table-td">{mcdrow.date}</td>
                                                 <td class="table-td">{mcdrow.value}</td>
                                                 <td class="table-td">
-                                                    <button title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id;  stateEdit.id = mcdrow.id; stateEdit.side = "mcd"; formData.kronos_job_number = mcdrow.kronos_job_number; formData.oracle_job_number = mcdrow.oracle_job_number; formData.employee_name = mcdrow.employee_name; formData.parent_id = mcdrow.parent_id; formData.date = mcdrow.date; formData.value = mcdrow.value}}>
+                                                    <button aria-label="edit" title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id;  stateEdit.id = mcdrow.id; stateEdit.side = "mcd"; formData.kronos_job_number = mcdrow.kronos_job_number; formData.oracle_job_number = mcdrow.oracle_job_number; formData.employee_name = mcdrow.employee_name; formData.parent_id = mcdrow.parent_id; formData.date = mcdrow.date; formData.value = mcdrow.value}}>
                                                         <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
                                                             <g id="SVGRepo_bgCarrier" stroke-width="0"/>

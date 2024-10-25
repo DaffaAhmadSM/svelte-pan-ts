@@ -2,15 +2,15 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         day_type: null,
         day: null,
         from_hour: null,
         to_hour: null,
         multiplication_calc_id: null,
-    }
+    })
 
     let tableList = [
         {
@@ -35,7 +35,7 @@
         },
     ]
 
-    let multiplicationCalcAll;
+    let multiplicationCalcAll = $state();
 
     async function getMultiplicationAll() {
         const getMultiplicationCalc = await fetch(import.meta.env.VITE_API_URL +'/multiplication-calculation/all', {
@@ -73,7 +73,8 @@
 
 <div class="table-container">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
-    <svelte:fragment slot="aditional-form-create">
+    <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
         {#await getMultiplicationAll() then _}
             <AutocompleteComponents
                 fieldLable="Multiplication Calculator"
@@ -85,7 +86,8 @@
             />
         {/await}
     </svelte:fragment>
-    <svelte:fragment slot="aditional-form-update">
+    <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
         {#await getMultiplicationAll() then _}
             <AutocompleteComponents
                 fieldLable="Multiplication Calculator"
