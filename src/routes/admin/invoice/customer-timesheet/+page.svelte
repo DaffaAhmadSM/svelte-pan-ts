@@ -312,20 +312,20 @@
     <div class="container-table">
       <table class="table-style">
         <thead class="table-thead">
-          <tr>
-            <th scope="col" class="table-header">
-              <p>No</p>
-            </th>
-            {#each Object.values(data.list.header) as columnHeading}
-                <th scope="col" class="table-header">
-                  <p>{columnHeading}</p>
-                </th>
-            {/each}
-            <slot name="table-header"></slot>
-            <th scope="col" class="table-header">
-              <p>Action</p>
-            </th>
-          <tr/>
+            <tr>
+              <th scope="col" class="table-header">
+                <p>No</p>
+              </th>
+              {#each Object.values(data.list.header) as columnHeading}
+                  <th scope="col" class="table-header">
+                    <p>{columnHeading}</p>
+                  </th>
+              {/each}
+              <slot name="table-header"></slot>
+              <th scope="col" class="table-header">
+                <p>Action</p>
+              </th>
+            </tr>
         </thead>
         <tbody class="table-tbody">
           {#each data.list.data.data as row, i}

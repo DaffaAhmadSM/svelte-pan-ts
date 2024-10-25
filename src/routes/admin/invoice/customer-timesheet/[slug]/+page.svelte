@@ -59,15 +59,17 @@
 <div class="table-container">
     <table class="table-style">
         <thead class="table-thead">
-            <th class="table-header">No</th>
-            <th class="table-header">UID</th>
-            <th class="table-header">Kronos Job Number</th>
-            <th class="table-header">Date</th>
-            <th class="table-header">Basic Hour</th>
-            <th class="table-header">Actual Hour</th>
-            <th class="table-header">Deduction Hour</th>
-            <th class="table-header">Total Overime Hour</th>
-            <th class="table-header">Paid Hour</th>
+            <tr>
+                <th class="table-header">No</th>
+                <th class="table-header">UID</th>
+                <th class="table-header">Kronos Job Number</th>
+                <th class="table-header">Date</th>
+                <th class="table-header">Basic Hour</th>
+                <th class="table-header">Actual Hour</th>
+                <th class="table-header">Deduction Hour</th>
+                <th class="table-header">Total Overime Hour</th>
+                <th class="table-header">Paid Hour</th>
+            </tr>
         </thead>
         <tbody>
         {#each dataTable.data as row, index}
@@ -97,13 +99,15 @@
                             <h1 class="text-xl text-center">Detail Overtime {row.custom_id}</h1>
                             <table class="table-style">
                                 <thead class="table-thead">
-                                    <th class="table-header">Multiplication Code</th>
-                                    <th class="table-header">Hours</th>
-                                    <th class="table-header">Total Hours</th>
-                                    <th class="table-header">Day</th>
-                                    <th class="table-header">Day Type</th>
-                                    <th class="table-header">From Hours</th>
-                                    <th class="table-header">To Hours</th>
+                                    <tr>
+                                        <th class="table-header">Multiplication Code</th>
+                                        <th class="table-header">Hours</th>
+                                        <th class="table-header">Total Hours</th>
+                                        <th class="table-header">Day</th>
+                                        <th class="table-header">Day Type</th>
+                                        <th class="table-header">From Hours</th>
+                                        <th class="table-header">To Hours</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {#each row.overtime_customer_timesheet as ovRow}

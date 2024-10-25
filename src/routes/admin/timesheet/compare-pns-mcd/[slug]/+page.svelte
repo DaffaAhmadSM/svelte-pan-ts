@@ -273,12 +273,14 @@
     <Tabs.Content value="compare" class="pt-3">
         <table class="table-style">
             <thead class="table-thead">
-                <th class="table-header">Employee Name</th>
-                <th class="table-header">Date</th>
-                <th class="table-header">PNS QTY</th>
-                <th class="table-header">MCD QTY</th>
-                <th class="table-header">DIFF</th>
-                <th class="table-header">Action</th>
+                <tr>
+                    <th class="table-header">Employee Name</th>
+                    <th class="table-header">Date</th>
+                    <th class="table-header">PNS QTY</th>
+                    <th class="table-header">MCD QTY</th>
+                    <th class="table-header">DIFF</th>
+                    <th class="table-header">Action</th>
+                </tr>
             </thead>
             <tbody class="table-body">
                 {#each data.diff.data as row, index}
@@ -312,10 +314,12 @@
                                 <h1>Detail PNS</h1>
                                 <table class="table-style">
                                     <thead class="table-thead">
-                                        <th class="table-header">Employee Name</th>
-                                        <th class="table-header">Date (YYYY-MM-DD)</th>
-                                        <th class="table-header">Value</th>
-                                        <th class="table-header">Action</th>
+                                        <tr>
+                                            <th class="table-header">Employee Name</th>
+                                            <th class="table-header">Date (YYYY-MM-DD)</th>
+                                            <th class="table-header">Value</th>
+                                            <th class="table-header">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         {#each row.pns_ids as pnsrow}
@@ -345,13 +349,15 @@
                                 <h1>Detail MCD</h1>
                                 <table class="table-style">
                                     <thead class="table-thead">
-                                        <th class="table-header">Kronos Job Number</th>
-                                        <th class="table-header">Oracle Job Number</th>
-                                        <th class="table-header">Employee Name</th>
-                                        <th class="table-header">Parent iD</th>
-                                        <th class="table-header">Date</th>
-                                        <th class="table-header">Value</th>
-                                        <th class="table-header">Action</th>
+                                        <tr>
+                                            <th class="table-header">Kronos Job Number</th>
+                                            <th class="table-header">Oracle Job Number</th>
+                                            <th class="table-header">Employee Name</th>
+                                            <th class="table-header">Parent iD</th>
+                                            <th class="table-header">Date</th>
+                                            <th class="table-header">Value</th>
+                                            <th class="table-header">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         {#each row.mcd_ids as mcdrow}
