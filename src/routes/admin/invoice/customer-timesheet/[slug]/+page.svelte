@@ -106,7 +106,7 @@
                                     <th class="table-header">To Hours</th>
                                 </thead>
                                 <tbody>
-                                    {#each row.overtime_timesheet as ovRow}
+                                    {#each row.overtime_customer_timesheet as ovRow}
                                         <tr>
                                             <td class="table-td">{ovRow.multiplication_code}</td>
                                             <td class="table-td">{ovRow.hours}</td>
@@ -118,7 +118,7 @@
                                         </tr>
                                     {/each}
 
-                                    {#if row.overtime_timesheet.length == 0 && row.overtime_hours > 0}
+                                    {#if row.overtime_customer_timesheet.length == 0 && row.overtime_hours > 0}
                                         {@const day = new Date(row.date).getDay()}
                                         {@const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']}
                                         <tr>

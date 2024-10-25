@@ -371,6 +371,7 @@
                               </slot>
                       {/if}
 
+                      <slot name="additional-action" row={row}></slot>
                       {#if detailMeta !== null}
                           <button class="btn btn-primary hover:btn-error" on:click={()=> {detailTable(row.id);}}>
                             Detail
