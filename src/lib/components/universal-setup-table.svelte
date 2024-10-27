@@ -7,6 +7,7 @@
   import {getValueByPath} from '$lib/helpers/getObjectValue';
 	import { fade } from 'svelte/transition';
 	import UniversalTableField from './universal-table-field.svelte';
+  import { holdInput } from '$lib/stores/holdinput';
   export let namePage = "Table";
     /**
      * @type {String}
@@ -101,6 +102,8 @@
   }
 
     async function createTable(){
+    holdInput.set(true);
+    if ($holdInput != true) return;
     const toastId = toastTriggerLoading('Creating...');
     let data = new FormData();
     for (const key in formData) {
@@ -118,6 +121,7 @@
       body: data,
     })
     if(createData.status === 500){
+      holdInput.set(false);
       return toastTrigger('Internal Server Error', toastId, createData.status);
     }
     if(createData.status === 401){
@@ -125,18 +129,21 @@
     }
     const datajson = await createData.json();
     if (!createData.ok){
+      holdInput.set(false);
       return toastTrigger(datajson.message, toastId, createData.status);
     }
     
     let newtable = fetchTable();
     dataTab = await newtable;
     addModal = false;
+    holdInput.set(false);
     return toastTrigger(datajson.message, toastId, 200);
   }
 
     async function updateTable(){
+        holdInput.set(true);
+        if ($holdInput != true) return;
         const toastId = toastTriggerLoading('Updating...');
-
         let data = new FormData();
         for (const key in formData) {
           // check if the value not null
@@ -153,6 +160,7 @@
         })
         let datajson = await updateData.json();
         if(updateData.ok){
+          holdInput.set(false);
           let newtable = fetchTable();
           dataTab = await newtable;
           updateModal=false;
@@ -161,9 +169,12 @@
       if (updateData.status !== 200) {
         toastTrigger(datajson.message, toastId, updateData.status);
       }
+      holdInput.set(false);
 }
 
     async function deleteTable(){
+        holdInput.set(true);
+        if ($holdInput != true) return;
         const toastId = toastTriggerLoading('Deleting...');
         const deleteData = await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' +rowId, {
         method: 'post',
@@ -174,6 +185,7 @@
         })
         let datajson = await deleteData.json();
         if(deleteData.ok){
+        holdInput.set(false);
         let newtable = fetchTable();
         dataTab = await newtable;
         deleteModal=false;
@@ -182,10 +194,13 @@
       if (deleteData.status !== 200) {
         toastTrigger(datajson.message, toastId, deleteData.status);
       }
+      holdInput.set(false);
 }
 
     async function updateDetailTable(row){
       nullForm();
+      holdInput.set(true);
+      if ($holdInput != true) return;
       const toastId = toastTriggerLoading('Loading...');
       const detailData = await fetch(import.meta.env.VITE_API_URL + detailUrl + '/' + row, {
           method: 'GET',
@@ -197,6 +212,7 @@
           
         let data = await detailData.json();
         if(detailData.ok){
+          holdInput.set(false);
           rowId = row;
           formData = data.data;
           updateModal = true;
@@ -206,6 +222,7 @@
         if(detailData.status !== 200){
           toastTrigger(data.message, toastId, detailData.status);
         }
+        holdInput.set(false);
     }
 
     let detailTableData;
@@ -408,7 +425,7 @@
     </Dialog.Portal>
 </Dialog.Root>
 
-<Dialog.Root bind:open={addModal} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={addModal} closeOnEscape={!$holdInput} closeOnOutsideClick ={!$holdInput}>
     <Dialog.Portal>
         <Dialog.Overlay
         transition={fade}
@@ -439,6 +456,7 @@
               </button>
               <button
               type="submit"
+              disabled={$holdInput}
                 class="inline-flex h-8 items-center justify-center rounded-sm
                           bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
                 on:click={() => {
@@ -453,7 +471,7 @@
 </Dialog.Root>
 
 
-<Dialog.Root bind:open={updateModal} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={updateModal} closeOnEscape={!$holdInput} closeOnOutsideClick ={!$holdInput}>
   <Dialog.Portal>
     <Dialog.Overlay
     transition={fade}

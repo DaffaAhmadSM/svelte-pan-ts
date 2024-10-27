@@ -4,6 +4,7 @@
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
+	import { holdInput } from '$lib/stores/holdinput.js';
 	import { Dialog } from 'bits-ui';
 	import { fade } from 'svelte/transition';
     export let data;
@@ -646,6 +647,10 @@ let detailMeta = [
 
     let modalImportExcel = false;
     async function importfromexcel() {
+        holdInput.set(true);
+        if ($holdInput != true) {
+            return;
+        }
         const toastId = toastTriggerLoading('Importing data, please wait...');
         let formData = new FormData();
         formData.append('file', formImportExcel.file);
@@ -658,17 +663,18 @@ let detailMeta = [
         });
 
         if (!res.ok) {
+            holdInput.set(false);
             toastTrigger('Failed to import data', toastId, res.status);
             return;
         }
 
         const resData = await res.json();
-
         let refetch = fetchTable();
         data.list = await refetch;
+        holdInput.set(false);
         modalImportExcel = false;
         
-        toastTrigger('Data imported successfully', toastId, res.status);
+        return toastTrigger('Data imported successfully', toastId, res.status);
     }
 
     
@@ -778,7 +784,7 @@ let detailMeta = [
     </UniversalSetupTable>
 </div>
 
-<Dialog.Root bind:open={modalImportExcel} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={modalImportExcel} closeOnEscape={!$holdInput} closeOnOutsideClick ={!$holdInput}>
     <Dialog.Portal>
         <Dialog.Overlay
         transition={fade}
@@ -806,6 +812,7 @@ let detailMeta = [
               </button>
               <button
               type="submit"
+              disabled={$holdInput}
                 class="inline-flex h-8 items-center justify-center rounded-sm
                           bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
                 on:click={() => {

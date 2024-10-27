@@ -5,6 +5,7 @@
 	import { Dialog } from 'bits-ui';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
+	import { holdInput } from '$lib/stores/holdinput.js';
     export let data;
 
     let formData = {
@@ -132,6 +133,8 @@
   let tempMcddata;
   let tempPnsdata;
   async function createTable() {
+    holdInput.set(true);
+    if ($holdInput != true) return;
     const toastId = toastTriggerLoading("importing data...");
     const tempTimesheet = await fetch(import.meta.env.VITE_API_URL + "/timesheet/create-temp-timesheet", {
       method: 'POST',
@@ -204,6 +207,7 @@
                 'Authorization': 'Bearer ' + getCookie('token')
             }
         });
+        holdInput.set(false);
         return toastTrigger("failed to import", toastId, 500);
     }
 
@@ -225,6 +229,7 @@
 
     dataDetail = true;
     formData = dumpformData;
+    holdInput.set(false);
     return toastTrigger("data imported", toastId, 200);
   }
 
@@ -412,7 +417,7 @@
     {/if}
   </div>
   
-  <Dialog.Root bind:open={addModal} closeOnEscape closeOnOutsideClick>
+  <Dialog.Root bind:open={addModal} closeOnEscape={!$holdInput} closeOnOutsideClick ={!$holdInput}>
       <Dialog.Portal>
           <Dialog.Overlay
           transition={fade}
@@ -441,6 +446,7 @@
             {/await}
             <div class="mt-6 flex justify-end gap-4">
                 <button
+                disabled={$holdInput}
                   class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
                     on:click={() => {
@@ -453,6 +459,7 @@
                 </button>
                 <button
                 type="submit"
+                disabled={$holdInput}
                   class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
                   on:click={() => {
