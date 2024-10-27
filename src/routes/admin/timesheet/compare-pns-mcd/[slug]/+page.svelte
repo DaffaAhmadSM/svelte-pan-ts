@@ -199,10 +199,10 @@
   const pnsdeleteUrl = '';
   const pnscreateUrl = '';
   const pnsdetailUrl = '';
-  const pnsSearchUrl = '/timesheet/search-mcd/' + data.timesheet.id;
+  const pnsSearchUrl = '/timesheet/search-pns/' + data.timesheet.id;
   const pnsnamePage = 'PNS Timesheet';
 
-  const mcdfetchUrl = '/timesheet/list-mcd-temp' + data.timesheet.id;
+  const mcdfetchUrl = '/timesheet/list-mcd-temp/' + data.timesheet.id;
   const mcdupdateUrl = '';
   const mcddeleteUrl = '';
   const mcdcreateUrl = '';
