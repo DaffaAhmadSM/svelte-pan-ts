@@ -10,6 +10,7 @@
         no: null,
         name: null,
         address: null,
+        working_hour_default: null,
         phone: null,
         email: null,
         fax: null,
@@ -20,10 +21,10 @@
 
     let tableList = [
         {
-            name: "No",
-            id: "no",
-            type: "text",
-            disabled : false
+            name: "Working Hour Default",
+            id: "working_hour_default",
+            type: "number",
+            required: true
         },
         {
             name: "Name",
@@ -69,6 +70,11 @@
     ]
 
     let detailMeta = [
+        {
+            name: "Working Hour Default",
+            id: "working_hour_default",
+            type: "text",
+        },
         {
             name: "No",
             id: "no",
