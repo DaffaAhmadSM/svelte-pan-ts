@@ -33,7 +33,9 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
-		customer_id: null
+		customer_id: null,
+		eti_bonus_percentage: null,
+		rate_id: null
 	};
 
 	let dumpformData = {
@@ -43,7 +45,9 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
-		customer_id: null
+		customer_id: null,
+		eti_bonus_percentage: null,
+		rate_id: null
 	};
 
 	let tableList = [
@@ -78,6 +82,11 @@
 			id: 'csvpns',
 			type: 'file',
 			showFileName: true
+		},
+		{
+			name: 'ETI Bonus Percentage',
+			id: 'eti_bonus_percentage',
+			type: 'number'
 		}
 	];
 
@@ -163,7 +172,9 @@
 					from_date: formData.from_date,
 					to_date: formData.to_date,
 					description: formData.description,
-					customer_id: formData.customer_id
+					customer_id: formData.customer_id,
+					rate_id: formData.rate_id,
+					eti_bonus_percentage: formData.eti_bonus_percentage
 				})
 			}
 		);
@@ -257,6 +268,17 @@
 
 	async function getCustomerAll() {
 		const res = await fetch(import.meta.env.VITE_API_URL + '/customer/all', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				authorization: 'Bearer ' + getCookie('token')
+			}
+		});
+		return await res.json();
+	}
+
+	async function getRatesAll() {
+		const res = await fetch(import.meta.env.VITE_API_URL + '/employee-rates/all', {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -531,8 +553,8 @@
 					Fill in the form below to add a new data.
 				</Dialog.Description>
 				<UniversalTableField {tableList} {formData} />
-				{#await getCustomerAll() then customerAll}
-					<fieldset class="table-fieldset">
+				<fieldset class="table-fieldset">
+					{#await getCustomerAll() then customerAll}
 						<div class="table-field-label">Customer</div>
 						<select name="customer_id" bind:value={formData.customer_id} class="table-field-input">
 							{#if customerAll}
@@ -541,8 +563,24 @@
 								{/each}
 							{/if}
 						</select>
-					</fieldset>
-				{/await}
+					{/await}
+				</fieldset>
+				<fieldset class="table-fieldset">
+					<div class="table-field-label">Rate</div>
+					{#await getRatesAll() then ratesAll}
+						<select
+							name="eti_bonus_percentage"
+							bind:value={formData.rate_id}
+							class="table-field-input"
+						>
+							{#if ratesAll}
+								{#each ratesAll.data as rate}
+									<option value={rate.random_string}>{rate.name}</option>
+								{/each}
+							{/if}
+						</select>
+					{/await}
+				</fieldset>
 				<div class="mt-6 flex justify-end gap-4">
 					<button
 						disabled={$holdInput}
