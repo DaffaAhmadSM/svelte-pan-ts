@@ -3,6 +3,7 @@
 	import { Dialog } from 'bits-ui';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
+	import { onDestroy, onMount } from 'svelte';
 	export let data;
 
 	let search;
@@ -14,6 +15,23 @@
 	let tableLoading = false;
 	// const deleteUrl = "/timesheet/delete-pns-mcd";
 	const fetchUrl = '/timesheet-data/list';
+
+	onMount(() => {
+		const interval = setInterval(async () => {
+			const res = await fetch(import.meta.env.VITE_API_URL + fetchUrl, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + getCookie('token')
+				}
+			});
+
+			const data = await res.json();
+			tableData = data.data;
+		}, 20000);
+
+		return () => clearInterval(interval);
+	});
 
 	$: tableData = data.list.data;
 	let observer;
@@ -69,17 +87,6 @@
 
 	let tempMcddata;
 	let tempPnsdata;
-
-	async function getCustomerAll() {
-		const res = await fetch(import.meta.env.VITE_API_URL + '/customer/all', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: 'Bearer ' + getCookie('token')
-			}
-		});
-		return await res.json();
-	}
 
 	async function moveToCustomerTimesheet(id) {
 		const toastId = toastTriggerLoading('Moving...');
@@ -170,35 +177,35 @@
 								<td class="table-td">{row.to_date}</td>
 								<td class="table-td max-w-20 truncate">{row.description}</td>
 								<td class="table-td">{row.status}</td>
-								<td class="table-td flex items-center gap-1">
-									<a class="" href="/admin/timesheet/timesheet-data/{row.random_string}">
-										<div class="flex gap-2">
-											<svg
-												fill="#3584e4"
-												width="18px"
-												height="18px"
-												viewBox="0 0 96 96"
-												xmlns="http://www.w3.org/2000/svg"
-												stroke="#3584e4"
-												><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-													id="SVGRepo_tracerCarrier"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke="#CCCCCC"
-													stroke-width="7.872"
-												></g><g id="SVGRepo_iconCarrier">
-													<title></title>
-													<g>
-														<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
-														<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-														<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-													</g>
-												</g></svg
-											>
-											<span>Detail</span>
-										</div>
-									</a>
-									{#if row.file_path != null}
+								< class="table-td flex items-center gap-1">
+									{#if row.status != 'generating' && row.file_path != null}
+										<a class="" href="/admin/timesheet/timesheet-data/{row.random_string}">
+											<div class="flex gap-2">
+												<svg
+													fill="#3584e4"
+													width="18px"
+													height="18px"
+													viewBox="0 0 96 96"
+													xmlns="http://www.w3.org/2000/svg"
+													stroke="#3584e4"
+													><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+														id="SVGRepo_tracerCarrier"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														stroke="#CCCCCC"
+														stroke-width="7.872"
+													></g><g id="SVGRepo_iconCarrier">
+														<title></title>
+														<g>
+															<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
+															<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+															<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+														</g>
+													</g></svg
+												>
+												<span>Detail</span>
+											</div>
+										</a>
 										<a
 											class="btn btn-primary flex gap-2"
 											href={import.meta.env.VITE_STORAGE_URL + row.file_path}
@@ -237,17 +244,28 @@
 											>
 											<p>Download</p>
 										</a>
+										{#if row.status != 'moved'}
+											<button
+												class="btn btn-primary hover:btn-error"
+												on:click={() => {
+													moveConfirm = true;
+													currentMoveId = row.id;
+												}}
+											>
+												Generate Customer TS
+											</button>
+										{/if}
+									{:else}
+										<div class="loading"></div>
 									{/if}
-									{#if row.status != 'generating'}
-										<button
-											class="btn btn-primary hover:btn-error"
-											on:click={() => {
-												moveConfirm = true;
-												currentMoveId = row.id;
-											}}
-										>
-											Generate Customer TS
+
+									{#if row.status == 'failed'}
+										<button class="btn btn-primary hover:btn-error" on:click={() => {}}>
+											Regenerate
 										</button>
+										<!-- <button class="btn btn-primary hover:btn-error" on:click={() => {}}>
+											show log error
+										</button> -->
 									{/if}
 								</td>
 							</tr>
