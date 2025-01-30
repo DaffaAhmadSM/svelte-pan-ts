@@ -177,7 +177,7 @@
 								<td class="table-td">{row.to_date}</td>
 								<td class="table-td max-w-20 truncate">{row.description}</td>
 								<td class="table-td">{row.status}</td>
-								< class="table-td flex items-center gap-1">
+								<td class="table-td flex items-center gap-1">
 									{#if row.status != 'generating' && row.file_path != null}
 										<a class="" href="/admin/timesheet/timesheet-data/{row.random_string}">
 											<div class="flex gap-2">
