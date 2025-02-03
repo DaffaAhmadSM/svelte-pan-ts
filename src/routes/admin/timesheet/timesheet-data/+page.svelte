@@ -34,6 +34,7 @@
 	});
 
 	$: tableData = data.list.data;
+	$: console.log(tableData);
 	let observer;
 	let loading = false;
 	async function loadMore() {
@@ -167,7 +168,7 @@
 						</tr>
 					</thead>
 					<tbody class="table-tbody">
-						{#each data.list.data.data as row, i}
+						{#each tableData.data as row, i}
 							<tr class="hover">
 								<td class="table-td">{i + 1}</td>
 								<td class="table-td">{row.filename}</td>
