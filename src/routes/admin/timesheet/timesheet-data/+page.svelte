@@ -34,7 +34,6 @@
 	});
 
 	$: tableData = data.list.data;
-	$: console.log(tableData);
 	let observer;
 	let loading = false;
 	async function loadMore() {
