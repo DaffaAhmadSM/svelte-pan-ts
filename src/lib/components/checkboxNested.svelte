@@ -1,26 +1,32 @@
 <script>
+    import CheckboxNested from './checkboxNested.svelte';
 	import { slide } from 'svelte/transition';
     import { expoInOut } from "svelte/easing";
-    export let menu;
 
-    export let parrentNode = null;
 
+    
+    
+    
+    
     /**
-     * @type {number[]} 
+     * @typedef {Object} Props
+     * @property {any} menu
+     * @property {any} [parrentNode]
+     * @property {number[]} [checkedNodes]
+     * @property {number[]} [createGroup]
+     * @property {number[]} [updateGroup]
+     * @property {number[]} [deleteGroup]
      */
-     export let checkedNodes = [];
-    /**
-     * @type {number[]} 
-     */
-    export let createGroup = [];
-    /**
-     * @type {number[]} 
-     */
-    export let updateGroup = [];
-    /**
-     * @type {number[]} 
-     */
-    export let deleteGroup = [];
+
+    /** @type {Props} */
+    let {
+        menu,
+        parrentNode = null,
+        checkedNodes = $bindable([]),
+        createGroup = $bindable([]),
+        updateGroup = $bindable([]),
+        deleteGroup = $bindable([])
+    } = $props();
     function toggleItem(item, isChecked) {
         if (isChecked) {
             if (!checkedNodes.includes(item.id)) {
@@ -107,7 +113,7 @@
                 {#if item.children}
                 <details class="flex items-center gap-2 p-2 font-medium marker:content-none hover:cursor-pointer">
                 <summary class="flex flex-row">
-                    <input type="checkbox" checked={checkedNodes.includes(item.id)} on:change={e => {toggleItem(item,/** @type {HTMLInputElement} */ (e.target).checked); checkParent()}} id={"check-"+item.id} data-parent={parrentNode}/>
+                    <input type="checkbox" checked={checkedNodes.includes(item.id)} onchange={e => {toggleItem(item,/** @type {HTMLInputElement} */ (e.target).checked); checkParent()}} id={"check-"+item.id} data-parent={parrentNode}/>
                     <span class="text-gray-900 gap-2 pl-2">{item.content}</span>
                     <svg class="w-5 h-5 text-gray-500 transition" xmlns="http://www.w3.org/2000/svg"
                     width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -118,28 +124,28 @@
                 </summary>
                 <div class="flex flex-row ml-3 gap-3">
                     <div>
-                        <input type="checkbox" name="create" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "create")}} checked={createGroup.includes(item.id)}>
+                        <input type="checkbox" name="create" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "create")}} checked={createGroup.includes(item.id)}>
                         <span>Create</span>
                     </div>
                     <div>
-                        <input type="checkbox" name="update" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "update")}} checked={updateGroup.includes(item.id)}>
+                        <input type="checkbox" name="update" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "update")}} checked={updateGroup.includes(item.id)}>
                         <span>update</span>
                     </div>
                     <div>
-                        <input type="checkbox" name="delete" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "delete")}} checked={deleteGroup.includes(item.id)}>
+                        <input type="checkbox" name="delete" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "delete")}} checked={deleteGroup.includes(item.id)}>
                         <span>delete</span>
                     </div>
                 </div>
                     <article class="mx-4">
                         <ul class="flex flex-col gap-2 pl-2 mt-4 border-l" transition:slide={{easing: expoInOut}}>
-                            <svelte:self menu={item.children} bind:checkedNodes={checkedNodes} parrentNode={item.id} bind:deleteGroup bind:updateGroup bind:createGroup/>
+                            <CheckboxNested menu={item.children} bind:checkedNodes={checkedNodes} parrentNode={item.id} bind:deleteGroup bind:updateGroup bind:createGroup/>
                         </ul>
                     </article>
                 </details>
                 {:else}
                     <details class="flex items-center font-medium marker:content-none hover:cursor-pointer">
                         <summary class="flex flex-row gap-2 p-2">
-                            <input type="checkbox" checked={checkedNodes.includes(item.id)} on:change={e => {toggleItem(item, /** @type {HTMLInputElement} */ (e.target).checked); checkParent()}} data-parent={parrentNode}/>
+                            <input type="checkbox" checked={checkedNodes.includes(item.id)} onchange={e => {toggleItem(item, /** @type {HTMLInputElement} */ (e.target).checked); checkParent()}} data-parent={parrentNode}/>
                             <span>{item.content}</span>
                             <svg class="w-5 h-5 text-gray-500 transition" xmlns="http://www.w3.org/2000/svg"
                             width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -151,15 +157,15 @@
                             <article class="mx-4">
                                 <div class="flex flex-row ml-4 gap-3">
                                     <div>
-                                        <input type="checkbox" name="create" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "create")}} checked={createGroup.includes(item.id)}>
+                                        <input type="checkbox" name="create" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "create")}} checked={createGroup.includes(item.id)}>
                                         <span>Create</span>
                                     </div>
                                     <div>
-                                        <input type="checkbox" name="update" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "update")}} checked={updateGroup.includes(item.id)}>
+                                        <input type="checkbox" name="update" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "update")}} checked={updateGroup.includes(item.id)}>
                                         <span>update</span>
                                     </div>
                                     <div>
-                                        <input type="checkbox" name="delete" data-permis-id={item.id} on:change={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "delete")}} checked={deleteGroup.includes(item.id)}>
+                                        <input type="checkbox" name="delete" data-permis-id={item.id} onchange={e => {permisSet(item.id, /** @type {HTMLInputElement} */ (e.target).checked, "delete")}} checked={deleteGroup.includes(item.id)}>
                                         <span>delete</span>
                                     </div>
                                 </div>

@@ -2,14 +2,14 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         responsibility: null,
         description: null,
         note: null,
         job_responsibility_id: null
-    }
+    })
 
     let tableList = [
         {
@@ -29,7 +29,7 @@
         },
     ];
 
-    let responsibilityAll;
+    let responsibilityAll = $state();
 
     async function getResponsibilityAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/job-resposibility/list', {
@@ -53,14 +53,16 @@
 
 <div class="table-container">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{index + 1}</td>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.job_task}</td>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.description}</td>
             <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">{row.job_responsibility.responsibility}</td>
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getResponsibilityAll() then _}
             <AutocompleteComponents
             fieldLable="Responsibility"
@@ -73,7 +75,8 @@
             />
             {/await}
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getResponsibilityAll() then _}
             <AutocompleteComponents
             fieldLable="Responsibility"

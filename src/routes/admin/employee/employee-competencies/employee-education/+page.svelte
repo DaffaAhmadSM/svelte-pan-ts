@@ -2,9 +2,9 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         education_level_id: null,
         employee_id: null,
         institution: null,
@@ -13,7 +13,7 @@
         from_year: null,
         to_year: null,
         notes: null,
-    }
+    })
 
     let tableList = [
         {
@@ -53,7 +53,7 @@
         },
     ]
 
-    let employeeAll;
+    let employeeAll = $state();
     async function getEmployeeAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/employee-data/all', {
             method: 'GET',
@@ -66,7 +66,7 @@
         employeeAll = await res.json();
     }
 
-    let educationLevelAll;
+    let educationLevelAll = $state();
 
     async function getEducationLevelAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/education-level/all', {
@@ -93,14 +93,16 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.employee.no}</td>
             <td class="table-td">{row.education_level.level}</td>
             <td class="table-td">{row.institution}</td>
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getEducationLevelAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Last Education"
@@ -123,7 +125,8 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getEducationLevelAll() then _} 
             <AutocompleteComponents
                 fieldLable="Last Education"
@@ -146,11 +149,13 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getEducationLevelAll(); getEmployeeAll();}}><p>Add</p></button>
+        <!-- @migration-task: migrate this slot by hand, `add-row` is an invalid identifier -->
+  <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
+            <button class="button-table-add" onclick={() =>  {openAddRow(); nullform(); getEducationLevelAll(); getEmployeeAll();}}><p>Add</p></button>
         </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getEducationLevelAll(); getEmployeeAll();}}>Edit</button>
+        <!-- @migration-task: migrate this slot by hand, `edit-row` is an invalid identifier -->
+  <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
+            <button class="btn btn-warning hover:btn-error" onclick={() =>  {detailTable(row.id); getEducationLevelAll(); getEmployeeAll();}}>Edit</button>
         </svelte:fragment>
         
     </UniversalSetupTable>

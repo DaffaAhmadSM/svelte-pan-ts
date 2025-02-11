@@ -1,12 +1,12 @@
 <script>
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         code: null,
         description: null,
         permanent: null, // enum yes, no
-    }
+    })
 
     let tableList = [
         {

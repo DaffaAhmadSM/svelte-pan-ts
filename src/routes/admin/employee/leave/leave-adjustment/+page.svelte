@@ -2,9 +2,9 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         employee_id: null,
         no: null,
         leave_category_id: null, // enum yes, no
@@ -13,7 +13,7 @@
         date : null,
         remark: null,
         posted: null,
-    }
+    })
 
     let tableList = [
         {
@@ -58,7 +58,7 @@
         },
     ]
 
-    let employeeAll;
+    let employeeAll = $state();
     async function getEmployeeAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/employee-data/all', {
             method: 'GET',
@@ -71,7 +71,7 @@
         employeeAll = await res.json();
     }
 
-    let leaveCategoryAll;
+    let leaveCategoryAll = $state();
     async function getLeaveCategoryAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/leave-category/all', {
             method: 'GET',
@@ -84,7 +84,7 @@
         leaveCategoryAll = await res.json();
     }
 
-    let numberSequenceAll;
+    let numberSequenceAll = $state();
     async function getNumberSequenceAll (){
         const res = await fetch(import.meta.env.VITE_API_URL + '/number-sequence/all', {
             method: 'GET',
@@ -108,7 +108,8 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.no}</td>
             <td class="table-td">{row.employee.no}</td>
@@ -121,7 +122,8 @@
             <td class="table-td">{row.posted}</td>
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getEmployeeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Employee"
@@ -154,7 +156,8 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getEmployeeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Employee"

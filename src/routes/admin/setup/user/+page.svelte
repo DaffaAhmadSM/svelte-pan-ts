@@ -10,8 +10,8 @@
 	import { fade } from 'svelte/transition';
 	import { menuData } from '$lib/stores/menu';
 	import { get } from 'svelte/store';
-  export let data;
-    let dialogPermis = false;
+  let { data = $bindable() } = $props();
+    let dialogPermis = $state(false);
 
   async function fetchTable(){
     const get = await fetch(import.meta.env.VITE_API_URL + '/user/list' + '?perpage=' + 50, {
@@ -57,8 +57,8 @@
     }
   }
 
-  let listMenu;
-  let chekcmenu;
+  let listMenu = $state();
+  let chekcmenu = $state();
   let userSelected;
   function setUserSelected(id){
     userSelected = id;
@@ -92,9 +92,9 @@
     }
   }
 
-  let menuCreate;
-  let menuUpdate;
-  let menuDelete;
+  let menuCreate = $state();
+  let menuUpdate = $state();
+  let menuDelete = $state();
 
   async function updatePermiss(){
     const toastId = toastTriggerLoading('Loading...');
@@ -200,7 +200,7 @@
             <button
               class="inline-flex h-8 items-center justify-center rounded-sm
                         bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-                on:click={() => {
+                onclick={() => {
                     dialogPermis = false;
                 }}
             >
@@ -211,7 +211,7 @@
             type="submit"
               class="inline-flex h-8 items-center justify-center rounded-sm
                         bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-              on:click={() => {
+              onclick={() => {
                 updatePermiss();
               }}
             >
@@ -225,7 +225,8 @@
 
 <div class="table-container">
   <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}>
-    <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>
+    <!-- @migration-task: migrate this slot by hand, `user-menu-edit` is an invalid identifier -->
+  <button slot="user-menu-edit" class="btn" onclick={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>
       <svg fill="#ed333b" width="18px" height="18px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" stroke="#ed333b">
 
         <g id="SVGRepo_bgCarrier" stroke-width="0"/>

@@ -2,15 +2,15 @@
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTriggerLoading, toastTriggerUpdate } from '$lib/helpers/toasterTrigger.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         number_sequence_id: null,
         code: null,
         contract_no: null,
         description: null,
         customer_id: null,
-    }
+    })
 
     let tableList = [
         {
@@ -43,9 +43,9 @@
         },
     ]
 
-    let positionAll;
-    let customerContractAll;
-    let customerAll;
+    let positionAll = $state();
+    let customerContractAll = $state();
+    let customerAll = $state();
     async function getCustomerAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/customer/all', {
             method: 'GET',
@@ -94,13 +94,15 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.customer.no}</td>
             <td class="table-td">{row.type}</td>
             <td class="table-td">{parseIntConcurency(row.rate)}</td>
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Position</div>
                 <select name="number_sequence" bind:value={formData.position_id} class="table-field-input">
@@ -132,7 +134,8 @@
                 </select>
             </fieldset>
         </svelte:fragment>
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Position</div>
                 <select name="number_sequence" bind:value={formData.position_id} class="table-field-input">
@@ -164,11 +167,13 @@
                 </select>
             </fieldset>
         </svelte:fragment>
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  { getCustomerContractAll(); getCustomerAll(); getPositionAll(); openAddRow(); nullform();}}><p>Add</p></button>
+        <!-- @migration-task: migrate this slot by hand, `add-row` is an invalid identifier -->
+  <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
+            <button class="button-table-add" onclick={() =>  { getCustomerContractAll(); getCustomerAll(); getPositionAll(); openAddRow(); nullform();}}><p>Add</p></button>
         </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getCustomerContractAll(); getCustomerAll(); getPositionAll()}}>Edit</button>
+        <!-- @migration-task: migrate this slot by hand, `edit-row` is an invalid identifier -->
+  <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
+            <button class="btn btn-warning hover:btn-error" onclick={() =>  {detailTable(row.id); getCustomerContractAll(); getCustomerAll(); getPositionAll()}}>Edit</button>
         </svelte:fragment>
     </UniversalSetupTable>
 </div>

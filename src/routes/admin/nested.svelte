@@ -1,12 +1,19 @@
 
 <script>
+    import Nested from './nested.svelte';
 	import {slide } from "svelte/transition";
 	import { expoInOut } from "svelte/easing";
 	import { page } from "$app/stores";
-    export let menu;
 
-    export let open = false;
-    export let highlightedquery = null;
+    /**
+     * @typedef {Object} Props
+     * @property {any} menu
+     * @property {boolean} [open]
+     * @property {any} [highlightedquery]
+     */
+
+    /** @type {Props} */
+    let { menu, open = false, highlightedquery = null } = $props();
 
     function highlightText(text) {
         if (!highlightedquery) return text;
@@ -31,7 +38,7 @@
                 <article class="mx-4">
                     <ul class="flex flex-col gap-2 pl-2 mt-4 border-l" transition:slide={{easing: expoInOut}}>
                         {#each menu.children as item}
-                            <svelte:self menu={item} highlightedquery={highlightedquery} open={open}/>
+                            <Nested menu={item} highlightedquery={highlightedquery} open={open}/>
                         {/each}
                     </ul>
                 </article>

@@ -1,4 +1,6 @@
 <script>
+  import { run } from 'svelte/legacy';
+
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
 	import { fade } from 'svelte/transition';
@@ -8,11 +10,11 @@
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
     import { Tabs, Dialog } from "bits-ui";
 	import { goto } from '$app/navigation';
-    export let data;
+  let { data = $bindable() } = $props();
     let tableLoading = false;
-    let editModal = false;
+    let editModal = $state(false);
     let loading =  false
-    let alertResolveModal = false;
+    let alertResolveModal = $state(false);
 
 
     function goBack() {
@@ -21,17 +23,9 @@
 
 
     let observer
-    $: {
-        if (observer) {
-            infiniteScroll({
-                fetch: loadMore,
-                element: observer,
-            });
-        }
-    }
 
 
-    let stateEdit = {
+    let stateEdit = $state({
         /** 
          * @type {string | "pns" | "mcd"}
          */
@@ -42,15 +36,15 @@
         parent_id: null,
         // data index in data.diff.data
         index_id: null,
-    }
-    let formData = {
+    })
+    let formData = $state({
         kronos_job_number:null,
         oracle_job_number:null,
         employee_name:null,
         parent_id:null,
         date:null,
         value:null
-    }
+    })
 
     let tableList = [
         {
@@ -106,7 +100,7 @@
         loading = true
     }
 
-    let conflictId = null;
+    let conflictId = $state(null);
     async function resolveConflict(id) {
         let toastId = toastTriggerLoading("resolving...");
         const response = await fetch(import.meta.env.VITE_API_URL + '/timesheet/resolve-compare-conflict/id/' + id, {
@@ -215,12 +209,20 @@
   const mcddetailUrl = '';
   const mcdSearchUrl = '/timesheet/search-mcd/' + data.timesheet.id;
   const mcdnamePage = 'MCD Timesheet';
+    run(() => {
+        if (observer) {
+            infiniteScroll({
+                fetch: loadMore,
+                element: observer,
+            });
+        }
+    });
 </script>
 
 
 <div class="m-6">
     <div class="flex flex-col gap-6">
-        <button aria-label="back" on:click={goBack}>
+        <button aria-label="back" onclick={goBack}>
             <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 4.29289C12.0976 4.68342 12.0976 5.31658 11.7071 5.70711L6.41421 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H6.41421L11.7071 18.2929C12.0976 18.6834 12.0976 19.3166 11.7071 19.7071C11.3166 20.0976 10.6834 20.0976 10.2929 19.7071L3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929L10.2929 4.29289C10.6834 3.90237 11.3166 3.90237 11.7071 4.29289Z" fill="#000000"></path> </g></svg>
         </button>
         <div class="flex gap-2 text-center">
@@ -294,115 +296,119 @@
             <tbody class="table-body">
                 {#each data.diff.data as row, index}
                 <Accordion>
-                    <svelte:fragment slot="parent" let:handleClick let:open>
-                        <td class="table-td flex gap-2" on:click={handleClick}>
-                            <svg class="w-5 h-5 text-gray-500 transition {open?'-rotate-90':'rotate-90'}" xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z">
-                            </path>
-                            </svg>
-                            <span>{row.employee_name}</span>
-                        </td>
-                        <td class="table-td">{row.date}</td>
-                        <td class="table-td">{row.pns_value}</td>
-                        <td class="table-td">{row.mcd_value}</td>
-                        {@const diff = row.pns_value - row.mcd_value}
-                        {@const difcolor = diff != 0 ? 'bg-red-300' : 'bg-green-300'}
-                        <td class="table-td {difcolor}">{diff}</td>
-                        <td class="table-td {diff != 0 ? 'hidden' : ''}">
-                            <button class="flex bg-green-400 gap-3 p-2 text-white" on:click={()=>{alertResolveModal = true, conflictId = row.id}}>
-                                <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cy="12.5" cx="12.5" r="1.75"></circle> <circle cy="12.5" cx="3.5" r="1.75"></circle> <circle cy="3.5" cx="3.5" r="1.75"></circle> <path d="m12.25 7.25v3m-8.5-4.5v4.5"></path> <path d="m14.25 1.75-3.5 3.5m0-3.5 3.5 3.5"></path> </g></svg>
-                                <p>Resolve</p>
-                            </button>
-                        </td>
-                    </svelte:fragment>
-                    <svelte:fragment slot="child">
-                        <td class="table-container m-3" colspan="4">
-                            <div class="p-3">
-                                <h1>Detail PNS</h1>
-                                <table class="table-style">
-                                    <thead class="table-thead">
-                                        <tr>
-                                            <th class="table-header">Employee Name</th>
-                                            <th class="table-header">Date (YYYY-MM-DD)</th>
-                                            <th class="table-header">Value</th>
-                                            <th class="table-header">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {#each row.pns_ids as pnsrow}
-                                            <tr>
-                                                <td class="table-td">{pnsrow.employee_name}</td>
-                                                <td class="table-td">{pnsrow.date}</td>
-                                                <td class="table-td">{pnsrow.value}</td>
-                                                <td class="table-td">
-                                                    <button title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id; stateEdit.id = pnsrow.id; stateEdit.side = "pns"; formData.kronos_job_number = pnsrow.kronos_job_number; formData.oracle_job_number = pnsrow.oracle_job_number; formData.employee_name = pnsrow.employee_name; formData.parent_id = pnsrow.parent_id; formData.date = pnsrow.date; formData.value = pnsrow.value}}>
-                                                        <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {#snippet parent({ handleClick, open })}
+                          
+                          <td class="table-td flex gap-2" onclick={handleClick}>
+                              <svg class="w-5 h-5 text-gray-500 transition {open?'-rotate-90':'rotate-90'}" xmlns="http://www.w3.org/2000/svg"
+                              width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z">
+                              </path>
+                              </svg>
+                              <span>{row.employee_name}</span>
+                          </td>
+                          <td class="table-td">{row.date}</td>
+                          <td class="table-td">{row.pns_value}</td>
+                          <td class="table-td">{row.mcd_value}</td>
+                          {@const diff = row.pns_value - row.mcd_value}
+                          {@const difcolor = diff != 0 ? 'bg-red-300' : 'bg-green-300'}
+                          <td class="table-td {difcolor}">{diff}</td>
+                          <td class="table-td {diff != 0 ? 'hidden' : ''}">
+                              <button class="flex bg-green-400 gap-3 p-2 text-white" onclick={()=>{alertResolveModal = true, conflictId = row.id}}>
+                                  <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" version="1.1" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cy="12.5" cx="12.5" r="1.75"></circle> <circle cy="12.5" cx="3.5" r="1.75"></circle> <circle cy="3.5" cx="3.5" r="1.75"></circle> <path d="m12.25 7.25v3m-8.5-4.5v4.5"></path> <path d="m14.25 1.75-3.5 3.5m0-3.5 3.5 3.5"></path> </g></svg>
+                                  <p>Resolve</p>
+                              </button>
+                          </td>
+                      
+                          {/snippet}
+                    {#snippet child()}
+                          
+                          <td class="table-container m-3" colspan="4">
+                              <div class="p-3">
+                                  <h1>Detail PNS</h1>
+                                  <table class="table-style">
+                                      <thead class="table-thead">
+                                          <tr>
+                                              <th class="table-header">Employee Name</th>
+                                              <th class="table-header">Date (YYYY-MM-DD)</th>
+                                              <th class="table-header">Value</th>
+                                              <th class="table-header">Action</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          {#each row.pns_ids as pnsrow}
+                                              <tr>
+                                                  <td class="table-td">{pnsrow.employee_name}</td>
+                                                  <td class="table-td">{pnsrow.date}</td>
+                                                  <td class="table-td">{pnsrow.value}</td>
+                                                  <td class="table-td">
+                                                      <button title="Edit" onclick={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id; stateEdit.id = pnsrow.id; stateEdit.side = "pns"; formData.kronos_job_number = pnsrow.kronos_job_number; formData.oracle_job_number = pnsrow.oracle_job_number; formData.employee_name = pnsrow.employee_name; formData.parent_id = pnsrow.parent_id; formData.date = pnsrow.date; formData.value = pnsrow.value}}>
+                                                          <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-                                                            
-                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            
-                                                            <g id="SVGRepo_iconCarrier"> <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="#3584e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
-                                                            
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        {/each}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="p-3">
-                                <h1>Detail MCD</h1>
-                                <table class="table-style">
-                                    <thead class="table-thead">
-                                        <tr>
-                                            <th class="table-header">Kronos Job Number</th>
-                                            <th class="table-header">Oracle Job Number</th>
-                                            <th class="table-header">Employee Name</th>
-                                            <th class="table-header">Parent iD</th>
-                                            <th class="table-header">Date</th>
-                                            <th class="table-header">Value</th>
-                                            <th class="table-header">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {#each row.mcd_ids as mcdrow}
-                                            <tr>
-                                                <td class="table-td">{mcdrow.kronos_job_number}</td>
-                                                <td class="table-td">{mcdrow.oracle_job_number}</td>
-                                                <td class="table-td">{mcdrow.employee_name}</td>
-                                                <td class="table-td">{mcdrow.parent_id}</td>
-                                                <td class="table-td">{mcdrow.date}</td>
-                                                <td class="table-td">{mcdrow.value}</td>
-                                                <td class="table-td">
-                                                    <button title="Edit" on:click={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id;  stateEdit.id = mcdrow.id; stateEdit.side = "mcd"; formData.kronos_job_number = mcdrow.kronos_job_number; formData.oracle_job_number = mcdrow.oracle_job_number; formData.employee_name = mcdrow.employee_name; formData.parent_id = mcdrow.parent_id; formData.date = mcdrow.date; formData.value = mcdrow.value}}>
-                                                        <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                              <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                                                              
+                                                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                                                              
+                                                              <g id="SVGRepo_iconCarrier"> <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="#3584e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
+                                                              
+                                                          </svg>
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          {/each}
+                                      </tbody>
+                                  </table>
+                              </div>
+                              <div class="p-3">
+                                  <h1>Detail MCD</h1>
+                                  <table class="table-style">
+                                      <thead class="table-thead">
+                                          <tr>
+                                              <th class="table-header">Kronos Job Number</th>
+                                              <th class="table-header">Oracle Job Number</th>
+                                              <th class="table-header">Employee Name</th>
+                                              <th class="table-header">Parent iD</th>
+                                              <th class="table-header">Date</th>
+                                              <th class="table-header">Value</th>
+                                              <th class="table-header">Action</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          {#each row.mcd_ids as mcdrow}
+                                              <tr>
+                                                  <td class="table-td">{mcdrow.kronos_job_number}</td>
+                                                  <td class="table-td">{mcdrow.oracle_job_number}</td>
+                                                  <td class="table-td">{mcdrow.employee_name}</td>
+                                                  <td class="table-td">{mcdrow.parent_id}</td>
+                                                  <td class="table-td">{mcdrow.date}</td>
+                                                  <td class="table-td">{mcdrow.value}</td>
+                                                  <td class="table-td">
+                                                      <button title="Edit" onclick={() => {editModal = true; stateEdit.index_id = index; stateEdit.parent_id = row.id;  stateEdit.id = mcdrow.id; stateEdit.side = "mcd"; formData.kronos_job_number = mcdrow.kronos_job_number; formData.oracle_job_number = mcdrow.oracle_job_number; formData.employee_name = mcdrow.employee_name; formData.parent_id = mcdrow.parent_id; formData.date = mcdrow.date; formData.value = mcdrow.value}}>
+                                                          <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-                                                            
-                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            
-                                                            <g id="SVGRepo_iconCarrier"> <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="#3584e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
-                                                            
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        {/each}
-                                        {#if row.mcd_ids.length == 0}
-                                            <tr>
-                                                <td class="table-td" colspan="6">No Data</td>
-                                            </tr>
-                                        {/if}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                        </td>
-                    </svelte:fragment>
+                                                              <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                                                              
+                                                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                                                              
+                                                              <g id="SVGRepo_iconCarrier"> <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="#3584e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
+                                                              
+                                                          </svg>
+                                                      </button>
+                                                  </td>
+                                              </tr>
+                                          {/each}
+                                          {#if row.mcd_ids.length == 0}
+                                              <tr>
+                                                  <td class="table-td" colspan="6">No Data</td>
+                                              </tr>
+                                          {/if}
+                                      </tbody>
+                                  </table>
+                              </div>
+                              
+                          </td>
+                      
+                          {/snippet}
                 </Accordion>
                 {/each}
                 
@@ -431,7 +437,7 @@
                 <button
                     class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-                    on:click={() => {
+                    onclick={() => {
                         editModal = false;
                     }}
                 >
@@ -442,7 +448,7 @@
                 type="submit"
                     class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-                    on:click={() => {
+                    onclick={() => {
                       editCompare();
                     }}
                 >
@@ -474,7 +480,7 @@
                 <button
                     class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-                    on:click={() => {
+                    onclick={() => {
                         alertResolveModal = false;
                     }}
                 >
@@ -485,7 +491,7 @@
                 type="submit"
                     class="inline-flex h-8 items-center justify-center rounded-sm
                             bg-magnum-100 px-4 font-medium leading-none text-magnum-900"
-                    on:click={() => {
+                    onclick={() => {
                     //   editCompare();
                     resolveConflict(conflictId);
 

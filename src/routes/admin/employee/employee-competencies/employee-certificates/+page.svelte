@@ -2,9 +2,9 @@
 	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
-    export let data;
+  let { data } = $props();
 
-    let formData = {
+    let formData = $state({
         certificate_type_id: null,
         employee_id: null,
         description: null,
@@ -12,7 +12,7 @@
         certificate_number: null,
         issued_date: null,
         issued_by: null,
-    }
+    })
 
     let tableList = [
         {
@@ -45,8 +45,8 @@
         },
     ]
 
-    let employeeAll;
-    let certificateTypeAll;
+    let employeeAll = $state();
+    let certificateTypeAll = $state();
 
     async function getCertificateTypeAll(){
         const res = await fetch(import.meta.env.VITE_API_URL + '/certificate-type/all', {
@@ -84,7 +84,8 @@
 
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
-        <svelte:fragment slot="table-row" let:row let:index>
+        <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.employee.no}</td>
             <td class="table-td">{row.certificate_type.type}</td>
@@ -95,7 +96,8 @@
             <td class="table-td">{row.issued_by}</td>
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-create">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-create">
             {#await getCertificateTypeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Certificate Type"
@@ -118,7 +120,8 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="aditional-form-update">
+        <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <svelte:fragment slot="aditional-form-update">
             {#await getCertificateTypeAll() then _} 
                     <AutocompleteComponents
                         fieldLable="Certificate Type"
@@ -141,11 +144,13 @@
             {/await}
         </svelte:fragment>
 
-        <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
-            <button class="button-table-add" on:click={() =>  {openAddRow(); nullform(); getCertificateTypeAll(); getEmployeeAll();}}><p>Add</p></button>
+        <!-- @migration-task: migrate this slot by hand, `add-row` is an invalid identifier -->
+  <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
+            <button class="button-table-add" onclick={() =>  {openAddRow(); nullform(); getCertificateTypeAll(); getEmployeeAll();}}><p>Add</p></button>
         </svelte:fragment>
-        <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
-            <button class="btn btn-warning hover:btn-error" on:click={() =>  {detailTable(row.id); getCertificateTypeAll(); getEmployeeAll();}}>Edit</button>
+        <!-- @migration-task: migrate this slot by hand, `edit-row` is an invalid identifier -->
+  <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
+            <button class="btn btn-warning hover:btn-error" onclick={() =>  {detailTable(row.id); getCertificateTypeAll(); getEmployeeAll();}}>Edit</button>
         </svelte:fragment>
         
     </UniversalSetupTable>
