@@ -712,11 +712,13 @@ let detailMeta = [
         </svelte:fragment> -->
 
         <!-- @migration-task: migrate this slot by hand, `add-slots` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `add-slots` is an invalid identifier -->
   <svelte:fragment slot="add-slots">
             <button class="button-table-add" onclick={()=> modalImportExcel = true}>Import from excel</button>
         </svelte:fragment>
 
         <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-create">
             {#await getTaxClassAll() then _} 
                     <AutocompleteComponents
@@ -751,6 +753,7 @@ let detailMeta = [
         </svelte:fragment>
 
         <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-update">
             {#await getTaxClassAll() then _} 
                     <AutocompleteComponents

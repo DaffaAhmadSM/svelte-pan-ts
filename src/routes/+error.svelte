@@ -13,7 +13,7 @@
 	<button class="mt-5">
       <a
       href="/admin"
-        class="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring"
+        class="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-hidden focus:ring-3"
       >
         <span
           class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#FF6A3D] group-hover:translate-y-0 group-hover:translate-x-0"

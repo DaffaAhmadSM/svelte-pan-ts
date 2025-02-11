@@ -94,7 +94,7 @@
           >
             <input
               type="text"
-              class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-none"
+              class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-hidden"
               placeholder="Search"
 			  bind:value={search}
 			  oninput={handleSearchMenu}

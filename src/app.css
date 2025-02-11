@@ -1,9 +1,88 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
+@config '../tailwind.config.js';
 
- 
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility btn {
+  /* input[type="checkbox"] {
+    @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
+  } */
+  @apply px-3 py-2;
+}
+
+@utility loading {
+  @apply w-12 h-12 rounded-full animate-spin border-4 border-solid dark:border-white border-gray-600 border-t-transparent dark:border-t-gray-800;
+}
+
+@utility button-table-add {
+  @apply px-5 py-3 gap-x-2 text-sm text-emerald-800 bg-emerald-100/90 dark:bg-gray-800 ml-auto;
+
+  & p {
+    @apply font-poppins font-bold uppercase whitespace-nowrap;
+  }
+}
+
+@utility container-table {
+  @apply p-5 shadow-sm;
+}
+
+@utility table-style {
+  @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto;
+}
+
+@utility table-header {
+  @apply py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400;
+
+  & p {
+    @apply block antialiased font-poppins text-sm font-normal leading-none opacity-70;
+  }
+}
+
+@utility table-thead {
+  @apply bg-gray-50 dark:bg-gray-800;
+}
+
+@utility table-fieldset {
+  @apply mb-4 flex items-center gap-5;
+}
+
+@utility table-field-input {
+  @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black border border-gray-300;
+}
+
+@utility table-field-label {
+  @apply w-[90px] text-black text-start;
+}
+
+@utility table-tbody {
+  @apply bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900;
+}
+
+@utility table-td {
+  @apply px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap;
+}
+
+@utility table-container {
+  @apply w-full overflow-auto;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -78,74 +157,4 @@
     @apply bg-background text-foreground;
   }
 
-}
-
-@layer components{
-  /* input[type="checkbox"] {
-    @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
-  } */
-
-  .btn {
-    @apply px-3 py-2
-  }
- 
-  
-}
-
-@layer utilities {
-  .loading {
-    @apply w-12 h-12 rounded-full animate-spin border-4 border-solid dark:border-white border-gray-600 border-t-transparent dark:border-t-gray-800;
-  }
-
-  .button-table-add {
-    @apply px-5 py-3 gap-x-2 text-sm text-emerald-800 bg-emerald-100/90 dark:bg-gray-800 ml-auto
-  }
-
-  .button-table-add p {
-    @apply font-poppins font-bold uppercase whitespace-nowrap
-  }
-
-  .container-table {
-    @apply p-5 shadow
-  }
-
-  .table-style {
-    @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto
-  }
-
-  .table-header {
-    @apply py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400
-  }
-
-  .table-header p {
-    @apply block antialiased font-poppins text-sm font-normal leading-none opacity-70
-  }
-
-  .table-thead {
-    @apply bg-gray-50 dark:bg-gray-800
-  }
-
-  .table-fieldset {
-    @apply mb-4 flex items-center gap-5
-  }
-
-  .table-field-input {
-    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black border border-gray-300
-  }
-
-  .table-field-label {
-    @apply w-[90px] text-black text-start
-  }
-
-  .table-tbody{
-    @apply bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900
-  }  
-
-  .table-td {
-    @apply px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap
-  }
-
-  .table-container {
-    @apply w-full overflow-auto
-  }
 }

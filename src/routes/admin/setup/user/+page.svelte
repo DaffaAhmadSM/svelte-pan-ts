@@ -226,6 +226,7 @@
 <div class="table-container">
   <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}>
     <!-- @migration-task: migrate this slot by hand, `user-menu-edit` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `user-menu-edit` is an invalid identifier -->
   <button slot="user-menu-edit" class="btn" onclick={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>
       <svg fill="#ed333b" width="18px" height="18px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" stroke="#ed333b">
 

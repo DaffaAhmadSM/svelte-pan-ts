@@ -31,7 +31,7 @@
 			<div class="flex w-full flex-col">
 				<input
 					type="file"
-					class="table-field-input !px-0 file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-slate-500"
+					class="table-field-input px-0! file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-slate-500"
 					id={list.id}
 					disabled={list.disabled}
 					onchange={(e) => {

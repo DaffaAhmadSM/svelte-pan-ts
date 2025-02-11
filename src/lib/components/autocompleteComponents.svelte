@@ -1,5 +1,5 @@
 <script>
-	// import AutoComplete from 'simple-svelte-autocomplete';
+	import AutoComplete from 'simple-svelte-autocomplete';
 	/**
 	 * @typedef {Object} Props
 	 * @property {any} items
@@ -52,7 +52,7 @@
 		{/if}
 	</div>
 
-	<!-- {#if searchFunction !== null}
+	{#if searchFunction !== null}
 		<AutoComplete
 			{labelFieldName}
 			{valueFieldName}
@@ -73,7 +73,7 @@
 			maxItemsToShowInList={20}
 			{disabled}
 		></AutoComplete>
-	{/if} -->
+	{/if}
 </fieldset>
 
 <style>

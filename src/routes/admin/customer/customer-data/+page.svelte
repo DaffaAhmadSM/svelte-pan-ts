@@ -192,6 +192,7 @@
 <div class="table-container">
     <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">
@@ -219,6 +220,7 @@
             {/await}
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-update">
             {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">

@@ -60,6 +60,7 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 <div class="table-container">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.type}</td>
@@ -67,6 +68,7 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
             <td class="table-td">{row.classification.classification}</td>
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-create">
             {#await getCertificationAll() then _}
             <AutocompleteComponents
@@ -91,6 +93,7 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
             />
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-update">
             {#await getCertificationAll() then _}
             <AutocompleteComponents

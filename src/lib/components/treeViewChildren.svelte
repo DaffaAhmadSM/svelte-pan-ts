@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot use explicit children snippet at the same time as implicit children content. Remove either the non-whitespace content or the children snippet block
+https://svelte.dev/e/snippet_conflict -->
 <script>
     import TreeViewChildren from './treeViewChildren.svelte';
     import {TreeViewItem} from '@skeletonlabs/skeleton';

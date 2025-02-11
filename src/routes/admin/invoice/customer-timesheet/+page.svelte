@@ -1,4 +1,5 @@
 <!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script>
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { fade } from 'svelte/transition';
@@ -296,10 +297,10 @@
 					<input
 						type="text"
 						placeholder="Search here"
-						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600"
+						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:outline-hidden focus:ring-2 focus:ring-gray-600"
 					/>
 					<button
-						class="ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+						class="ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:outline-hidden focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
 					>
 						Search
 					</button>

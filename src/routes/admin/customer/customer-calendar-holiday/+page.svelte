@@ -55,6 +55,7 @@
 <div class="w-full overflow-auto">
     <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.date}</td>
@@ -63,6 +64,7 @@
             <td class="table-td">{row.customer.name}</td>
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-create">
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Customer</div>
@@ -76,6 +78,7 @@
             </fieldset>
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `aditional-form-update` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-update">
             <fieldset class="table-fieldset">
                 <div class="table-field-label">Customer</div>
@@ -89,10 +92,12 @@
             </fieldset>
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `add-row` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `add-row` is an invalid identifier -->
   <svelte:fragment slot="add-row" let:nullform={nullform} let:openAddRow>
             <button class="button-table-add" onclick={() =>  {openAddRow(); nullform(); getCustomerAll();}}><p>Add</p></button>
         </svelte:fragment>
         <!-- @migration-task: migrate this slot by hand, `edit-row` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `edit-row` is an invalid identifier -->
   <svelte:fragment slot="edit-row" let:prop={row} let:detailTable={detailTable}>
             <button class="btn btn-warning hover:btn-error" onclick={() =>  {detailTable(row.id); getCustomerAll();}}>Edit</button>
         </svelte:fragment>
