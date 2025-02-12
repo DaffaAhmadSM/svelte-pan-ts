@@ -1,13 +1,13 @@
 <script>
 	import { run } from 'svelte/legacy';
 
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let crumbs = $state([]);
 
 	run(() => {
 		// Remove zero-length tokens.
-		const tokens = $page.url.pathname.split('/').filter((t) => t !== '');
+		const tokens = page.url.pathname.split('/').filter((t) => t !== '');
 
 		// Create { label, href } pairs for each token.
 		let tokenPath = '';
@@ -15,7 +15,7 @@
 			tokenPath += '/' + t;
 			t = t.charAt(0).toUpperCase() + t.slice(1);
 			return {
-				label: $page.data.label || t,
+				label: page.data.label || t,
 				href: tokenPath
 			};
 		});

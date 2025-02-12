@@ -5,7 +5,7 @@
 	import { Toaster } from 'svelte-sonner';
 	import { menuData } from '$lib/stores/menu';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
-	
+
 	/**
 	 * @typedef {Object} Props
 	 * @property {import('./$types').LayoutData} data
@@ -23,99 +23,93 @@
 	let dataMenuSearch = $state([]);
 
 	// Filter function
-    function searchMenu(menu, query) {
-        if (!query) return menu;
+	function searchMenu(menu, query) {
+		if (!query) return menu;
 
-        function search(items) {
+		function search(items) {
 			if (!Array.isArray(items)) return [];
-            return items
-                .map(item => {
-                    if (item.name.toLowerCase().includes(query.toLowerCase())) {
-                        return item;
-                    }
-                    if (item.children) {
-                        const filteredChildren = search(item.children);
-                        if (filteredChildren.length) {
-                            return { ...item, children: filteredChildren };
-                        }
-                    }
-                    return null;
-                })
-                .filter(item => item !== null);
-        }
+			return items
+				.map((item) => {
+					if (item.name.toLowerCase().includes(query.toLowerCase())) {
+						return item;
+					}
+					if (item.children) {
+						const filteredChildren = search(item.children);
+						if (filteredChildren.length) {
+							return { ...item, children: filteredChildren };
+						}
+					}
+					return null;
+				})
+				.filter((item) => item !== null);
+		}
 
-        return search(menu);
-    }
+		return search(menu);
+	}
 
 	async function handleSearchMenu() {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            if (search === '') {
-                dataMenuSearch = [];
-                loading = false;
-                return;
-            }
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			if (search === '') {
+				dataMenuSearch = [];
+				loading = false;
+				return;
+			}
 
-            loading = true;
+			loading = true;
 
-            // Perform search
-            dataMenuSearch = searchMenu(menu, search);
-            loading = false;
-        }, 500);
-    }
+			// Perform search
+			dataMenuSearch = searchMenu(menu, search);
+			loading = false;
+		}, 500);
+	}
 </script>
 
-<div class="flex flex-row text-wrap text-start font-poppins">
+<div class="font-poppins flex flex-row text-start text-wrap">
 	<aside
-		class="fixed left-0 top-0 flex h-screen min-w-64 max-w-64 flex-col overflow-y-scroll bg-slate-100"
+		class="fixed top-0 left-0 flex h-screen max-w-64 min-w-64 flex-col overflow-y-scroll bg-slate-100"
 	>
-		<div class="flex items-center justify-center mt-3 border-b-2 pb-6">
-			<p>
-				LOGO HERE
-			</p>
+		<div class="mt-3 flex items-center justify-center border-b-2 pb-6">
+			<p>LOGO HERE</p>
 		</div>
 		<div id="profile" class="space-y-3 p-6">
 			<img
-			src={"https://api.dicebear.com/9.x/initials/svg?seed=" + data.menu.user.name}
-			alt="Avatar user"
-			class="w-10 md:w-16 rounded-full mx-auto"
+				src={'https://api.dicebear.com/9.x/initials/svg?seed=' + data.menu.user.name}
+				alt="Avatar user"
+				class="mx-auto w-10 rounded-full md:w-16"
 			/>
 			<div>
-			<h2
-				class="font-medium text-xs md:text-sm text-center text-teal-500"
-			>
-			{data.menu.user.name}
-			</h2>
-			<p class="text-xs text-gray-500 text-center">{data.menu.user.email}</p>
+				<h2 class="text-center text-xs font-medium text-teal-500 md:text-sm">
+					{data.menu.user.name}
+				</h2>
+				<p class="text-center text-xs text-gray-500">{data.menu.user.email}</p>
 			</div>
 		</div>
-		<div
-            class="flex rounded-md focus-within:ring-2 p-2"
-          >
-            <input
-              type="text"
-              class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-hidden"
-              placeholder="Search"
-			  bind:value={search}
-			  oninput={handleSearchMenu}
-            />
-          </div>
+		<div class="flex rounded-md p-2 focus-within:ring-2">
+			<input
+				type="text"
+				class="w-full rounded-tl-md rounded-bl-md px-2 py-3 text-sm text-gray-600 focus:outline-hidden"
+				placeholder="Search"
+				bind:value={search}
+				oninput={handleSearchMenu}
+			/>
+		</div>
 		<div class="flex flex-col overflow-y-scroll px-3 py-4">
 			{#if dataMenuSearch.length > 0}
 				{#each dataMenuSearch as item}
 					<ul class="menu text-md flex flex-col font-medium">
-						<Nested menu={item} open={true} highlightedquery={search}/>
+						<Nested menu={item} open={true} highlightedquery={search} />
 					</ul>
 				{/each}
 			{:else}
-			{#each menu as item}
-				<ul class="menu text-md flex flex-col font-medium">
-					<Nested menu={item} />
-				</ul>
-			{/each}
+				{#each menu as item}
+					<ul class="menu text-md flex flex-col font-medium">
+						<Nested menu={item} />
+					</ul>
+				{/each}
 			{/if}
 		</div>
-		<div class="mt-auto flex flex-row items-center justify-between bg-slate-50 py-3 px-2">
+		<div class="mt-auto flex flex-row items-center justify-between bg-slate-50 px-2 py-3">
 			<div class="flex flex-col items-start gap-x-2">
 				<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
 					{data.menu.user.name}
@@ -126,7 +120,7 @@
 			</div>
 			<!-- <button on:click={toggleMode}>Toggle Mode</button> -->
 			<div
-				class="rotate-180 text-gray-500 transition-colors duration-200 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 rtl:rotate-0"
+				class="rotate-180 text-gray-500 transition-colors duration-200 hover:text-blue-500 rtl:rotate-0 dark:text-gray-400 dark:hover:text-blue-400"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
