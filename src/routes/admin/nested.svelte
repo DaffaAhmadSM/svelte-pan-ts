@@ -2,8 +2,7 @@
 	import Nested from './nested.svelte';
 	import { slide } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
-	import { page } from '$app/stores';
-
+	import { page } from '$app/state';
 	/**
 	 * @typedef {Object} Props
 	 * @property {any} menu
@@ -12,8 +11,7 @@
 	 */
 
 	/** @type {Props} */
-	let { menu, open = false, highlightedquery = null } = $props();
-
+	let { menu, open = $bindable(false), highlightedquery = null } = $props();
 	function highlightText(text) {
 		if (!highlightedquery) return text;
 		const regex = new RegExp(highlightedquery, 'gi');
@@ -24,7 +22,7 @@
 {#if menu.children}
 	<li>
 		<details
-			class={$page.url.pathname == menu.url ? 'bg-secondary-400' : 'hover:bg-surface-200'}
+			class={page.url.pathname == menu.url ? 'bg-secondary-400' : 'hover:bg-surface-200'}
 			{open}
 		>
 			<summary
@@ -58,7 +56,7 @@
 	</li>
 {/if}
 {#if !menu.children}
-	<li class="{$page.url.pathname == menu.url ? 'bg-blue-50' : 'hover:bg-blue-50'} block">
+	<li class="{page.url.pathname == menu.url ? 'bg-blue-50' : 'hover:bg-blue-50'} block">
 		<a class="block rounded-xl p-3" href="{menu.url}?menuid={menu.id}"
 			>{@html highlightText(menu.name)}</a
 		>

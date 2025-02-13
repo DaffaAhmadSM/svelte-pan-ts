@@ -20,7 +20,7 @@ export const actions = {
                 path: '/',
                 httpOnly: false,
             });
-            throw redirect(301, '/admin');
+            redirect(301, '/admin');
         }
 
         if (response.status == 401) {

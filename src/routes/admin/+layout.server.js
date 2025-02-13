@@ -16,7 +16,7 @@ export async function load ({ fetch, cookies }) {
      menu = await response.json();
      cookies.set('user_id', String(menu.user.id), { path: '/' , httpOnly: false });
     } else {
-      throw redirect(302, '/');
+      redirect(302, '/');
     }
 
     const reqSetting = await fetch(import.meta.env.VITE_API_URL + '/app-setting/all', {

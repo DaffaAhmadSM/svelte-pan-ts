@@ -24,7 +24,7 @@ export async function handle({ event, resolve }) {
             event.cookies.getAll().forEach(cookie => {
                 event.cookies.delete(cookie.name, {path: '/'});
             });
-            throw redirect(307, '/');
+            redirect(307, '/');
         }
     }
 	const response = await resolve(event);
