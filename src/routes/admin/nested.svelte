@@ -28,13 +28,6 @@
 		event.preventDefault();
 		$menuStates[menuId] = !$menuStates[menuId];
 	}
-
-	function handleLinkClick(event) {
-		// Prevent the click from bubbling up and triggering other handlers
-		event.stopPropagation();
-		// Ensure the menu state persists
-		$menuStates[menuId] = true;
-	}
 </script>
 
 {#if menu.children}
@@ -76,7 +69,7 @@
 {/if}
 {#if !menu.children}
 	<li class="{page.url.pathname == menu.url ? 'bg-blue-50' : 'hover:bg-blue-50'} block">
-		<a class="block rounded-xl p-3" href="{menu.url}?menuid={menu.id}" onclick={handleLinkClick}
+		<a class="block rounded-xl p-3" href="{menu.url}?menuid={menu.id}"
 			>{@html highlightText(menu.name)}</a
 		>
 	</li>
