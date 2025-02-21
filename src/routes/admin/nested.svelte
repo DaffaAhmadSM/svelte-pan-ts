@@ -3,6 +3,7 @@
 	import { slide } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
 	import { page } from '$app/state';
+	import { menuStates } from '$lib/stores/menuStates';
 	/**
 	 * @typedef {Object} Props
 	 * @property {any} menu
@@ -12,10 +13,27 @@
 
 	/** @type {Props} */
 	let { menu, open = $bindable(false), highlightedquery = null } = $props();
+
+	const menuId = menu.id || menu.url;
+
+	$menuStates[menuId] = $menuStates[menuId] ?? open;
+
 	function highlightText(text) {
 		if (!highlightedquery) return text;
 		const regex = new RegExp(highlightedquery, 'gi');
 		return text.replace(regex, '<mark class="highlight">' + highlightedquery + '</mark>');
+	}
+
+	function handleSummaryClick(event) {
+		event.preventDefault();
+		$menuStates[menuId] = !$menuStates[menuId];
+	}
+
+	function handleLinkClick(event) {
+		// Prevent the click from bubbling up and triggering other handlers
+		event.stopPropagation();
+		// Ensure the menu state persists
+		$menuStates[menuId] = true;
 	}
 </script>
 
@@ -23,10 +41,11 @@
 	<li>
 		<details
 			class={page.url.pathname == menu.url ? 'bg-secondary-400' : 'hover:bg-surface-200'}
-			{open}
+			open={$menuStates[menuId]}
 		>
 			<summary
 				class="flex items-center gap-2 p-2 font-medium marker:content-none hover:cursor-pointer"
+				onclick={handleSummaryClick}
 			>
 				<span class="gap-2 text-gray-900" id="highlightcheck">{@html highlightText(menu.name)}</span
 				>
@@ -48,7 +67,7 @@
 			<article class="mx-4">
 				<ul class="mt-4 flex flex-col gap-2 border-l pl-2" transition:slide={{ easing: expoInOut }}>
 					{#each menu.children as item}
-						<Nested menu={item} {highlightedquery} {open} />
+						<Nested menu={item} open={$menuStates[menuId]} {highlightedquery} />
 					{/each}
 				</ul>
 			</article>
@@ -57,7 +76,7 @@
 {/if}
 {#if !menu.children}
 	<li class="{page.url.pathname == menu.url ? 'bg-blue-50' : 'hover:bg-blue-50'} block">
-		<a class="block rounded-xl p-3" href="{menu.url}?menuid={menu.id}"
+		<a class="block rounded-xl p-3" href="{menu.url}?menuid={menu.id}" onclick={handleLinkClick}
 			>{@html highlightText(menu.name)}</a
 		>
 	</li>
