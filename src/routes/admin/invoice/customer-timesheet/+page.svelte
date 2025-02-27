@@ -74,6 +74,8 @@
 			data.list = await fetchTable();
 			return;
 		}
+
+		toastTrigger('Failed to export', 'Error', 200, 500);
 	}
 
 	let setting = data.setting;
