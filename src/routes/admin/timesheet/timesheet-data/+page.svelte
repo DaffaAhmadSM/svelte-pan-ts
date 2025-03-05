@@ -120,7 +120,7 @@
 </script>
 
 <div class="table-container">
-	<div class="mb-6 flex w-full flex-col p-5 font-poppins">
+	<div class="font-poppins mb-6 flex w-full flex-col p-5">
 		<h1 class="text-5xl">Timesheet Data</h1>
 	</div>
 
@@ -132,10 +132,10 @@
 					<input
 						type="text"
 						placeholder="Search here"
-						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:outline-hidden focus:ring-2 focus:ring-gray-600"
+						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					/>
 					<button
-						class="ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:outline-hidden focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+						class="focus:ring-opacity-50 ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					>
 						Search
 					</button>
@@ -146,8 +146,8 @@
 
 	<div class="container-table">
 		{#if tableLoading}
-			<div class="z-99 fixed left-0 top-0 flex h-full w-full items-center justify-center">
-				<div class="loading" />
+			<div class="fixed top-0 left-0 z-99 flex h-full w-full items-center justify-center">
+				<div class="loading"></div>
 			</div>
 		{:else}
 			<div class="container-table">
@@ -276,7 +276,7 @@
 					</tbody>
 				</table>
 				{#if loading}
-					<div class="loading" />
+					<div class="loading"></div>
 				{/if}
 			</div>
 		{/if}
@@ -291,7 +291,7 @@
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content
-			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
+			class="bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border p-6 shadow-lg sm:rounded-lg md:w-full"
 		>
 			<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">Move Confirm</Dialog.Title>
 			<Dialog.Description class="mb-6 text-sm text-black">
@@ -301,7 +301,7 @@
 			<div class="mt-6 flex justify-end gap-4">
 				<button
 					class="inline-flex h-8 items-center justify-center rounded-sm
-                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                        bg-zinc-100 px-4 leading-none font-medium text-zinc-600"
 					on:click={() => {
 						moveConfirm = false;
 					}}
@@ -311,7 +311,7 @@
 				<button
 					type="submit"
 					class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
-                        justify-center rounded-sm px-4 font-medium leading-none"
+                        justify-center rounded-sm px-4 leading-none font-medium"
 					on:click={() => {
 						moveToCustomerTimesheet(currentMoveId);
 					}}
@@ -331,7 +331,7 @@
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content
-			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
+			class="bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border p-6 shadow-lg sm:rounded-lg md:w-full"
 		>
 			<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">
 				Detail Imported Data
@@ -346,7 +346,7 @@
 			<div class="mt-6 flex justify-end gap-4">
 				<button
 					class="inline-flex h-8 items-center justify-center rounded-sm
-                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                        bg-zinc-100 px-4 leading-none font-medium text-zinc-600"
 					on:click={() => {
 						dataDetail = false;
 					}}

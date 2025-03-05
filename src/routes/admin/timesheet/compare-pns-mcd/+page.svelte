@@ -35,6 +35,7 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
+		csvdaily: null,
 		customer_id: null,
 		eti_bonus_percentage: null,
 		rate_id: null
@@ -47,6 +48,7 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
+		csvdaily: null,
 		customer_id: null,
 		eti_bonus_percentage: null,
 		rate_id: null
@@ -76,6 +78,12 @@
 		{
 			name: 'CSV MCD',
 			id: 'csvmcd',
+			type: 'file',
+			showFileName: true
+		},
+		{
+			name: 'CSV Daily Rate',
+			id: 'csvdaily',
 			type: 'file',
 			showFileName: true
 		},
@@ -150,7 +158,6 @@
 		return await get.json();
 	}
 
-	let csvImportData;
 	async function createTable() {
 		holdInput.set(true);
 		if ($holdInput != true) return;
@@ -187,6 +194,11 @@
 		// dataCsv.append('pns_csv', formData.csvpns);
 		dataCsv.append('temptimesheet_id', tempTimesheetJson.data.id);
 
+		let csvDailyData = new FormData();
+		csvDailyData.append('csv', formData.csvdaily);
+		csvDailyData.append('temp_timesheet_id', tempTimesheetJson.data.id);
+
+		let csvDailyImport;
 		let csvImport;
 
 		try {
@@ -201,7 +213,16 @@
 					body: dataCsv
 				}
 			);
-			if (!csvImport.ok) {
+
+			csvDailyImport = await fetch(import.meta.env.VITE_API_URL + '/timesheet/import-daily-rate', {
+				method: 'POST',
+				headers: {
+					// 'Content-Type': 'multipart/form-data',
+					Authorization: 'Bearer ' + getCookie('token')
+				},
+				body: csvDailyData
+			});
+			if (!csvImport.ok || !csvDailyImport.ok) {
 				holdInput.set(false);
 				await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + tempTimesheetJson.data.id, {
 					method: 'POST',
@@ -220,12 +241,11 @@
 
 		data.list = await fetchTable();
 		addModal = false;
-		csvImportData = await csvImport.json();
 
 		dataDetail = true;
 		formData = dumpformData;
 		holdInput.set(false);
-		return toastTrigger('data imported', toastId, 200);
+		return toastTrigger('importing data', toastId, 200);
 	}
 
 	async function deleteRow(id) {
