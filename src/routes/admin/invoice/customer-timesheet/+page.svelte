@@ -155,45 +155,89 @@
 								<td class="table-td">{row.from_date}</td>
 								<td class="table-td">{row.to_date}</td>
 								<td class="table-td max-w-20 truncate">{row.description}</td>
-								<td class="table-td max-w-20 truncate">{row.status}</td>
+								<td class="table-td max-w-20">{row.status}</td>
 								<td class="table-td flex items-center gap-4">
-									<a class="" href="/admin/invoice/customer-timesheet/{row.random_string}">
-										<div class="flex gap-2">
+									{#if row.status == 'generating' || row.status == 'exporting'}
+										<div class="loading"></div>
+									{:else}
+										<a
+											class="btn btn-primary flex gap-2"
+											href={import.meta.env.VITE_STORAGE_URL + row.file_path}
+											download
+										>
 											<svg
-												fill="#3584e4"
-												width="18px"
-												height="18px"
-												viewBox="0 0 96 96"
+												viewBox="0 0 24 24"
+												fill="none"
 												xmlns="http://www.w3.org/2000/svg"
-												stroke="#3584e4"
+												width="1.3rem"
+												height="1.3rem"
 												><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
 													id="SVGRepo_tracerCarrier"
 													stroke-linecap="round"
 													stroke-linejoin="round"
-													stroke="#CCCCCC"
-													stroke-width="7.872"
 												></g><g id="SVGRepo_iconCarrier">
-													<title></title>
-													<g>
-														<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
-														<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-														<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-													</g>
+													<path
+														d="M12 7L12 14M12 14L15 11M12 14L9 11"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													></path>
+													<path
+														d="M16 17H12H8"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+														stroke-linecap="round"
+													></path>
+													<path
+														d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+													></path>
 												</g></svg
 											>
-											<span>Detail</span>
-										</div>
-									</a>
-									{#if row.status != 'exported'}
-										<button
-											class="btn btn-primary hover:btn-error"
-											on:click={() => {
-												moveConfirm = true;
-												currentMoveId = row.id;
-											}}
-										>
-											Export Invoice
-										</button>
+											<p>Download</p>
+										</a>
+										{#if row.status == 'draft'}
+											<button
+												class="btn btn-primary hover:btn-error"
+												on:click={() => {
+													moveConfirm = true;
+													currentMoveId = row.random_string;
+												}}
+											>
+												Export Invoice
+											</button>
+										{/if}
+										{#if row.status == 'exported'}
+											<a class="" href="/admin/invoice/customer-timesheet/{row.random_string}">
+												<div class="flex gap-2">
+													<svg
+														fill="#3584e4"
+														width="18px"
+														height="18px"
+														viewBox="0 0 96 96"
+														xmlns="http://www.w3.org/2000/svg"
+														stroke="#3584e4"
+														><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+															id="SVGRepo_tracerCarrier"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															stroke="#CCCCCC"
+															stroke-width="7.872"
+														></g><g id="SVGRepo_iconCarrier">
+															<title></title>
+															<g>
+																<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
+																<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+																<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+															</g>
+														</g></svg
+													>
+													<span>Detail Export</span>
+												</div>
+											</a>
+										{/if}
 									{/if}
 								</td>
 							</tr>
@@ -239,6 +283,8 @@
 					class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
                         justify-center rounded-sm px-4 leading-none font-medium"
 					on:click={() => {
+						generateInvoice(currentMoveId);
+						moveConfirm = false;
 						// generateCustomerInvoice(currentMoveId);
 					}}
 				>

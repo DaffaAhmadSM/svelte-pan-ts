@@ -57,7 +57,7 @@
 
 	let tableList = [
 		{
-			name: 'Filename',
+			name: 'name',
 			id: 'filename',
 			type: 'text'
 		},
@@ -77,7 +77,7 @@
 			type: 'date'
 		},
 		{
-			name: 'CSV MCD',
+			name: 'CSV TS',
 			id: 'csvmcd',
 			type: 'file',
 			showFileName: true
