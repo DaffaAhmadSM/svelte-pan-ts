@@ -281,11 +281,9 @@
 	</div>
 </div>
 
-<Dialog.Root bind:open={moveConfirm} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={moveConfirm}>
 	<Dialog.Portal>
 		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content
@@ -321,11 +319,9 @@
 	</Dialog.Portal>
 </Dialog.Root>
 
-<Dialog.Root bind:open={dataDetail} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={dataDetail}>
 	<Dialog.Portal>
 		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content

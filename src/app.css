@@ -2,150 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
-
- 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
- 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
- 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
- 
-    --border: 0 0% 89.8%;
-    /* --input: 0 0% 89.8%; */
- 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
- 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
- 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
- 
-    --destructive: 0 72.2% 50.6%;
-    --destructive-foreground: 0 0% 98%;
- 
-    --ring: 0 0% 3.9%;
- 
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
- 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
- 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
- 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
- 
-    --border: 0 0% 14.9%;
-    /* --input: 0 0% 14.9%; */
- 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
- 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
- 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
- 
-    --ring: 0 0% 83.1%;
-  }
-}
- 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 0 0% 3.9%;
 
+		--muted: 0 0% 96.1%;
+		--muted-foreground: 0 0% 45.1%;
+
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 3.9%;
+
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 3.9%;
+
+		--border: 0 0% 89.8%;
+		/* --input: 0 0% 89.8%; */
+
+		--primary: 0 0% 9%;
+		--primary-foreground: 0 0% 98%;
+
+		--secondary: 0 0% 96.1%;
+		--secondary-foreground: 0 0% 9%;
+
+		--accent: 0 0% 96.1%;
+		--accent-foreground: 0 0% 9%;
+
+		--destructive: 0 72.2% 50.6%;
+		--destructive-foreground: 0 0% 98%;
+
+		--ring: 0 0% 3.9%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		--background: 0 0% 3.9%;
+		--foreground: 0 0% 98%;
+
+		--muted: 0 0% 14.9%;
+		--muted-foreground: 0 0% 63.9%;
+
+		--popover: 0 0% 3.9%;
+		--popover-foreground: 0 0% 98%;
+
+		--card: 0 0% 3.9%;
+		--card-foreground: 0 0% 98%;
+
+		--border: 0 0% 14.9%;
+		/* --input: 0 0% 14.9%; */
+
+		--primary: 0 0% 98%;
+		--primary-foreground: 0 0% 9%;
+
+		--secondary: 0 0% 14.9%;
+		--secondary-foreground: 0 0% 98%;
+
+		--accent: 0 0% 14.9%;
+		--accent-foreground: 0 0% 98%;
+
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
+
+		--ring: 0 0% 83.1%;
+	}
 }
 
-@layer components{
-  /* input[type="checkbox"] {
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
+
+@layer components {
+	/* input[type="checkbox"] {
     @apply   h-5 w-5 cursor-pointer checked:bg-no-repeat checked:bg-center checked:border-indigo-500 checked:bg-indigo-100 rounded-md border transition-all duration-200;
   } */
 
-  .btn {
-    @apply px-3 py-2
-  }
- 
-  
+	.btn {
+		@apply px-3 py-2;
+	}
 }
 
 @layer utilities {
-  .loading {
-    @apply w-12 h-12 rounded-full animate-spin border-4 border-solid dark:border-white border-gray-600 border-t-transparent dark:border-t-gray-800;
-  }
+	.loading {
+		@apply h-12 w-12 animate-spin rounded-full border-4 border-solid border-gray-600 border-t-transparent dark:border-white dark:border-t-gray-800;
+	}
 
-  .button-table-add {
-    @apply px-5 py-3 gap-x-2 text-sm text-emerald-800 bg-emerald-100/90 dark:bg-gray-800 ml-auto
-  }
+	.button-table-add {
+		@apply ml-auto gap-x-2 bg-emerald-100/90 px-5 py-3 text-sm text-emerald-800 dark:bg-gray-800;
+	}
 
-  .button-table-add p {
-    @apply font-poppins font-bold uppercase whitespace-nowrap
-  }
+	.button-table-add p {
+		@apply whitespace-nowrap font-poppins font-bold uppercase;
+	}
 
-  .container-table {
-    @apply p-5 shadow
-  }
+	.container-table {
+		@apply p-5 shadow;
+	}
 
-  .table-style {
-    @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto
-  }
+	.table-style {
+		@apply min-w-full table-auto divide-y divide-gray-200 dark:divide-gray-700;
+	}
 
-  .table-header {
-    @apply py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400
-  }
+	.table-header {
+		@apply px-4 py-3.5 text-left text-sm font-normal text-gray-500 dark:text-gray-400 rtl:text-right;
+	}
 
-  .table-header p {
-    @apply block antialiased font-poppins text-sm font-normal leading-none opacity-70
-  }
+	.table-header p {
+		@apply block font-poppins text-sm font-normal leading-none antialiased opacity-70;
+	}
 
-  .table-thead {
-    @apply bg-gray-50 dark:bg-gray-800
-  }
+	.table-thead {
+		@apply bg-gray-50 dark:bg-gray-800;
+	}
 
-  .table-fieldset {
-    @apply mb-4 flex items-center gap-5
-  }
+	.table-fieldset {
+		@apply mb-4 flex items-center gap-5;
+	}
 
-  .table-field-input {
-    @apply inline-flex h-8 w-full flex-1 rounded-sm px-3 leading-none text-black border border-gray-300
-  }
+	.table-field-input {
+		@apply inline-flex h-8 w-full flex-1 rounded-sm border border-gray-300 px-3 leading-none text-black;
+	}
 
-  .table-field-label {
-    @apply w-[90px] text-black text-start
-  }
+	.table-field-label {
+		@apply w-[90px] text-start text-black;
+	}
 
-  .table-tbody{
-    @apply bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900
-  }  
+	.table-tbody {
+		@apply divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900;
+	}
 
-  .table-td {
-    @apply px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap
-  }
+	.table-td {
+		@apply whitespace-nowrap px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200;
+	}
 
-  .table-container {
-    @apply w-full overflow-auto
-  }
+	.table-container {
+		@apply w-full overflow-auto;
+	}
 }

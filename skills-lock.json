@@ -1,23 +1,23 @@
 {
-  "version": 1,
-  "skills": {
-    "caveman": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman/SKILL.md",
-      "computedHash": "dfbf85749fd474feeb0bbe60c779795ecd5dbec0083299b56e68916bc3ddd8c9"
-    },
-    "caveman-stats": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-stats/SKILL.md",
-      "computedHash": "47ce2de3d6cb39a75047b5c962e4eb3da15594e7397c94103e9a104d42626553"
-    },
-    "web-design-guidelines": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/web-design-guidelines/SKILL.md",
-      "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
-    }
-  }
+	"version": 1,
+	"skills": {
+		"caveman": {
+			"source": "JuliusBrussee/caveman",
+			"sourceType": "github",
+			"skillPath": "skills/caveman/SKILL.md",
+			"computedHash": "dfbf85749fd474feeb0bbe60c779795ecd5dbec0083299b56e68916bc3ddd8c9"
+		},
+		"caveman-stats": {
+			"source": "JuliusBrussee/caveman",
+			"sourceType": "github",
+			"skillPath": "skills/caveman-stats/SKILL.md",
+			"computedHash": "47ce2de3d6cb39a75047b5c962e4eb3da15594e7397c94103e9a104d42626553"
+		},
+		"web-design-guidelines": {
+			"source": "vercel-labs/agent-skills",
+			"sourceType": "github",
+			"skillPath": "skills/web-design-guidelines/SKILL.md",
+			"computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+		}
+	}
 }

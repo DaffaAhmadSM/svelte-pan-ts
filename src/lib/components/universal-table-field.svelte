@@ -1,10 +1,9 @@
 <script>
 	import AutocompleteComponents from './autocompleteComponents.svelte';
 
-	export let tableList;
-	export let formData;
+	let { tableList, formData = $bindable() } = $props();
 
-	// console.log(formData);
+	
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none;">
@@ -35,7 +34,7 @@
 					class="table-field-input !px-0 file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-slate-500"
 					id={list.id}
 					disabled={list.disabled}
-					on:change={(e) => {
+					onchange={(e) => {
 						// @ts-ignore
 						formData[list.id] = e.target.files[0];
 					}}

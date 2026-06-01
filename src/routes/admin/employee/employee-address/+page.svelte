@@ -99,7 +99,7 @@
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>
             <td class="table-td">{row.employee.no}</td>

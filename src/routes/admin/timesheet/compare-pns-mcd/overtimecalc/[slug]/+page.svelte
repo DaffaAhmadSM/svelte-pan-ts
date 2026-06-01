@@ -221,16 +221,14 @@
         </tbody>
     </table>
 
-    <!-- <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} {namePage} {searchUrl}></UniversalSetupTable> -->
+    <!-- <UniversalSetupTable bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} {namePage} {searchUrl}></UniversalSetupTable> -->
     
     
 </div>
 
-<Dialog.Root bind:open={alertVerify} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={alertVerify}>
     <Dialog.Portal>
         <Dialog.Overlay
-        transition={fade}
-        transitionConfig={{ duration: 150 }}
         class="fixed inset-0 z-50 bg-black/50"
     />
         <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">

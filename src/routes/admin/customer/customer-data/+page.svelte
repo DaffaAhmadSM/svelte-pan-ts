@@ -2,8 +2,7 @@
 	import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { toastTrigger, toastTriggerLoading, toastTriggerUpdate } from '$lib/helpers/toasterTrigger.js';
-	import { name } from '@melt-ui/svelte';
-    export let data;
+	    export let data;
 
     let formData = {
         number_sequence_id: null,
@@ -190,7 +189,7 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {detailMeta} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="table-fieldset">
@@ -242,7 +241,7 @@
                 </select>
             </fieldset>
             {/await}
-            
+
         </svelte:fragment>
     </UniversalSetupTable>
 </div>

@@ -72,7 +72,7 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
     <svelte:fragment slot="aditional-form-create">
         {#await getMultiplicationAll() then _}
             <AutocompleteComponents

@@ -1,9 +1,11 @@
 <script>
+  import { run } from 'svelte/legacy';
+
     import { page } from '$app/stores';
   
-    let crumbs = [];
+    let crumbs = $state([]);
   
-      $: {
+      run(() => {
           // Remove zero-length tokens.
           const tokens = $page.url.pathname.split('/').filter((t) => t !== '');
   
@@ -17,7 +19,7 @@
                   href: tokenPath
               };
           });
-      }
+      });
   </script>
   
   <div class="breadcrumb">

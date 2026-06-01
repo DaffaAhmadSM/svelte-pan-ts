@@ -35,7 +35,7 @@
 <div class="w-full overflow-auto">
 	<UniversalSetupTable
 		{namePage}
-		{data}
+bind:data
 		{fetchUrl}
 		{deleteUrl}
 		{updateUrl}

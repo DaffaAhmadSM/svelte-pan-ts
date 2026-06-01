@@ -3,8 +3,7 @@
     import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 	import { getCookie } from '$lib/helpers/getLocalCookies.js';
 	import { getValueByPath } from '$lib/helpers/getObjectValue';
-	import { name } from '@melt-ui/svelte';
-    export let data;
+	    export let data;
 
     let formData = {
         employee_id: null,
@@ -123,7 +122,7 @@
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="table-row" let:header let:index let:row>
             <td class="table-td">{index + 1}</td>
             {#each Object.entries(header) as [key, value]}
@@ -132,7 +131,7 @@
         </svelte:fragment>
 
         <svelte:fragment slot="aditional-form-create">
-            {#await getEmployeeAll() then _} 
+            {#await getEmployeeAll() then _}
                     <AutocompleteComponents
                         fieldLable="Employee"
                         items={employeeAll.data}
@@ -145,7 +144,7 @@
         </svelte:fragment>
 
         <svelte:fragment slot="aditional-form-update">
-            {#await getEmployeeAll() then _} 
+            {#await getEmployeeAll() then _}
                     <AutocompleteComponents
                         fieldLable="Employee"
                         items={employeeAll.data}
@@ -156,6 +155,6 @@
                     />
             {/await}
         </svelte:fragment>
-        
+
     </UniversalSetupTable>
 </div>

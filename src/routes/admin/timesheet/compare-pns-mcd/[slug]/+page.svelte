@@ -411,11 +411,9 @@
     </Tabs.Content>
   </Tabs.Root>
 
-    <Dialog.Root bind:open={editModal} closeOnEscape closeOnOutsideClick>
+    <Dialog.Root bind:open={editModal}>
         <Dialog.Portal>
             <Dialog.Overlay
-            transition={fade}
-            transitionConfig={{ duration: 150 }}
             class="fixed inset-0 z-50 bg-black/50"
         />
             <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
@@ -425,7 +423,7 @@
             <Dialog.Description class="mb-6 text-sm text-black">
                 Fill in the form below to add a new data.
             </Dialog.Description>
-            <UniversalTableField {tableList} formData={formData} />
+            <UniversalTableField {tableList} bind:formData={formData} />
 
             <div class="mt-6 flex justify-end gap-4">
                 <button
@@ -455,11 +453,9 @@
 
 
 
-    <Dialog.Root bind:open={alertResolveModal} closeOnEscape closeOnOutsideClick>
+    <Dialog.Root bind:open={alertResolveModal}>
         <Dialog.Portal>
             <Dialog.Overlay
-            transition={fade}
-            transitionConfig={{ duration: 150 }}
             class="fixed inset-0 z-50 bg-black/50"
         />
             <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">

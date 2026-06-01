@@ -5,7 +5,6 @@
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { holdInput } from '$lib/stores/holdinput.js';
 	import { Dialog } from 'bits-ui';
-	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
@@ -134,7 +133,7 @@
 <div class="w-full overflow-auto">
 	<UniversalSetupTable
 		{namePage}
-		{data}
+		bind:data
 		{fetchUrl}
 		{deleteUrl}
 		{updateUrl}
@@ -183,13 +182,9 @@
 <!-- Import CSV Modal -->
 <Dialog.Root
 	bind:open={modalImportExcel}
-	closeOnEscape={!$holdInput}
-	closeOnOutsideClick={!$holdInput}
 >
 	<Dialog.Portal>
 		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content

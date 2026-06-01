@@ -178,5 +178,5 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {detailMeta} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
+    <UniversalSetupTable {detailMeta} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} bind:formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
 </div>

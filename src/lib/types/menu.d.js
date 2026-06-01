@@ -2,8 +2,8 @@
  * @typedef Menu
  * @prop {Data[]} menu
  * @prop {User} user
- * 
- * 
+ *
+ *
  * @typedef User
  * @prop {number} id
  * @prop {string} name
@@ -16,4 +16,4 @@
  * @prop {Data[]?} children
  */
 
-module.exports = {}
+module.exports = {};

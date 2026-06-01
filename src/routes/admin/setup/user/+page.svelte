@@ -7,7 +7,6 @@
 	import { setContext } from 'svelte';
   import CheckboxNested from '$lib/components/checkboxNested.svelte';
 	import {Dialog} from 'bits-ui';
-	import { fade } from 'svelte/transition';
 	import { menuData } from '$lib/stores/menu';
 	import { get } from 'svelte/store';
   export let data;
@@ -189,8 +188,6 @@
 <Dialog.Root bind:open={dialogPermis}>
   <Dialog.Portal>
     <Dialog.Overlay
-        transition={fade}
-        transitionConfig={{ duration: 150 }}
         class="fixed inset-0 z-50 bg-black/50"
       />
       <Dialog.Content class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg sm:rounded-lg md:w-full max-h-[80%] overflow-scroll">
@@ -224,7 +221,7 @@
 </Dialog.Root>
 
 <div class="table-container">
-  <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} formData={formData} tableList={tableList} {namePage}>
+  <UniversalSetupTable bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} searchUrl={searchUrl} bind:formData={formData} tableList={tableList} {namePage}>
     <button slot="user-menu-edit" class="btn" on:click={()=> {openPermisModal(id); setUserSelected(id)}} let:id={id}>
       <svg fill="#ed333b" width="18px" height="18px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" stroke="#ed333b">
 

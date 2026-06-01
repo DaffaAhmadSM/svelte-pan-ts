@@ -30,5 +30,5 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
+    <UniversalSetupTable bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {namePage}></UniversalSetupTable>
 </div>

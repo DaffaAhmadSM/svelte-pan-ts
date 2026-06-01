@@ -1,6 +1,6 @@
 <script>
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
-	import { fade } from 'svelte/transition';
+	import AutocompleteComponents from '$lib/components/autocompleteComponents.svelte';
 	import { Dialog } from 'bits-ui';
 	import { toastTrigger, toastTriggerLoading } from '$lib/helpers/toasterTrigger';
 	import { getCookie } from '$lib/helpers/getLocalCookies';
@@ -538,13 +538,9 @@
 		{/if}
 	</div>
 
-	<Dialog.Root bind:open={addModal} closeOnEscape={!$holdInput} closeOnOutsideClick={!$holdInput}>
+	<Dialog.Root bind:open={addModal}>
 		<Dialog.Portal>
-			<Dialog.Overlay
-				transition={fade}
-				transitionConfig={{ duration: 150 }}
-				class="fixed inset-0 z-50 bg-black/50"
-			/>
+			<Dialog.Overlay class="fixed inset-0 z-50 bg-black/50" />
 			<Dialog.Content
 				class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
 			>
@@ -566,19 +562,14 @@
 					{/await}
 				</fieldset>
 				<fieldset class="table-fieldset">
-					<div class="table-field-label">Rate</div>
 					{#await getRatesAll() then ratesAll}
-						<select
-							name="eti_bonus_percentage"
-							bind:value={formData.rate_id}
-							class="table-field-input"
-						>
-							{#if ratesAll}
-								{#each ratesAll.data as rate}
-									<option value={rate.random_string}>{rate.name}</option>
-								{/each}
-							{/if}
-						</select>
+						<AutocompleteComponents
+							fieldLable="Rate"
+							items={ratesAll.data}
+							labelFieldName="name"
+							valueFieldName="random_string"
+							bind:bindValue={formData.rate_id}
+						/>
 					{/await}
 				</fieldset>
 				<div class="mt-6 flex justify-end gap-4">
@@ -610,13 +601,9 @@
 	</Dialog.Root>
 </div>
 
-<Dialog.Root bind:open={moveConfirm} closeOnEscape closeOnOutsideClick>
+<Dialog.Root bind:open={moveConfirm}>
 	<Dialog.Portal>
-		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
-			class="fixed inset-0 z-50 bg-black/50"
-		/>
+		<Dialog.Overlay class="fixed inset-0 z-50 bg-black/50" />
 		<Dialog.Content
 			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
 		>
@@ -650,11 +637,9 @@
 	</Dialog.Portal>
 </Dialog.Root>
 
-<!-- <Dialog.Root bind:open={dataDetail} closeOnEscape closeOnOutsideClick>
+<!-- <Dialog.Root bind:open={dataDetail}>
 	<Dialog.Portal>
 		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content

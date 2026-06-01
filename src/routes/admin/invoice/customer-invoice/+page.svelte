@@ -18,7 +18,7 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
       <svelte:fragment slot="additional-action" let:row>
         <a class="" href="/admin/invoice/customer-invoice/{row.document_number}">
           <div class="flex gap-2">

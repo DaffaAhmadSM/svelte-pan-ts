@@ -114,7 +114,7 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {detailMeta}{namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {detailMeta}{namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
         <svelte:fragment slot="aditional-form-create">
             {#await getNumberSequenceAll() then _}
             <fieldset class="mb-4 flex items-center gap-5">
