@@ -1,46 +1,32 @@
-import { redirect, fail } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
 export const actions = {
-	default: async (event) => {
-		const data = await event.request.formData();
-		const email = data.get('email');
-		const password = data.get('password');
+    default: async (event) => {
+        const data = await event.request.formData();
+        const email = data.get('email');
+        const password = data.get('password');
+        const response = await event.fetch(import.meta.env.VITE_API_URL + '/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, password: password }),
+        });
 
-		if (!email || !password) {
-			return fail(400, { error: 'Email and password are required.' });
-		}
+        if (response.ok) {
+            const { token } = await response.json();
+            // Save the token in cookies
+            event.cookies.set('token', token, {
+                path: '/',
+                httpOnly: false,
+            });
+            throw redirect(301, '/admin');
+        }
 
-		const response = await event.fetch(import.meta.env.VITE_API_URL + '/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email, password })
-		});
+        if (response.status == 401) {
+            return { error: 'Invalid credentials' };
+        }
 
-		const body = await response.json();
-
-		if (!response.ok) {
-			return fail(response.status, {
-				error: body.error ?? 'Invalid email or password. Please try again.'
-			});
-		}
-
-		event.cookies.set('token', body.token, {
-			path: '/',
-			httpOnly: false,
-			sameSite: 'lax'
-		});
-
-		// Store menu in cookie for server-side access
-		if (body.menu) {
-			event.cookies.set('menu', JSON.stringify(body.menu), {
-				path: '/',
-				httpOnly: false,
-				sameSite: 'lax'
-			});
-		}
-
-		throw redirect(303, '/admin');
+        return { error: 'Invalid credentials' };
 	}
-};
+}
