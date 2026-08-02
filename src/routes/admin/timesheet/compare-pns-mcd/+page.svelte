@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script>
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { fade } from 'svelte/transition';
@@ -6,6 +8,7 @@
 	import { getCookie } from '$lib/helpers/getLocalCookies';
 	import { holdInput } from '$lib/stores/holdinput.js';
 	import { onMount } from 'svelte';
+	import { Rows } from 'lucide-svelte';
 	export let data;
 
 	// long pooling every 10 sec
@@ -33,6 +36,7 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
+		csvdaily: null,
 		customer_id: null,
 		eti_bonus_percentage: null,
 		rate_id: null
@@ -45,6 +49,7 @@
 		description: null,
 		csvmcd: null,
 		csvpns: null,
+		csvdaily: null,
 		customer_id: null,
 		eti_bonus_percentage: null,
 		rate_id: null
@@ -52,7 +57,7 @@
 
 	let tableList = [
 		{
-			name: 'Filename',
+			name: 'name',
 			id: 'filename',
 			type: 'text'
 		},
@@ -72,14 +77,14 @@
 			type: 'date'
 		},
 		{
-			name: 'CSV MCD',
+			name: 'CSV TS',
 			id: 'csvmcd',
 			type: 'file',
 			showFileName: true
 		},
 		{
-			name: 'CSV PNS',
-			id: 'csvpns',
+			name: 'CSV Daily Rate',
+			id: 'csvdaily',
 			type: 'file',
 			showFileName: true
 		},
@@ -154,7 +159,6 @@
 		return await get.json();
 	}
 
-	let csvImportData;
 	async function createTable() {
 		holdInput.set(true);
 		if ($holdInput != true) return;
@@ -188,9 +192,14 @@
 
 		let dataCsv = new FormData();
 		dataCsv.append('mcd_csv', formData.csvmcd);
-		dataCsv.append('pns_csv', formData.csvpns);
+		// dataCsv.append('pns_csv', formData.csvpns);
 		dataCsv.append('temptimesheet_id', tempTimesheetJson.data.id);
 
+		let csvDailyData = new FormData();
+		csvDailyData.append('csv', formData.csvdaily);
+		csvDailyData.append('temp_timesheet_id', tempTimesheetJson.data.id);
+
+		let csvDailyImport;
 		let csvImport;
 
 		try {
@@ -205,7 +214,16 @@
 					body: dataCsv
 				}
 			);
-			if (!csvImport.ok) {
+
+			csvDailyImport = await fetch(import.meta.env.VITE_API_URL + '/timesheet/import-daily-rate', {
+				method: 'POST',
+				headers: {
+					// 'Content-Type': 'multipart/form-data',
+					Authorization: 'Bearer ' + getCookie('token')
+				},
+				body: csvDailyData
+			});
+			if (!csvImport.ok || !csvDailyImport.ok) {
 				holdInput.set(false);
 				await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + tempTimesheetJson.data.id, {
 					method: 'POST',
@@ -224,12 +242,35 @@
 
 		data.list = await fetchTable();
 		addModal = false;
-		csvImportData = await csvImport.json();
 
 		dataDetail = true;
 		formData = dumpformData;
 		holdInput.set(false);
 		return toastTrigger('data imported', toastId, 200);
+	}
+
+	async function overtimeCalculation(tempsheetID, isrecalculate = false) {
+		const toastId = toastTriggerLoading('Calculating...');
+		const res = await fetch(
+			import.meta.env.VITE_API_URL + '/temp-timesheet/calculate-overtime/queue/' + tempsheetID,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + getCookie('token')
+				},
+
+				body: JSON.stringify({
+					recalculate: isrecalculate
+				})
+			}
+		);
+		if (res.ok) {
+			data.list = await fetchTable();
+			return toastTrigger('Data Calculated', toastId, 200, 500);
+		}
+
+		return toastTrigger(data.list.data.message, toastId, res.status);
 	}
 
 	async function deleteRow(id) {
@@ -308,7 +349,7 @@
 </script>
 
 <div class="table-container">
-	<div class="mb-6 flex w-full flex-col p-5 font-poppins">
+	<div class="font-poppins mb-6 flex w-full flex-col p-5">
 		<h1 class="text-5xl">Compare PNS MCD</h1>
 	</div>
 
@@ -320,10 +361,10 @@
 					<input
 						type="text"
 						placeholder="Search here"
-						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600"
+						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					/>
 					<button
-						class="ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+						class="focus:ring-opacity-50 ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					>
 						Search
 					</button>
@@ -339,8 +380,8 @@
 
 	<div class="container-table">
 		{#if tableLoading}
-			<div class="z-99 fixed left-0 top-0 flex h-full w-full items-center justify-center">
-				<div class="loading" />
+			<div class="fixed top-0 left-0 z-99 flex h-full w-full items-center justify-center">
+				<div class="loading"></div>
 			</div>
 		{:else}
 			<div class="container-table">
@@ -405,9 +446,16 @@
                     Detail
                 </button> -->
 										{#if (row.pns_mcd_diff_count == 0 && row.status == 'draft') || row.status == 'calculated'}
-											<a
+											<button
 												class="flex gap-2"
-												href="/admin/timesheet/compare-pns-mcd/overtimecalc/{row.random_string}?menuid={data.paramsurl}"
+												on:click={() => {
+													if (row.status == 'calculated') {
+														overtimeCalculation(row.random_string, true);
+														return;
+													} else {
+														overtimeCalculation(row.random_string, false);
+													}
+												}}
 											>
 												<svg
 													width="18px"
@@ -430,11 +478,55 @@
 														></path>
 													</g></svg
 												>
-												<p>Overtime Calculation</p>
-											</a>
+
+												{#if row.status == 'calculated'}
+													<span>Recalculate Overtime</span>
+												{:else}
+													<span>Calculate Overtime</span>
+												{/if}
+											</button>
 										{/if}
 
-										{#if row.status != 'moved' && row.status != 'draft' && row.status != 'cancelled'}
+										{#if row.status == 'calculated'}
+											<button class="flex gap-2" on:click={() => moveToTimesheet(row.id)}>
+												<p>Move to Timesheet</p>
+											</button>
+										{/if}
+
+										{#if row.status == 'draft'}
+											<button
+												class="btn btn-primary hover:btn-error flex gap-2"
+												on:click={() => deleteRow(row.id)}
+											>
+												<svg
+													width="18px"
+													height="18px"
+													viewBox="0 0 24 24"
+													fill="none"
+													xmlns="http://www.w3.org/2000/svg"
+												>
+													<g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+													<g
+														id="SVGRepo_tracerCarrier"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													/>
+
+													<g id="SVGRepo_iconCarrier">
+														<path
+															d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z"
+															fill="#e01b24"
+														/>
+														<path
+															d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z"
+															fill="#e01b24"
+														/>
+													</g>
+												</svg>
+												<p>delete</p>
+											</button>
+											<!-- {:else}
 											<button
 												class="flex gap-1"
 												on:click={() => {
@@ -477,53 +569,11 @@
 													</g></svg
 												>
 												<p>Cancel</p>
-											</button>
+											</button> -->
 										{/if}
-
-										{#if row.status == 'verified'}
-											<button class="flex gap-2" on:click={() => moveToTimesheet(row.id)}>
-												<p>Move to Timesheet</p>
-											</button>
+										{#if row.status == 'importing ...' || row.status == 'calculating' || row.status == 'recalculating'}
+											<div class="loading"></div>
 										{/if}
-
-										{#if row.status == 'draft'}
-											<button
-												class="btn btn-primary hover:btn-error flex gap-2"
-												on:click={() => deleteRow(row.id)}
-											>
-												<svg
-													width="18px"
-													height="18px"
-													viewBox="0 0 24 24"
-													fill="none"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<g id="SVGRepo_bgCarrier" stroke-width="0" />
-
-													<g
-														id="SVGRepo_tracerCarrier"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													/>
-
-													<g id="SVGRepo_iconCarrier">
-														<path
-															d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z"
-															fill="#e01b24"
-														/>
-														<path
-															d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z"
-															fill="#e01b24"
-														/>
-													</g>
-												</svg>
-												<p>delete</p>
-											</button>
-										{/if}
-									</td>
-								{:else if row.status == 'importing ...'}
-									<td class="table-td flex items-center justify-center gap-4">
-										<div class="loading" />
 									</td>
 								{/if}
 							</tr>
@@ -532,7 +582,7 @@
 					</tbody>
 				</table>
 				{#if loading}
-					<div class="loading" />
+					<div class="loading"></div>
 				{/if}
 			</div>
 		{/if}
@@ -546,7 +596,7 @@
 				class="fixed inset-0 z-50 bg-black/50"
 			/>
 			<Dialog.Content
-				class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
+				class="bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border p-6 shadow-lg sm:rounded-lg md:w-full"
 			>
 				<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">Add</Dialog.Title>
 				<Dialog.Description class="mb-6 text-sm text-black">
@@ -585,7 +635,7 @@
 					<button
 						disabled={$holdInput}
 						class="inline-flex h-8 items-center justify-center rounded-sm
-                            bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                            bg-zinc-100 px-4 leading-none font-medium text-zinc-600"
 						on:click={() => {
 							addModal = false;
 							formData = dumpformData;
@@ -597,7 +647,7 @@
 						type="submit"
 						disabled={$holdInput}
 						class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
-                            justify-center rounded-sm px-4 font-medium leading-none"
+                            justify-center rounded-sm px-4 leading-none font-medium"
 						on:click={() => {
 							createTable();
 						}}
@@ -618,7 +668,7 @@
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content
-			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
+			class="bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border p-6 shadow-lg sm:rounded-lg md:w-full"
 		>
 			<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">Add</Dialog.Title>
 			<Dialog.Description class="mb-6 text-sm text-black">
@@ -628,7 +678,7 @@
 			<div class="mt-6 flex justify-end gap-4">
 				<button
 					class="inline-flex h-8 items-center justify-center rounded-sm
-                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                        bg-zinc-100 px-4 leading-none font-medium text-zinc-600"
 					on:click={() => {
 						moveConfirm = false;
 					}}
@@ -638,7 +688,7 @@
 				<button
 					type="submit"
 					class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
-                        justify-center rounded-sm px-4 font-medium leading-none"
+                        justify-center rounded-sm px-4 leading-none font-medium"
 					on:click={() => {
 						moveToTimesheet(currentMoveId);
 					}}

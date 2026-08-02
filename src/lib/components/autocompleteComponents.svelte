@@ -1,16 +1,30 @@
 <script>
 	import AutoComplete from 'simple-svelte-autocomplete';
-	export let items;
-	export let labelFieldName;
-	export let valueFieldName;
-	export let bindValue;
-	export let fieldLable;
-	export let searchFunction = null;
-	export let required = false;
+	/**
+	 * @typedef {Object} Props
+	 * @property {any} items
+	 * @property {any} labelFieldName
+	 * @property {any} valueFieldName
+	 * @property {any} bindValue
+	 * @property {any} fieldLable
+	 * @property {any} [searchFunction]
+	 * @property {boolean} [required]
+	 */
 
-	let disabled = false;
+	/** @type {Props} */
+	let {
+		items,
+		labelFieldName,
+		valueFieldName,
+		bindValue = $bindable(),
+		fieldLable,
+		searchFunction = null,
+		required = false
+	} = $props();
 
-	let searchObj = null;
+	let disabled = $state(false);
+
+	let searchObj = $state(null);
 	if (bindValue !== null) {
 		if (typeof bindValue === 'string') {
 			try {

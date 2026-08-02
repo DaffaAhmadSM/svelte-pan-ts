@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script>
 	import UniversalTableField from '$lib/components/universal-table-field.svelte';
 	import { fade } from 'svelte/transition';
@@ -6,73 +8,18 @@
 	import { getCookie } from '$lib/helpers/getLocalCookies';
 	export let data;
 
-	let formData = {
-		filename: null,
-		from_date: null,
-		to_date: null,
-		description: null,
-		csvmcd: null,
-		csvpns: null,
-		customer_id: null
-	};
-
-	let dumpformData = {
-		filename: null,
-		from_date: null,
-		to_date: null,
-		description: null,
-		csvmcd: null,
-		csvpns: null,
-		customer_id: null
-	};
-
-	let tableList = [
-		{
-			name: 'Filename',
-			id: 'filename',
-			type: 'text'
-		},
-		{
-			name: 'Description',
-			id: 'description',
-			type: 'text'
-		},
-		{
-			name: 'From Date',
-			id: 'from_date',
-			type: 'date'
-		},
-		{
-			name: 'To Date',
-			id: 'to_date',
-			type: 'date'
-		},
-		{
-			name: 'CSV MCD',
-			id: 'csvmcd',
-			type: 'file',
-			showFileName: true
-		},
-		{
-			name: 'CSV PNS',
-			id: 'csvpns',
-			type: 'file',
-			showFileName: true
-		}
-	];
-
 	let search;
 
-	let addModal = false;
 	let moveConfirm = false;
-	let dataDetail = false;
 	let currentMoveId = null;
 
 	let tableLoading = false;
-	const deleteUrl = '/timesheet/delete-pns-mcd';
 	const fetchUrl = '/customer-timesheet/list';
 
 	$: tableData = data.list.data;
+
+	$: console.log(tableData);
+
 	let observer;
 	let loading = false;
 	async function loadMore() {
@@ -111,6 +58,26 @@
 		}
 	}
 
+	async function generateInvoice(stringId) {
+		let uri = '/customer-timesheet/generate-invoice/' + stringId;
+
+		const res = await fetch(import.meta.env.VITE_API_URL + uri, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + getCookie('token')
+			}
+		});
+
+		if (res.ok) {
+			toastTrigger('Export Started', 'Success', 200, 500);
+			data.list = await fetchTable();
+			return;
+		}
+
+		toastTrigger('Failed to export', 'Error', 200, 500);
+	}
+
 	let setting = data.setting;
 	async function fetchTable() {
 		let page = setting.sizePage ? setting.sizePage : 70;
@@ -126,164 +93,10 @@
 
 	let tempMcddata;
 	let tempPnsdata;
-	async function createTable() {
-		const toastId = toastTriggerLoading('importing data...');
-		const tempTimesheet = await fetch(
-			import.meta.env.VITE_API_URL + '/timesheet/create-temp-timesheet',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + getCookie('token')
-				},
-				body: JSON.stringify({
-					filename: formData.filename,
-					from_date: formData.from_date,
-					to_date: formData.to_date,
-					description: formData.description,
-					customer_id: formData.customer_id
-				})
-			}
-		);
-
-		if (!tempTimesheet.ok) {
-			return toastTrigger(tempTimesheet.statusText, toastId, tempTimesheet.status);
-		}
-
-		const tempTimesheetJson = await tempTimesheet.json();
-
-		let mcdCsv = new FormData();
-		mcdCsv.append('csv', formData.csvmcd);
-		mcdCsv.append('temptimesheet_id', tempTimesheetJson.data.id);
-		// const tempMcd = await fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-mcd", {
-		//   method: 'POST',
-		//   headers: {
-		//     // 'Content-Type': 'multipart/form-data',
-		//     'Authorization': 'Bearer ' +  getCookie('token')
-		//   },
-		//   body: mcdCsv
-		// })
-
-		let pnsCsv = new FormData();
-		pnsCsv.append('csv', formData.csvpns);
-		pnsCsv.append('temptimesheet_id', tempTimesheetJson.data.id);
-		// const tempPNS = await fetch(import.meta.env.VITE_API_URL + "/timesheet/import-to-temp-pns", {
-		//   method: 'POST',
-		//   headers: {
-		//     // 'Content-Type': 'multipart/form-data',
-		//     'Authorization': 'Bearer ' +  getCookie('token')
-		//   },
-		//   body: pnsCsv
-		// })
-
-		const tempMcd = await fetch(import.meta.env.VITE_API_URL + '/timesheet/import-to-temp-mcd', {
-			method: 'POST',
-			headers: {
-				// 'Content-Type': 'multipart/form-data',
-				Authorization: 'Bearer ' + getCookie('token')
-			},
-			body: mcdCsv
-		});
-		const tempPNS = await fetch(import.meta.env.VITE_API_URL + '/timesheet/import-to-temp-pns', {
-			method: 'POST',
-			headers: {
-				// 'Content-Type': 'multipart/form-data',
-				Authorization: 'Bearer ' + getCookie('token')
-			},
-			body: pnsCsv
-		});
-
-		if (!tempMcd.ok && !tempPNS.ok) {
-			await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + tempTimesheetJson.data.id, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: 'Bearer ' + getCookie('token')
-				}
-			});
-			return toastTrigger(tempMcd.statusText, toastId, tempMcd.status);
-		}
-
-		await fetch(import.meta.env.VITE_API_URL + '/timesheet/compare-pns-mcd', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + getCookie('token')
-			},
-			body: JSON.stringify({
-				random_string: tempTimesheetJson.data.random_string
-			})
-		});
-
-		data.list = await fetchTable();
-		addModal = false;
-		tempMcddata = await tempMcd.json();
-		tempPnsdata = await tempPNS.json();
-
-		dataDetail = true;
-		formData = dumpformData;
-		return toastTrigger('data imported', toastId, 200);
-	}
-
-	async function deleteRow(id) {
-		const toastId = toastTriggerLoading('Deleting...');
-		const res = await fetch(import.meta.env.VITE_API_URL + deleteUrl + '/' + id, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + getCookie('token')
-			}
-		});
-		if (res.ok) {
-			data.list = await fetchTable();
-			return toastTrigger('Data Deleted', toastId, 200, 500);
-		}
-
-		return toastTrigger(data.list.data.message, toastId, res.status);
-	}
-
-	async function getCustomerAll() {
-		const res = await fetch(import.meta.env.VITE_API_URL + '/customer/all', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				authorization: 'Bearer ' + getCookie('token')
-			}
-		});
-		return await res.json();
-	}
-
-	async function generateCustomerInvoice(id) {
-		const toastId = toastTriggerLoading('Generating...');
-		const res = await fetch(
-			import.meta.env.VITE_API_URL + '/customer-timesheet/generate-invoice/' + id,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					authorization: 'Bearer ' + getCookie('token')
-				}
-			}
-		);
-		if (res.ok) {
-			moveConfirm = false;
-			data.list = await fetchTable();
-			return toastTrigger('Data Generated', toastId, 200, 500);
-		}
-
-		let message = await res.json();
-
-		if (!res.ok) {
-			moveConfirm = false;
-			return toastTrigger(message.message, toastId, res.status);
-		}
-
-		return toastTrigger(data.list.data.message, toastId, res.status);
-	}
 </script>
 
 <div class="table-container">
-	<div class="mb-6 flex w-full flex-col p-5 font-poppins">
+	<div class="font-poppins mb-6 flex w-full flex-col p-5">
 		<h1 class="text-5xl">Customer Timesheet Data</h1>
 	</div>
 
@@ -295,10 +108,10 @@
 					<input
 						type="text"
 						placeholder="Search here"
-						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600"
+						class="w-full rounded-md px-2 py-1 focus:border-transparent focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					/>
 					<button
-						class="ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+						class="focus:ring-opacity-50 ml-2 rounded-md bg-gray-800 px-4 py-1 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 focus:outline-hidden"
 					>
 						Search
 					</button>
@@ -310,8 +123,8 @@
 
 	<div class="container-table">
 		{#if tableLoading}
-			<div class="z-99 fixed left-0 top-0 flex h-full w-full items-center justify-center">
-				<div class="loading" />
+			<div class="fixed top-0 left-0 z-99 flex h-full w-full items-center justify-center">
+				<div class="loading"></div>
 			</div>
 		{:else}
 			<div class="container-table">
@@ -342,46 +155,90 @@
 								<td class="table-td">{row.from_date}</td>
 								<td class="table-td">{row.to_date}</td>
 								<td class="table-td max-w-20 truncate">{row.description}</td>
-								<td class="table-td max-w-20 truncate">{row.status}</td>
+								<td class="table-td max-w-20">{row.status}</td>
 								<td class="table-td flex items-center gap-4">
-									<a class="" href="/admin/invoice/customer-timesheet/{row.random_string}">
-										<div class="flex gap-2">
+									{#if row.status == 'generating' || row.status == 'exporting'}
+										<div class="loading"></div>
+									{:else}
+										<a
+											class="btn btn-primary flex gap-2"
+											href={import.meta.env.VITE_STORAGE_URL + row.file_path}
+											download
+										>
 											<svg
-												fill="#3584e4"
-												width="18px"
-												height="18px"
-												viewBox="0 0 96 96"
+												viewBox="0 0 24 24"
+												fill="none"
 												xmlns="http://www.w3.org/2000/svg"
-												stroke="#3584e4"
+												width="1.3rem"
+												height="1.3rem"
 												><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
 													id="SVGRepo_tracerCarrier"
 													stroke-linecap="round"
 													stroke-linejoin="round"
-													stroke="#CCCCCC"
-													stroke-width="7.872"
 												></g><g id="SVGRepo_iconCarrier">
-													<title></title>
-													<g>
-														<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
-														<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-														<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
-													</g>
+													<path
+														d="M12 7L12 14M12 14L15 11M12 14L9 11"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													></path>
+													<path
+														d="M16 17H12H8"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+														stroke-linecap="round"
+													></path>
+													<path
+														d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+														stroke="#4bf94e"
+														stroke-width="1.5"
+													></path>
 												</g></svg
 											>
-											<span>Detail</span>
-										</div>
-									</a>
-									<!-- {#if row.status == 'open'} -->
-									<button
-										class="btn btn-primary hover:btn-error"
-										on:click={() => {
-											moveConfirm = true;
-											currentMoveId = row.id;
-										}}
-									>
-										Generate Invoice
-									</button>
-									<!-- {/if} -->
+											<p>Download</p>
+										</a>
+										{#if row.status == 'draft'}
+											<button
+												class="btn btn-primary hover:btn-error"
+												on:click={() => {
+													moveConfirm = true;
+													currentMoveId = row.random_string;
+												}}
+											>
+												Export Invoice
+											</button>
+										{/if}
+										{#if row.status == 'exported'}
+											<a class="" href="/admin/invoice/customer-timesheet/{row.random_string}">
+												<div class="flex gap-2">
+													<svg
+														fill="#3584e4"
+														width="18px"
+														height="18px"
+														viewBox="0 0 96 96"
+														xmlns="http://www.w3.org/2000/svg"
+														stroke="#3584e4"
+														><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+															id="SVGRepo_tracerCarrier"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															stroke="#CCCCCC"
+															stroke-width="7.872"
+														></g><g id="SVGRepo_iconCarrier">
+															<title></title>
+															<g>
+																<path d="M18,24H78a6,6,0,0,0,0-12H18a6,6,0,0,0,0,12Z"></path>
+																<path d="M78,42H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+																<path d="M78,72H18a6,6,0,0,0,0,12H78a6,6,0,0,0,0-12Z"></path>
+															</g>
+														</g></svg
+													>
+													<span>Detail Export</span>
+												</div>
+											</a>
+										{/if}
+									{/if}
 								</td>
 							</tr>
 						{/each}
@@ -389,64 +246,11 @@
 					</tbody>
 				</table>
 				{#if loading}
-					<div class="loading" />
+					<div class="loading"></div>
 				{/if}
 			</div>
 		{/if}
 	</div>
-
-	<Dialog.Root bind:open={addModal} closeOnEscape closeOnOutsideClick>
-		<Dialog.Portal>
-			<Dialog.Overlay
-				transition={fade}
-				transitionConfig={{ duration: 150 }}
-				class="fixed inset-0 z-50 bg-black/50"
-			/>
-			<Dialog.Content
-				class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
-			>
-				<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">Add</Dialog.Title>
-				<Dialog.Description class="mb-6 text-sm text-black">
-					Fill in the form below to add a new data.
-				</Dialog.Description>
-				<UniversalTableField {tableList} {formData} />
-				{#await getCustomerAll() then customerAll}
-					<fieldset class="table-fieldset">
-						<div class="table-field-label">Customer</div>
-						<select name="customer_id" bind:value={formData.customer_id} class="table-field-input">
-							{#if customerAll}
-								{#each customerAll.data as customer}
-									<option value={customer.id}>{customer.name}</option>
-								{/each}
-							{/if}
-						</select>
-					</fieldset>
-				{/await}
-				<div class="mt-6 flex justify-end gap-4">
-					<button
-						class="inline-flex h-8 items-center justify-center rounded-sm
-                            bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-						on:click={() => {
-							addModal = false;
-							formData = dumpformData;
-						}}
-					>
-						Cancel
-					</button>
-					<button
-						type="submit"
-						class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
-                            justify-center rounded-sm px-4 font-medium leading-none"
-						on:click={() => {
-							createTable();
-						}}
-					>
-						Save changes
-					</button>
-				</div>
-			</Dialog.Content>
-		</Dialog.Portal>
-	</Dialog.Root>
 </div>
 
 <Dialog.Root bind:open={moveConfirm} closeOnEscape closeOnOutsideClick>
@@ -457,7 +261,7 @@
 			class="fixed inset-0 z-50 bg-black/50"
 		/>
 		<Dialog.Content
-			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
+			class="bg-background fixed top-[50%] left-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border p-6 shadow-lg sm:rounded-lg md:w-full"
 		>
 			<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">Generate</Dialog.Title>
 			<Dialog.Description class="mb-6 text-sm text-black">
@@ -467,7 +271,7 @@
 			<div class="mt-6 flex justify-end gap-4">
 				<button
 					class="inline-flex h-8 items-center justify-center rounded-sm
-                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
+                        bg-zinc-100 px-4 leading-none font-medium text-zinc-600"
 					on:click={() => {
 						moveConfirm = false;
 					}}
@@ -477,47 +281,14 @@
 				<button
 					type="submit"
 					class="bg-magnum-100 text-magnum-900 inline-flex h-8 items-center
-                        justify-center rounded-sm px-4 font-medium leading-none"
+                        justify-center rounded-sm px-4 leading-none font-medium"
 					on:click={() => {
-						generateCustomerInvoice(currentMoveId);
+						generateInvoice(currentMoveId);
+						moveConfirm = false;
+						// generateCustomerInvoice(currentMoveId);
 					}}
 				>
 					Move
-				</button>
-			</div>
-		</Dialog.Content>
-	</Dialog.Portal>
-</Dialog.Root>
-
-<Dialog.Root bind:open={dataDetail} closeOnEscape closeOnOutsideClick>
-	<Dialog.Portal>
-		<Dialog.Overlay
-			transition={fade}
-			transitionConfig={{ duration: 150 }}
-			class="fixed inset-0 z-50 bg-black/50"
-		/>
-		<Dialog.Content
-			class="fixed left-[50%] top-[50%] z-50 grid max-h-[80%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-scroll border bg-background p-6 shadow-lg sm:rounded-lg md:w-full"
-		>
-			<Dialog.Title class="text-primary-400 m-0 text-lg font-medium">
-				Detail Imported Data
-			</Dialog.Title>
-			<Dialog.Description class="mb-6 text-sm text-black">
-				<div class="flex flex-row justify-between">
-					<p>Total pns data: {tempPnsdata?.count}</p>
-					<p>Total mcd data: {tempMcddata?.count}</p>
-				</div>
-			</Dialog.Description>
-
-			<div class="mt-6 flex justify-end gap-4">
-				<button
-					class="inline-flex h-8 items-center justify-center rounded-sm
-                        bg-zinc-100 px-4 font-medium leading-none text-zinc-600"
-					on:click={() => {
-						dataDetail = false;
-					}}
-				>
-					Close
 				</button>
 			</div>
 		</Dialog.Content>

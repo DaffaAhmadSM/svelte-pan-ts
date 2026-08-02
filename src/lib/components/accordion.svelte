@@ -1,17 +1,25 @@
 <script>
 	import { slide } from 'svelte/transition';
-    let open;
-    $: classOpen = (open == true)? 'bg-red-100' : '';
+    /**
+     * @typedef {Object} Props
+     * @property {import('svelte').Snippet<[any]>} [parent]
+     * @property {import('svelte').Snippet} [child]
+     */
+
+    /** @type {Props} */
+    let { parent, child } = $props();
+    let open = $state();
+    let classOpen = $derived((open == true)? 'bg-red-100' : '');
     function handleClick() {
         open = !open
     }
 </script>
 
 <tr class="{classOpen}">
-    <slot name="parent" handleClick={handleClick} open={open}/>
+    {@render parent?.({ handleClick, open, })}
 </tr>
 {#if open}
 <tr transition:slide={{duration: 300, easing: (t) => t * (2 - t)}}>
-    <slot name="child"/>
+    {@render child?.()}
 </tr>
 {/if}
