@@ -58,7 +58,7 @@ import UniversalSetupTable from '$lib/components/universal-setup-table.svelte';
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <svelte:fragment slot="table-row" let:row let:index>

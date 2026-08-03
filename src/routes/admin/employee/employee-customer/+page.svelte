@@ -54,7 +54,7 @@
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {searchUrl} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {searchUrl} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <!-- @migration-task: migrate this slot by hand, `table-row` is an invalid identifier -->
   <svelte:fragment slot="table-row" let:row let:index>

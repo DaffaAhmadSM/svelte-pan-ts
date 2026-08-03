@@ -700,7 +700,7 @@ let detailMeta = [
 </script>
 
 <div class="w-full overflow-auto">
-    <UniversalSetupTable {detailMeta} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList} {searchUrl}>
+    <UniversalSetupTable {detailMeta} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList} {searchUrl}>
 
         <!-- <svelte:fragment slot="table-row" let:row let:index>
             <td class="table-td">{index + 1}</td>

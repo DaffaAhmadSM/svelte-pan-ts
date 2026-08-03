@@ -190,7 +190,7 @@
 </script>
 
 <div class="table-container">
-    <UniversalSetupTable {detailMeta} {namePage} data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} bind:formData={formData} tableList={tableList}>
+    <UniversalSetupTable {detailMeta} {namePage} bind:data={data} fetchUrl={fetchUrl} deleteUrl={deleteUrl} updateUrl={updateUrl} detailUrl={detailUrl} createUrl={createUrl} formData={formData} tableList={tableList}>
         <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <!-- @migration-task: migrate this slot by hand, `aditional-form-create` is an invalid identifier -->
   <svelte:fragment slot="aditional-form-create">
