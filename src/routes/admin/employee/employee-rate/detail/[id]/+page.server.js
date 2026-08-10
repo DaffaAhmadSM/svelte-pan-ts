@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 
 export async function load({ fetch, cookies, params }) {
 	const detail = await fetch(
-		import.meta.env.VITE_API_URL + '/employee-rates/detail/' + params.id,
+		import.meta.env.VITE_SERVER_API_URL + '/employee-rates/detail/' + params.id,
 		{
 			method: 'GET',
 			headers: {
@@ -20,7 +20,7 @@ export async function load({ fetch, cookies, params }) {
 	}
 
 	const details = await fetch(
-		import.meta.env.VITE_API_URL + '/employee-rate-details/list/' + params.id + '?perpage=100',
+		import.meta.env.VITE_SERVER_API_URL + '/employee-rate-details/list/' + params.id + '?perpage=100',
 		{
 			method: 'GET',
 			headers: {

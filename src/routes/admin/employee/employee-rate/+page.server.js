@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 export async function load({ fetch, cookies, url }) {
-	const list = await fetch(import.meta.env.VITE_API_URL + '/employee-rates/list', {
+	const list = await fetch(import.meta.env.VITE_SERVER_API_URL + '/employee-rates/list', {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ export async function load({ fetch, cookies, url }) {
 
 	const paramsurl = url.searchParams.get('menuid');
 	const permission = await fetch(
-		import.meta.env.VITE_API_URL + '/menu-user-permission/menu/' + paramsurl,
+		import.meta.env.VITE_SERVER_API_URL + '/menu-user-permission/menu/' + paramsurl,
 		{
 			method: 'GET',
 			headers: {
